@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chart 1 — Tests vs % Positive</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="nav">
+    <div class="container nav__bar">
+      <a class="brand" href="index.html">Road<span>Safety</span></a>
+      <nav class="nav__links">
+        <a href="chart-1.html">Chart 1</a>
+        <a href="chart-2.html">Chart 2</a>
+        <a href="chart-3.html">Chart 3</a>
+        <a href="chart-4.html">Chart 4</a>
+        <a href="chart-5.html">Chart 5</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero chart-header">
+    <div class="container centered">
+      <h1>Drug tests conducted vs positive results</h1>
+      <p class="intro">Static bar chart showing total drug tests and positivity rate trends by year. Replace with your chart export if desired.</p>
+      <div class="pager">
+        <a class="btn btn--ghost" href="index.html">← Back</a>
+        <a class="btn btn--brand" href="chart-2.html">Next →</a>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="container chart-grid">
+      <figure class="chart-figure">
+        <figcaption class="kicker">Chart 1 · Tests vs % Positive</figcaption>
+        <svg viewBox="0 0 720 360" class="svg-frame" role="img" aria-label="Annual roadside drug tests and percent positive (demo)">
+          <rect x="0" y="0" width="720" height="360" fill="#ffffff" rx="18" ry="18" />
+          <g class="grid">
+            <line x1="80" y1="300" x2="680" y2="300" />
+            <line x1="80" y1="240" x2="680" y2="240" />
+            <line x1="80" y1="180" x2="680" y2="180" />
+            <line x1="80" y1="120" x2="680" y2="120" />
+            <line x1="80" y1="60"  x2="680" y2="60" />
+          </g>
+          <g class="axis">
+            <line x1="80" y1="300" x2="80" y2="40" />
+            <line x1="80" y1="300" x2="680" y2="300" />
+          </g>
+          <g>
+            <rect class="bar-green-1" x="110" y="230" width="60" height="70" rx="6" />
+            <rect class="bar-green-3" x="200" y="270" width="60" height="30" rx="6" />
+            <rect class="bar-green-2" x="290" y="245" width="60" height="55" rx="6" />
+            <rect class="bar-green-1" x="380" y="210" width="60" height="90" rx="6" />
+            <rect class="bar-green-2" x="470" y="180" width="60" height="120" rx="6" />
+            <rect class="bar-green-1" x="560" y="160" width="60" height="140" rx="6" />
+          </g>
+          <g fill="#0f172a" font-size="12" text-anchor="middle">
+            <text x="140" y="320">2019</text>
+            <text x="230" y="320">2020</text>
+            <text x="320" y="320">2021</text>
+            <text x="410" y="320">2022</text>
+            <text x="500" y="320">2023</text>
+            <text x="590" y="320">2024</text>
+          </g>
+        </svg>
+      </figure>
+
+      <aside class="notes">
+        <h3>Notes & Insights</h3>
+        <ul class="list">
+          <li>Pandemic-related drop in 2020 with steady recovery after 2021.</li>
+          <li>Highlight peaks with contextual policy or enforcement notes.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer">
+      <div>© <span id="year1"></span> Road Safety</div>
+      <div class="page-dots"><a href="chart-1.html">1</a> · <a href="chart-2.html">2</a> · <a href="chart-3.html">3</a> · <a href="chart-4.html">4</a> · <a href="chart-5.html">5</a></div>
+    </div>
+  </footer>
+  <script>document.getElementById('year1').textContent = new Date().getFullYear();</script>
+</body>
+</html>

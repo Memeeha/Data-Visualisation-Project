@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chart 2 — Positives by Jurisdiction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="nav">
+    <div class="container nav__bar">
+      <a class="brand" href="index.html">Road<span>Safety</span></a>
+      <nav class="nav__links">
+        <a href="chart-1.html">Chart 1</a>
+        <a href="chart-2.html">Chart 2</a>
+        <a href="chart-3.html">Chart 3</a>
+        <a href="chart-4.html">Chart 4</a>
+        <a href="chart-5.html">Chart 5</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero chart-header">
+    <div class="container centered">
+      <h1>Positive results by jurisdiction</h1>
+      <p class="intro">Displays comparative trends by jurisdiction. Replace the placeholder with your exported line or area chart.</p>
+      <div class="pager">
+        <a class="btn btn--ghost" href="chart-1.html">← Previous</a>
+        <a class="btn btn--brand" href="chart-3.html">Next →</a>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="container chart-grid">
+      <figure class="chart-figure">
+        <figcaption class="kicker">Chart 2 · Positives by Jurisdiction</figcaption>
+        <img class="chart-img" src="charts/chart-2.png" alt="Line chart placeholder showing positive rate by jurisdiction over time">
+      </figure>
+      <aside class="notes">
+        <h3>Notes & Insights</h3>
+        <ul class="list">
+          <li>Jurisdictions differ in enforcement intensity and sample volumes.</li>
+          <li>Label major peaks and anomalies directly on your visual export.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer">
+      <div>© <span id="year2"></span> Road Safety</div>
+      <div class="page-dots"><a href="chart-1.html">1</a> · <a href="chart-2.html">2</a> · <a href="chart-3.html">3</a> · <a href="chart-4.html">4</a> · <a href="chart-5.html">5</a></div>
+    </div>
+  </footer>
+  <script>document.getElementById('year2').textContent = new Date().getFullYear();</script>
+</body>
+</html>

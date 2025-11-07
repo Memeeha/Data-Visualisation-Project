@@ -1,1 +1,167 @@
-Hi ivy i love you
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Road Safety — Drug Testing Insights</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Top Navigation -->
+  <div class="nav">
+    <div class="container nav__bar">
+      <a class="brand" href="#top">Road<span>Safety</span></a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#background">Background</a>
+        <a href="#aim">Aim & Objectives</a>
+        <a href="#explore">Explore</a>
+        <a href="#team">Team</a>
+        <a href="#sources">Sources</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <header class="hero" id="top">
+    <div class="container">
+      <h1 class="centered">Drug Testing Insights Dashboard</h1>
+      <p class="centered" style="margin-top:8px">
+        <span class="chip" aria-label="Author">Ivy Lim</span>
+        <span style="opacity:.7; margin: 0 .4rem;">and</span>
+        <span class="chip" aria-label="Author">Selina Chang</span>
+      </p>
+      <p class="intro centered">
+        Friendly, data-driven insights on roadside drug testing: total tests, positivity rate, jurisdictional trends, and
+        testing stages — all presented clearly for quick decisions.
+      </p>
+      <div class="sparkline" aria-hidden="true">
+        <svg viewBox="0 0 200 48" width="90%" height="70%" role="img" aria-label="decorative sparkline">
+          <polyline fill="none" stroke="#10b981" stroke-width="3"
+            points="10,28 40,40 70,22 100,26 130,18 160,22 190,12"/>
+        </svg>
+      </div>
+      <div class="actions" role="group" aria-label="Hero actions">
+        <a class="btn btn--brand" href="#explore">Explore Visuals</a>
+        <a class="btn btn--ghost" href="#background">Learn More</a>
+      </div>
+      <p class="small-note">COS30045 · Data Visualisation</p>
+    </div>
+  </header>
+
+  <!-- Background -->
+  <section id="background">
+    <div class="container split">
+      <div>
+        <div class="kicker">Background</div>
+        <h2>Why Drug Testing Matters</h2>
+        <p class="text-muted">
+          Roadside drug testing helps reduce impaired driving and serious crashes. This site summarises key indicators—
+          total tests, % positive, differences across jurisdictions, and testing stages—so stakeholders can monitor risk
+          and target interventions.
+        </p>
+        <div class="pills" role="group" aria-label="Section paging">
+          <a class="btn" href="#top">◀ Back</a>
+          <a class="btn" href="#aim">Next ▶</a>
+        </div>
+      </div>
+      <figure class="mapbox">
+        <div>
+          <strong>Illustration placeholder</strong>
+          <p class="map-note">Replace with an emblem or jurisdiction map if desired.</p>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Aim & Objectives -->
+  <section id="aim" class="white">
+    <div class="container centered">
+      <h2>Aim & Objectives</h2>
+      <p class="text-muted">
+        <strong>Road Safety — Drug Testing</strong> tracks multi-year patterns (tests conducted & % positive), compares
+        jurisdictions on population-adjusted rates, and outlines testing stages. Our aim: a friendly, credible snapshot
+        to guide enforcement and education resources.
+      </p>
+      <div class="cta">
+        <a class="btn btn--brand" href="#explore">Explore Visuals</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explore -->
+  <section id="explore">
+    <div class="container">
+      <div class="grid-3">
+        <div>
+          <h3>Explore the Visuals</h3>
+          <p class="text-muted">Browse five tidy chart pages. Each is lightweight (HTML + CSS) and ready for your exported figures.</p>
+          <div class="btn-group" role="group" aria-label="Charts">
+            <a class="btn btn--brand" href="chart-1.html">Chart 1 · Tests vs % Positive</a>
+            <a class="btn" href="chart-2.html">Chart 2 · Positives by Jurisdiction</a>
+            <a class="btn" href="chart-3.html">Chart 3 · Tests per 10,000 Licences</a>
+            <a class="btn" href="chart-4.html">Chart 4 · Testing Stages</a>
+            <a class="btn" href="chart-5.html">Chart 5 · KPIs & Notes</a>
+          </div>
+        </div>
+        <aside class="card" aria-labelledby="quickfacts-title">
+          <h3 id="quickfacts-title" style="margin-bottom:6px">Quick facts</h3>
+          <ul class="list">
+            <li>Mobile-first responsive layout</li>
+            <li>Alt text & short chart summaries</li>
+            <li>Consistent colours and spacing</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section id="team" class="white">
+    <div class="container">
+      <h3 class="centered">Project Team</h3>
+      <div class="team" style="margin-top:16px">
+        <div class="member">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <strong>Ivy Lim</strong><br />
+            <small>Data wrangling & analysis</small><br />
+            <a href="mailto:tan@example.com">tan@example.com</a>
+          </div>
+        </div>
+        <div class="member">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <strong>Selina Chang</strong><br />
+            <small>Frontend & UX</small><br />
+            <a href="mailto:jia@example.com">jia@example.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sources & Notes -->
+  <section id="sources">
+    <div class="container centered">
+      <h2>Sources & Notes</h2>
+      <p class="text-muted">Cite official road-safety datasets (transport departments, police reports) and add methodology/definitions.</p>
+      <ul class="list" style="display:inline-block; text-align:left; margin-top:12px;">
+        <li>Dataset A — jurisdiction-level drug test counts and positive results</li>
+        <li>Dataset B — licensing population by jurisdiction (for per-10,000 rates)</li>
+        <li>Method notes — exclusions, definitions, and data collection periods</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer">
+      <div>© <span id="year"></span> Road Safety</div>
+      <div>
+        <a href="#sources">Attributions</a> · <a href="#explore">Charts</a>
+      </div>
+    </div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

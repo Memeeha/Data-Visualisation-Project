@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chart 4 — Testing Stages</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="nav">
+    <div class="container nav__bar">
+      <a class="brand" href="index.html">Road<span>Safety</span></a>
+      <nav class="nav__links">
+        <a href="chart-1.html">Chart 1</a>
+        <a href="chart-2.html">Chart 2</a>
+        <a href="chart-3.html">Chart 3</a>
+        <a href="chart-4.html">Chart 4</a>
+        <a href="chart-5.html">Chart 5</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero chart-header">
+    <div class="container centered">
+      <h1>Drug-testing stages</h1>
+      <p class="intro">Visualise stages: roadside screening, confirmatory lab test, and final outcomes.</p>
+      <div class="pager">
+        <a class="btn btn--ghost" href="chart-3.html">← Previous</a>
+        <a class="btn btn--brand" href="chart-5.html">Next →</a>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="container chart-grid">
+      <figure class="chart-figure">
+        <figcaption class="kicker">Chart 4 · Testing Stages</figcaption>
+        <img class="chart-img" src="charts/chart-4.png" alt="Funnel or stacked bar showing drug testing stages">
+      </figure>
+      <aside class="notes">
+        <h3>Notes & Insights</h3>
+        <ul class="list">
+          <li>Stage-based analysis shows attrition between screening and confirmation.</li>
+          <li>Highlight improvement areas where cases drop out unexpectedly.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer">
+      <div>© <span id="year4"></span> Road Safety</div>
+      <div class="page-dots"><a href="chart-1.html">1</a> · <a href="chart-2.html">2</a> · <a href="chart-3.html">3</a> · <a href="chart-4.html">4</a> · <a href="chart-5.html">5</a></div>
+    </div>
+  </footer>
+  <script>document.getElementById('year4').textContent = new Date().getFullYear();</script>
+</body>
+</html>
