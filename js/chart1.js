@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ----------------------------------------------------------
-// TOOLTIP (cleaner styling, stronger contrast, soft shadow)
+// Tooltip styling (shared)
 // ----------------------------------------------------------
 function createTooltip() {
-  d3.selectAll(".chart-tooltip").remove(); // remove duplicates
+  d3.selectAll(".chart-tooltip").remove(); // avoid duplicates
 
   return d3.select("body")
     .append("div")
@@ -37,7 +37,7 @@ function renderChart1() {
   container.innerHTML = "";
 
   const margin = { top: 30, right: 30, bottom: 50, left: 70 };
-  const width = container.clientWidth || 720;
+  const width  = container.clientWidth || 720;
   const height = 380;
 
   const svg = d3.select(container)
@@ -46,23 +46,22 @@ function renderChart1() {
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "xMidYMid meet");
 
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
+  const innerWidth  = width  - margin.left - margin.right;
+  const innerHeight = height - margin.top  - margin.bottom;
 
   const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
   const tooltip = createTooltip();
 
-  // =========================================================
-  // LOAD CSV + MANUAL AGGREGATION (cleanest + safest)
-  // =========================================================
   d3.csv("data/police_enforcement_2024_positive_drug_tests.csv").then(raw => {
-
+    // ------------------------------------------------------
+    // 1) Aggregate COUNT per YEAR
+    // ------------------------------------------------------
     const totalsByYear = {};
 
     raw.forEach(d => {
-      const year = +d.YEAR;
+      const year  = +d.YEAR;
       const count = +d.COUNT || 0;
       if (Number.isFinite(year)) {
         totalsByYear[year] = (totalsByYear[year] || 0) + count;
@@ -74,13 +73,13 @@ function renderChart1() {
       .sort((a, b) => d3.ascending(a.year, b.year));
 
     if (!data.length) {
-      console.warn("Chart1: No data found");
+      console.warn("Chart1: no data after aggregation");
       return;
     }
 
-    // =========================================================
-    // SCALES
-    // =========================================================
+    // ------------------------------------------------------
+    // 2) Scales
+    // ------------------------------------------------------
     const x = d3.scaleBand()
       .domain(data.map(d => d.year))
       .range([0, innerWidth])
@@ -93,9 +92,9 @@ function renderChart1() {
 
     const getX = d => x(d.year) + x.bandwidth() / 2;
 
-    // =========================================================
-    // GRID
-    // =========================================================
+    // ------------------------------------------------------
+    // 3) Grid + axes
+    // ------------------------------------------------------
     g.append("g")
       .attr("class", "grid")
       .call(
@@ -105,36 +104,42 @@ function renderChart1() {
           .tickFormat("")
       );
 
-    // =========================================================
-    // AXES
-    // =========================================================
     g.append("g")
       .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(6).tickFormat(d3.format(",")));  // ★ FIXED
+      .call(d3.axisLeft(y).ticks(6).tickFormat(d3.format(",")));
 
     g.append("g")
       .attr("class", "axis")
       .attr("transform", `translate(0,${innerHeight})`)
       .call(d3.axisBottom(x));
 
-    // =========================================================
-    // LINE
-    // =========================================================
+    // ------------------------------------------------------
+    // 4) Line with draw animation
+    // ------------------------------------------------------
     const line = d3.line()
       .x(d => getX(d))
       .y(d => y(d.value))
       .curve(d3.curveMonotoneX);
 
-    g.append("path")
+    const linePath = g.append("path")
       .datum(data)
       .attr("fill", "none")
       .attr("stroke", "#3b82f6")
       .attr("stroke-width", 3)
       .attr("d", line);
 
-    // =========================================================
-    // DOTS + TOOLTIP INTERACTION
-    // =========================================================
+    const totalLength = linePath.node().getTotalLength();
+    linePath
+      .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
+      .attr("stroke-dashoffset", totalLength)
+      .transition()
+      .duration(1200)
+      .ease(d3.easeCubicOut)
+      .attr("stroke-dashoffset", 0);
+
+    // ------------------------------------------------------
+    // 5) Static dots (for visual emphasis)
+    // ------------------------------------------------------
     g.selectAll(".dot")
       .data(data)
       .enter()
@@ -145,31 +150,92 @@ function renderChart1() {
       .attr("r", 4)
       .attr("fill", "#3b82f6")
       .attr("stroke", "#ffffff")
+      .attr("stroke-width", 1.5);
+
+    // ------------------------------------------------------
+    // 6) Interactive focus line + dot + tooltip
+    // ------------------------------------------------------
+    const focusLine = g.append("line")
+      .attr("class", "focus-line")
+      .attr("stroke", "#93c5fd")
       .attr("stroke-width", 1.5)
-      .on("mouseenter", function (event, d) {
+      .attr("stroke-dasharray", "4 4")
+      .style("opacity", 0);
 
-        d3.select(this).transition().duration(120).attr("r", 7);
+    const focusDot = g.append("circle")
+      .attr("class", "focus-dot")
+      .attr("r", 6)
+      .attr("fill", "#1d4ed8")
+      .attr("stroke", "#ffffff")
+      .attr("stroke-width", 2)
+      .style("opacity", 0);
 
-        const idx = data.findIndex(p => p.year === d.year);
-        const prev = data[idx - 1];
+    // precompute x-pixel positions for each point
+    const xPositions = data.map(d => getX(d));
+
+    // big transparent rect to capture mouse movement
+    g.append("rect")
+      .attr("class", "overlay")
+      .attr("fill", "transparent")
+      .attr("pointer-events", "all")
+      .attr("width", innerWidth)
+      .attr("height", innerHeight)
+      .on("mousemove", function (event) {
+        const [mx] = d3.pointer(event, this);
+
+        // guard if mouse is completely outside
+        if (mx < 0 || mx > innerWidth) {
+          focusLine.style("opacity", 0);
+          focusDot.style("opacity", 0);
+          tooltip.style("opacity", 0);
+          return;
+        }
+
+        // find closest data point to mouse x
+        let closestIndex = 0;
+        let minDist = Infinity;
+        xPositions.forEach((px, i) => {
+          const dist = Math.abs(mx - px);
+          if (dist < minDist) {
+            minDist = dist;
+            closestIndex = i;
+          }
+        });
+
+        const d  = data[closestIndex];
+        const cx = getX(d);
+        const cy = y(d.value);
+
+        // move guide line + focus dot
+        focusLine
+          .attr("x1", cx)
+          .attr("x2", cx)
+          .attr("y1", 0)
+          .attr("y2", innerHeight)
+          .style("opacity", 1);
+
+        focusDot
+          .attr("cx", cx)
+          .attr("cy", cy)
+          .style("opacity", 1);
+
+        // build "change vs previous year" info
+        const prev = data[closestIndex - 1];
         const diff = prev ? d.value - prev.value : null;
-        const pct = prev && prev.value > 0
+        const pct  = prev && prev.value > 0
           ? ((diff / prev.value) * 100).toFixed(1)
           : null;
 
-        // Build extra stats
-        let extra = "";
+        let extraHtml = "";
         if (pct !== null) {
           const sign = diff >= 0 ? "+" : "";
-          extra =
+          extraHtml =
             `<div style="margin-top:4px; color:#64748b;">
-              vs prev year: ${sign}${diff.toLocaleString()} (${sign}${pct}%)
-            </div>`;
+               vs prev year: ${sign}${diff.toLocaleString()} (${sign}${pct}%)
+             </div>`;
         }
 
-        // ----------------------------------------------
-        // NEW TOOLTIP LOOK
-        // ----------------------------------------------
+        // tooltip content
         tooltip
           .style("opacity", 1)
           .html(`
@@ -179,24 +245,20 @@ function renderChart1() {
             <div style="color:#1d4ed8; font-weight:600;">
               ${d.value.toLocaleString()} positive tests
             </div>
-            ${extra}
+            ${extraHtml}
           `)
           .style("left", event.pageX + 14 + "px")
           .style("top", event.pageY - 40 + "px");
       })
-      .on("mousemove", function (event) {
-        tooltip
-          .style("left", event.pageX + 14 + "px")
-          .style("top", event.pageY - 40 + "px");
-      })
       .on("mouseleave", function () {
-        d3.select(this).transition().duration(120).attr("r", 4);
+        focusLine.style("opacity", 0);
+        focusDot.style("opacity", 0);
         tooltip.style("opacity", 0);
       });
 
-    // =========================================================
-    // AXIS LABELS
-    // =========================================================
+    // ------------------------------------------------------
+    // 7) Axis labels
+    // ------------------------------------------------------
     g.append("text")
       .attr("x", innerWidth / 2)
       .attr("y", innerHeight + 40)
