@@ -34,8 +34,8 @@
   <section>
     <div class="container chart-grid">
       <figure class="chart-figure">
-        <figcaption class="kicker">Chart 2 · Positives by Jurisdiction</figcaption>
-        <img class="chart-img" src="charts/chart-2.png" alt="Line chart placeholder showing positive rate by jurisdiction over time">
+        <figcaption class="kicker">Chart 2 · Positive tests by jurisdiction (2024)</figcaption>
+        <div id="chart2"></div>
       </figure>
       <aside class="notes">
         <h3>Notes & Insights</h3>
@@ -54,5 +54,9 @@
     </div>
   </footer>
   <script>document.getElementById('year2').textContent = new Date().getFullYear();</script>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="js/chart2.js"></script>
+
 </body>
 </html>
