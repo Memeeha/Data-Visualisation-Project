@@ -525,6 +525,15 @@ footer{
 .axis{stroke:#64748b; stroke-width:2;}
 .grid{stroke:#e2e8f0; stroke-width:1;}
 
+/* Make chart labels sharp and readable */
+.axis text,
+.tick text {
+  stroke: none;
+  fill: var(--text-dark);
+  font-weight: 500;
+}
+
+
 .chart-img{
   width:100%; 
   height:auto; 
