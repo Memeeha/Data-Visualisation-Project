@@ -23,7 +23,7 @@
   <header class="hero chart-header">
     <div class="container centered">
       <h1>Tests per 10,000 driver licences</h1>
-      <p class="intro">Shows testing intensity across jurisdictions. Replace placeholder image with your horizontal bar chart export.</p>
+      <p class="intro">This chart highlights the relative contribution of initial screening, secondary confirmation, and laboratory toxicology results.</p>
       <div class="pager">
         <a class="btn btn--ghost" href="chart-2.html">← Previous</a>
         <a class="btn btn--brand" href="chart-4.html">Next →</a>
@@ -35,7 +35,7 @@
     <div class="container chart-grid">
       <figure class="chart-figure">
         <figcaption class="kicker">Chart 3 · Tests per 10,000 Licences</figcaption>
-        <img class="chart-img" src="charts/chart-3.png" alt="Horizontal bar chart showing tests per 10,000 licences by jurisdiction">
+        <div id="chart3"></div> 
       </figure>
       <aside class="notes">
         <h3>Notes & Insights</h3>
@@ -54,5 +54,8 @@
     </div>
   </footer>
   <script>document.getElementById('year3').textContent = new Date().getFullYear();</script>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="js/chart3.js"></script>
 </body>
 </html>
