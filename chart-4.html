@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chart 4 — Testing Stages</title>
+  <title>Chart 4 — Enforcement Actions by Jurisdiction</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -22,8 +22,12 @@
 
   <header class="hero chart-header">
     <div class="container centered">
-      <h1>Drug-testing stages</h1>
-      <p class="intro">Visualise stages: roadside screening, confirmatory lab test, and final outcomes.</p>
+      <h1>Enforcement actions across jurisdictions</h1>
+      <p class="intro">
+        Compares how many fines, arrests, and charges were recorded for positive roadside drug tests
+        across each state and territory in 2024.
+      </p>
+
       <div class="pager">
         <a class="btn btn--ghost" href="chart-3.html">← Previous</a>
         <a class="btn btn--brand" href="chart-5.html">Next →</a>
@@ -34,14 +38,16 @@
   <section>
     <div class="container chart-grid">
       <figure class="chart-figure">
-        <figcaption class="kicker">Chart 4 · Testing Stages</figcaption>
-        <img class="chart-img" src="charts/chart-4.png" alt="Funnel or stacked bar showing drug testing stages">
+        <figcaption class="kicker">Chart 4 · Fines, arrests, and charges by jurisdiction (2024)</figcaption>
+        <div id="chart4"></div>
       </figure>
+
       <aside class="notes">
         <h3>Notes & Insights</h3>
         <ul class="list">
-          <li>Stage-based analysis shows attrition between screening and confirmation.</li>
-          <li>Highlight improvement areas where cases drop out unexpectedly.</li>
+          <li>Each cluster of bars shows how enforcement outcomes differ by jurisdiction for positive drug tests.</li>
+          <li>Fines and charges generally make up the majority of actions, with arrests applied more selectively.</li>
+          <li>This helps highlight where enforcement is more punitive (charges) versus monetary (fines).</li>
         </ul>
       </aside>
     </div>
@@ -50,9 +56,21 @@
   <footer>
     <div class="container footer">
       <div>© <span id="year4"></span> Road Safety</div>
-      <div class="page-dots"><a href="chart-1.html">1</a> · <a href="chart-2.html">2</a> · <a href="chart-3.html">3</a> · <a href="chart-4.html">4</a> · <a href="chart-5.html">5</a></div>
+      <div class="page-dots">
+        <a href="chart-1.html">1</a> ·
+        <a href="chart-2.html">2</a> ·
+        <a href="chart-3.html">3</a> ·
+        <a href="chart-4.html">4</a> ·
+        <a href="chart-5.html">5</a>
+      </div>
     </div>
   </footer>
-  <script>document.getElementById('year4').textContent = new Date().getFullYear();</script>
+
+  <script>
+    document.getElementById('year4').textContent = new Date().getFullYear();
+  </script>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="js/chart4.js"></script>
 </body>
 </html>
