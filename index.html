@@ -31,8 +31,10 @@
         <span class="chip" aria-label="Author">Selina Chang</span>
       </p>
       <p class="intro centered">
-        Friendly, data-driven insights on roadside drug testing: total tests, positivity rate, jurisdictional trends, and
-        testing stages — all presented clearly for quick decisions.
+        This dashboard visualises key insights from Australian roadside drug testing data, including long-term trends,
+  jurisdiction comparisons, detection methods, enforcement actions, and age-group patterns. Each chart answers one
+  of the five core research questions using police_enforcement_2024_positive_drug_tests.csv and the processed Chart
+  1–5 datasets.
       </p>
       <div class="sparkline" aria-hidden="true">
         <svg viewBox="0 0 200 48" width="90%" height="70%" role="img" aria-label="decorative sparkline">
@@ -55,21 +57,102 @@
         <div class="kicker">Background</div>
         <h2>Why Drug Testing Matters</h2>
         <p class="text-muted">
-          Roadside drug testing helps reduce impaired driving and serious crashes. This site summarises key indicators—
-          total tests, % positive, differences across jurisdictions, and testing stages—so stakeholders can monitor risk
-          and target interventions.
+         Roadside drug testing plays an essential role in reducing impaired driving. This project explores five key
+  questions: how positive drug detections have changed over time, which jurisdictions show high or low positive
+  rates, which detection methods record the most positives, what enforcement actions are most common, and which
+  age groups are most affected. These insights are derived from official police enforcement data and processed
+  CSV files (Chart 1–5).
         </p>
         <div class="pills" role="group" aria-label="Section paging">
           <a class="btn" href="#top">◀ Back</a>
           <a class="btn" href="#aim">Next ▶</a>
         </div>
       </div>
-      <figure class="mapbox">
-        <div>
-          <strong>Illustration placeholder</strong>
-          <p class="map-note">Replace with an emblem or jurisdiction map if desired.</p>
-        </div>
-      </figure>
+    <figure class="mapbox">
+  <div class="aus-map-wrapper">
+    <svg
+      class="aus-map"
+      viewBox="0 0 320 260"
+      role="img"
+      aria-labelledby="ausMapTitle ausMapDesc"
+    >
+      <title id="ausMapTitle">Australian jurisdictions</title>
+      <desc id="ausMapDesc">
+        Stylised block map of Australian states and territories. Each region is coloured and can be hovered to see more information.
+      </desc>
+
+      <!-- Western Australia -->
+      <g class="state state--wa"
+         data-name="Western Australia"
+         data-info="Large western state with long remote highways and regional testing corridors.">
+        <rect x="10" y="60" width="90" height="140" rx="10" ry="10"></rect>
+        <text x="55" y="140">WA</text>
+      </g>
+
+      <!-- Northern Territory -->
+      <g class="state state--nt"
+         data-name="Northern Territory"
+         data-info="Smaller population but long outback routes, often covered by targeted enforcement campaigns.">
+        <rect x="115" y="40" width="80" height="80" rx="10" ry="10"></rect>
+        <text x="155" y="90">NT</text>
+      </g>
+
+      <!-- South Australia -->
+      <g class="state state--sa"
+         data-name="South Australia"
+         data-info="Mix of metropolitan Adelaide and rural freight routes with regular roadside testing.">
+        <rect x="115" y="130" width="80" height="90" rx="10" ry="10"></rect>
+        <text x="155" y="180">SA</text>
+      </g>
+
+      <!-- Queensland -->
+      <g class="state state--qld"
+         data-name="Queensland"
+         data-info="Large eastern state with high traffic volumes and extensive coastal and inland testing.">
+        <rect x="210" y="40" width="90" height="100" rx="10" ry="10"></rect>
+        <text x="255" y="95">QLD</text>
+      </g>
+
+      <!-- New South Wales -->
+      <g class="state state--nsw"
+         data-name="New South Wales"
+         data-info="Densely populated jurisdiction with intensive enforcement on major urban and regional corridors.">
+        <rect x="210" y="145" width="90" height="60" rx="10" ry="10"></rect>
+        <text x="255" y="180">NSW</text>
+      </g>
+
+      <!-- Victoria -->
+      <g class="state state--vic"
+         data-name="Victoria"
+         data-info="Compact state with a dense road network and frequent roadside drug-testing operations.">
+        <rect x="220" y="210" width="60" height="30" rx="8" ry="8"></rect>
+        <text x="250" y="230">VIC</text>
+      </g>
+
+      <!-- Tasmania -->
+      <g class="state state--tas"
+         data-name="Tasmania"
+         data-info="Island state with lower volumes but focused testing around key population centres.">
+        <rect x="150" y="210" width="40" height="30" rx="10" ry="10"></rect>
+        <text x="170" y="230">TAS</text>
+      </g>
+
+      <!-- Australian Capital Territory -->
+      <g class="state state--act"
+         data-name="Australian Capital Territory"
+         data-info="Small jurisdiction centred on Canberra with predominantly metropolitan testing.">
+        <rect x="205" y="155" width="26" height="20" rx="6" ry="6"></rect>
+        <text x="218" y="169" font-size="9">ACT</text>
+      </g>
+    </svg>
+
+    <div id="map-label" class="map-label">
+      Hover over a state or territory to see its name and a short description.
+    </div>
+  </div>
+</figure>
+
+
     </div>
   </section>
 
@@ -78,9 +161,10 @@
     <div class="container centered">
       <h2>Aim & Objectives</h2>
       <p class="text-muted">
-        <strong>Road Safety — Drug Testing</strong> tracks multi-year patterns (tests conducted & % positive), compares
-        jurisdictions on population-adjusted rates, and outlines testing stages. Our aim: a friendly, credible snapshot
-        to guide enforcement and education resources.
+        <strong>Road Safety — Drug Testing Insights</strong> aims to present clear, data-driven findings based on five
+  core research questions. Using multi-year drug test data, we identify trends in positive detections (2008–2024),
+  compare jurisdictions, examine detection methods, analyse enforcement actions, and highlight age groups with the
+  highest positive results. All visuals are generated from the cleaned datasets (Chart 1.csv to Chart 5.csv).
       </p>
       <div class="cta">
         <a class="btn btn--brand" href="#explore">Explore Visuals</a>
@@ -96,19 +180,21 @@
           <h3>Explore the Visuals</h3>
           <p class="text-muted">Browse five tidy chart pages. Each is lightweight (HTML + CSS) and ready for your exported figures.</p>
           <div class="btn-group" role="group" aria-label="Charts">
-            <a class="btn btn--brand" href="chart-1.html">Chart 1 · Tests vs % Positive</a>
-            <a class="btn" href="chart-2.html">Chart 2 · Positives by Jurisdiction</a>
-            <a class="btn" href="chart-3.html">Chart 3 · Tests per 10,000 Licences</a>
-            <a class="btn" href="chart-4.html">Chart 4 · Testing Stages</a>
-            <a class="btn" href="chart-5.html">Chart 5 · KPIs & Notes</a>
-          </div>
+  <a class="btn btn--brand" href="chart-1.html">Chart 1 · Positive Detections (2008–2024)</a>
+  <a class="btn" href="chart-2.html">Chart 2 · Jurisdiction Rates Over Time</a>
+  <a class="btn" href="chart-3.html">Chart 3 · Detection Method Comparison (2024)</a>
+  <a class="btn" href="chart-4.html">Chart 4 · Enforcement Actions by Jurisdiction</a>
+  <a class="btn" href="chart-5.html">Chart 5 · Positive Detections by Age Group (2024)</a>
+</div>
+
         </div>
         <aside class="card" aria-labelledby="quickfacts-title">
           <h3 id="quickfacts-title" style="margin-bottom:6px">Quick facts</h3>
           <ul class="list">
-            <li>Mobile-first responsive layout</li>
-            <li>Alt text & short chart summaries</li>
-            <li>Consistent colours and spacing</li>
+            <li>Data covers 2008–2024 positive drug test trends.</li>
+    <li>Jurisdiction rates based on population-adjusted metrics.</li>
+    <li>Detection methods, enforcement actions, and age groups analysed using 2024 data.</li>
+    <li>All visuals generated from cleaned Chart 1–5 datasets.</li>
           </ul>
         </aside>
       </div>
@@ -125,7 +211,7 @@
           <div>
             <strong>Ivy Lim</strong><br />
             <small>Data wrangling & analysis</small><br />
-            <a href="mailto:tan@example.com">tan@example.com</a>
+            <a href="mailto:tan@example.com">Lim@example.com</a>
           </div>
         </div>
         <div class="member">
@@ -133,7 +219,7 @@
           <div>
             <strong>Selina Chang</strong><br />
             <small>Frontend & UX</small><br />
-            <a href="mailto:jia@example.com">jia@example.com</a>
+            <a href="mailto:jia@example.com">Chang@example.com</a>
           </div>
         </div>
       </div>
@@ -146,9 +232,12 @@
       <h2>Sources & Notes</h2>
       <p class="text-muted">Cite official road-safety datasets (transport departments, police reports) and add methodology/definitions.</p>
       <ul class="list" style="display:inline-block; text-align:left; margin-top:12px;">
-        <li>Dataset A — jurisdiction-level drug test counts and positive results</li>
-        <li>Dataset B — licensing population by jurisdiction (for per-10,000 rates)</li>
-        <li>Method notes — exclusions, definitions, and data collection periods</li>
+        <li>police_enforcement_2024_positive_drug_tests.csv — main dataset for detection methods, age groups, and enforcement actions</li>
+  <li>Chart 1.csv — yearly positive drug test counts (2008–2024)</li>
+  <li>Chart 2.csv — jurisdiction positive detection rates</li>
+  <li>Chart 3.csv — positive detections by detection method (2024)</li>
+  <li>Chart 4.csv — fines, arrests, and charges across jurisdictions</li>
+  <li>Chart 5.csv — positive detections by age group (2024)</li>
       </ul>
     </div>
   </section>
@@ -158,10 +247,79 @@
     <div class="container footer">
       <div>© <span id="year"></span> Road Safety</div>
       <div>
-        <a href="#sources">Attributions</a> · <a href="#explore">Charts</a>
+      <a href="#explore">Charts</a>
       </div>
     </div>
   </footer>
   <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+
+  <!-- Scroll Buttons -->
+<button id="toTop" class="scroll-btn">↑</button>
+<button id="toBottom" class="scroll-btn">↓</button>
+
+<script>
+  const toTop = document.getElementById("toTop");
+  const toBottom = document.getElementById("toBottom");
+
+  // Show/hide buttons on scroll
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      toTop.classList.add("show");
+    } else {
+      toTop.classList.remove("show");
+    }
+
+    if (window.scrollY < 200) {
+      toBottom.classList.add("show");
+    } else {
+      toBottom.classList.remove("show");
+    }
+  });
+
+  // Scroll to top
+  toTop.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // Scroll to bottom
+  toBottom.addEventListener("click", () => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+  });
+</script>
+
+<script>
+  (function () {
+    const labelEl = document.getElementById('map-label');
+    const states = document.querySelectorAll('.aus-map .state');
+    if (!labelEl || !states.length) return;
+
+    const defaultText = 'Hover over a state or territory to see its name and a short description.';
+
+    states.forEach((state) => {
+      const name = state.getAttribute('data-name') || 'Unknown jurisdiction';
+      const info = state.getAttribute('data-info') || '';
+
+      state.addEventListener('mouseenter', () => {
+        states.forEach(s => s.classList.remove('is-active'));
+        state.classList.add('is-active');
+
+        if (info) {
+          labelEl.innerHTML = '<strong>' + name + ':</strong> ' + info;
+        } else {
+          labelEl.innerHTML = '<strong>' + name + '</strong>';
+        }
+      });
+
+      state.addEventListener('mouseleave', () => {
+        state.classList.remove('is-active');
+        labelEl.textContent = defaultText;
+      });
+    });
+  })();
+</script>
+
+
+
 </body>
 </html>
