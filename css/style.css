@@ -140,11 +140,35 @@ p{margin:.5rem 0 0; line-height:1.65;}
   border-color:var(--accent-light);
 }
 
+/* Generic button group (used in other places) */
 .btn-group{
   margin-top:1rem; 
   display:flex; 
   gap:10px; 
   flex-wrap:wrap;
+}
+
+/* Neater layout for the Explore section buttons */
+#explore .btn-group {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+/* Make each Explore button fill its grid cell and align text nicely */
+#explore .btn-group .btn {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  border-radius: 999px;          /* pill shape */
+}
+
+/* Make non-primary Explore buttons look soft but clickable */
+#explore .btn-group .btn:not(.btn--brand) {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .cta{margin-top:1.5rem;}
@@ -469,7 +493,6 @@ footer{
   margin: 32px auto 56px;                     /* center and give breathing room */
 }
 
-
 .chart-figure{
   position: relative;
   background: var(--bg-white);
@@ -502,7 +525,6 @@ footer{
   box-shadow: var(--shadow);
   padding: 1.5rem 1.75rem;
 }
-
 
 .notes h3{
   margin-bottom:.75rem;
@@ -540,7 +562,6 @@ footer{
   fill: var(--text-dark);
   font-weight: 500;
 }
-
 
 .chart-img{
   width:100%; 
@@ -588,7 +609,6 @@ footer{
 }
 
 /* Hero KPI cards for Chart 2 */
-
 .kpi-grid-hero {
   max-width: 820px;
   margin: 32px auto 28px;
@@ -746,6 +766,125 @@ footer{
     transition-duration:0.01ms !important;
   }
 }
+
 /* Allow clicks to pass through the hero overlay */
 .hero::before,
 .hero::after { pointer-events: none; }
+
+
+/* Floating scroll buttons */
+.scroll-btn {
+  position: fixed;
+  right: 22px;
+  z-index: 999;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-size: 1.25rem;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    opacity 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.25s ease;
+}
+
+/* Top button */
+#toTop {
+  bottom: 90px;
+}
+
+/* Bottom button */
+#toBottom {
+  bottom: 30px;
+}
+
+/* Show state */
+.scroll-btn.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Hover – brighter + lifted */
+.scroll-btn.show:hover {
+  background: linear-gradient(135deg, var(--accent-light), var(--accent-2));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Active (when clicked) – subtle press down */
+.scroll-btn.show:active {
+  transform: translateY(0) scale(0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+/* Keyboard focus ring */
+.scroll-btn.show:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.7), var(--shadow-md);
+}
+
+.aus-map-wrapper {
+  width: 100%;
+  max-width: 360px;
+}
+
+.aus-map {
+  width: 100%;
+  height: auto;
+}
+
+/* Base style for all states */
+.aus-map .state rect {
+  stroke: #0f766e;
+  stroke-width: 1.6;
+  transition: fill 0.2s ease, stroke 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.aus-map .state text {
+  fill: #0f766e;
+  font-size: 12px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+/* Pastel colours per state (similar to the reference map) */
+.state--wa rect  { fill: #f9c;          /* soft pink */      }
+.state--nt rect  { fill: #a7f3d0;      /* mint green */     }
+.state--sa rect  { fill: #fed7aa;      /* peach */          }
+.state--qld rect { fill: #bbf7d0;      /* light green */    }
+.state--nsw rect { fill: #bfdbfe;      /* pale blue */      }
+.state--vic rect { fill: #ddd6fe;      /* soft purple */    }
+.state--tas rect { fill: #fecaca;      /* soft red */       }
+.state--act rect { fill: #e5e7eb;      /* neutral grey */   }
+
+/* Hover / active highlight */
+.aus-map .state.is-active rect,
+.aus-map .state:hover rect {
+  transform: translateY(-2px);
+  stroke: #047857;
+  fill-opacity: 0.95;
+}
+
+/* Label under map */
+.map-label {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-body);
+  line-height: 1.5;
+}
+
+.map-label strong {
+  color: #047857;
+}
