@@ -587,6 +587,24 @@ footer{
   color:var(--accent);
 }
 
+/* Hero KPI cards for Chart 2 */
+
+.kpi-grid-hero {
+  max-width: 820px;
+  margin: 32px auto 28px;
+}
+
+.hero .kpi {
+  box-shadow: var(--shadow-md);
+}
+
+.kpi-sub {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
 .table-wrap{
   background:var(--bg-white); 
   border:1px solid var(--border); 

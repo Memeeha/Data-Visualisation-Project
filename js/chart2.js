@@ -28,6 +28,41 @@ function createTooltip2() {
     .style("z-index", 9999);
 }
 
+// === KPI STATISTICS ===
+function generateKPISection(data) {
+  // compute highest, lowest, and total
+  const sorted = [...data].sort((a, b) => d3.descending(a.value, b.value));
+
+  const highest = sorted[0];
+  const lowest  = sorted[sorted.length - 1];
+  const total   = d3.sum(sorted, d => d.value);
+
+  // build HTML dynamically
+  const kpiContainer = document.getElementById("kpi2");
+  if (!kpiContainer) return;
+
+  kpiContainer.innerHTML = `
+    <div class="kpi">
+      <h3>HIGHEST JURISDICTION</h3>
+      <p>${highest.jurisdiction}</p>
+      <span class="kpi-sub">${highest.value.toLocaleString()} positive tests</span>
+    </div>
+
+    <div class="kpi">
+      <h3>LOWEST JURISDICTION</h3>
+      <p>${lowest.jurisdiction}</p>
+      <span class="kpi-sub">${lowest.value.toLocaleString()} positive tests</span>
+    </div>
+
+    <div class="kpi">
+      <h3>TOTAL POSITIVE (2024)</h3>
+      <p>${total.toLocaleString()}</p>
+      <span class="kpi-sub">National total</span>
+    </div>
+  `;
+}
+
+
 function renderChart2() {
   const container = document.getElementById("chart2");
   if (!container) return;
@@ -80,6 +115,9 @@ function renderChart2() {
 
     // sort descending (highest positive tests first)
     data.sort((a, b) => d3.descending(a.value, b.value));
+
+    // ⭐ NEW: generate KPI cards from the same data
+    generateKPISection(data);
 
     // --- 3) Scales ---
     const x = d3.scaleBand()
