@@ -1,5 +1,7 @@
 // js/chart5.js
 
+let chart5Filter = "all"; // 'all' or a specific age group string
+
 document.addEventListener("DOMContentLoaded", () => {
   renderChart5();
   window.addEventListener("resize", renderChart5);
@@ -8,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
 function createTooltip5() {
   d3.selectAll(".chart-tooltip").remove();
 
-  return d3.select("body")
+  return d3
+    .select("body")
     .append("div")
     .attr("class", "chart-tooltip")
     .style("position", "absolute")
@@ -32,10 +35,10 @@ function generateKPI5(data) {
   const sorted = [...data].sort((a, b) => d3.descending(a.value, b.value));
   const highest = sorted[0];
   const lowest = sorted[sorted.length - 1];
-  const total   = d3.sum(sorted, d => d.value);
+  const total = d3.sum(sorted, d => d.value);
 
   const kpiContainer = document.getElementById("kpi5");
-  if (!kpiContainer) return;
+  if (!kpiContainer || !data.length) return;
 
   kpiContainer.innerHTML = `
     <div class="kpi">
@@ -53,9 +56,54 @@ function generateKPI5(data) {
     <div class="kpi">
       <h3>TOTAL POSITIVES (2024)</h3>
       <p>${total.toLocaleString()}</p>
-      <span class="kpi-sub">All age groups</span>
+      <span class="kpi-sub">${
+        chart5Filter === "all" ? "All age groups" : "Filtered age groups"
+      }</span>
     </div>
   `;
+}
+
+// Build / rebuild age filter pills based on available groups
+function buildAgeFilter5(ageGroups) {
+  const container = document.getElementById("ageFilter5");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const makePill = (label, value) => {
+    const btn = document.createElement("button");
+    btn.className = "age-pill";
+    btn.dataset.value = value;
+    btn.textContent = label;
+
+    if (
+      (value === "all" && chart5Filter === "all") ||
+      (value !== "all" && chart5Filter === value)
+    ) {
+      btn.classList.add("is-active");
+    }
+
+    btn.addEventListener("click", () => {
+      chart5Filter = value;
+      // update active states
+      container.querySelectorAll(".age-pill").forEach(pill => {
+        const v = pill.dataset.value;
+        const active =
+          (v === "all" && chart5Filter === "all") ||
+          (v !== "all" && chart5Filter === v);
+        pill.classList.toggle("is-active", active);
+      });
+      renderChart5();
+    });
+
+    container.appendChild(btn);
+  };
+
+  // "All" pill
+  makePill("All age groups", "all");
+
+  // One pill per age group (keep original order)
+  ageGroups.forEach(g => makePill(g, g));
 }
 
 function renderChart5() {
@@ -65,19 +113,21 @@ function renderChart5() {
   container.innerHTML = "";
 
   const margin = { top: 30, right: 20, bottom: 70, left: 80 };
-  const width  = container.clientWidth || 720;
+  const width = container.clientWidth || 720;
   const height = 360;
 
-  const svg = d3.select(container)
+  const svg = d3
+    .select(container)
     .append("svg")
     .attr("class", "svg-frame")
     .attr("viewBox", `0 0 ${width} ${height}`)
     .attr("preserveAspectRatio", "xMidYMid meet");
 
-  const innerWidth  = width  - margin.left - margin.right;
-  const innerHeight = height - margin.top  - margin.bottom;
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
 
-  const g = svg.append("g")
+  const g = svg
+    .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
   const tooltip = createTooltip5();
@@ -88,32 +138,62 @@ function renderChart5() {
       return;
     }
 
-    const data = raw.map(d => ({
+    // Base data from CSV
+    const baseData = raw.map(d => ({
       ageGroup: d.AGE_GROUP,
       value: +d["Sum(COUNT)"] || 0
     }));
 
-    // sort descending by count (highest bar first)
+    const allGroups = baseData.map(d => d.ageGroup);
+    buildAgeFilter5(allGroups);
+
+    // Apply filter
+    let data =
+      chart5Filter === "all"
+        ? baseData
+        : baseData.filter(d => d.ageGroup === chart5Filter);
+
+    if (!data.length) return;
+
+    // Sort visible data by value (highest first)
     data.sort((a, b) => d3.descending(a.value, b.value));
 
-    // generate KPI cards in hero
+    // KPIs reflect current filtered view
     generateKPI5(data);
 
-    const x = d3.scaleBand()
+    const x = d3
+      .scaleBand()
       .domain(data.map(d => d.ageGroup))
       .range([0, innerWidth])
       .padding(0.25);
 
-    const y = d3.scaleLinear()
+    const y = d3
+      .scaleLinear()
       .domain([0, d3.max(data, d => d.value) * 1.1])
       .nice()
       .range([innerHeight, 0]);
+
+    // Multi-colour scale for age groups
+    const colorScale = d3
+      .scaleOrdinal()
+      .domain(allGroups) // keep consistent colours even when filtered
+      .range([
+        "#60a5fa", // Light Blue
+        "#3b82f6", // Blue
+        "#2563eb", // Deep Blue
+        "#10b981", // Green
+        "#34d399", // Light Green
+        "#0ea5e9", // Cyan
+        "#6366f1", // Indigo
+        "#7c3aed" // Violet
+      ]);
 
     // grid
     g.append("g")
       .attr("class", "grid")
       .call(
-        d3.axisLeft(y)
+        d3
+          .axisLeft(y)
           .ticks(5)
           .tickSize(-innerWidth)
           .tickFormat("")
@@ -125,16 +205,17 @@ function renderChart5() {
       .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(",")));
 
     // x-axis
-    const xAxis = g.append("g")
+    const xAxis = g
+      .append("g")
       .attr("class", "axis")
       .attr("transform", `translate(0,${innerHeight})`)
       .call(d3.axisBottom(x));
 
-    xAxis.selectAll("text")
-      .attr("dy", "1em");
+    xAxis.selectAll("text").attr("dy", "1em");
 
     // bars
-    const bars = g.selectAll(".bar")
+    const bars = g
+      .selectAll(".bar")
       .data(data)
       .enter()
       .append("rect")
@@ -143,17 +224,19 @@ function renderChart5() {
       .attr("width", x.bandwidth())
       .attr("y", innerHeight)
       .attr("height", 0)
-      .attr("fill", "#6366f1")
+      .attr("fill", d => colorScale(d.ageGroup))
       .attr("rx", 8);
 
-    bars.transition()
+    bars
+      .transition()
       .duration(900)
       .delay((d, i) => i * 80)
       .attr("y", d => y(d.value))
       .attr("height", d => innerHeight - y(d.value));
 
     // labels above bars
-    g.selectAll(".bar-label")
+    g
+      .selectAll(".bar-label")
       .data(data)
       .enter()
       .append("text")
@@ -167,10 +250,14 @@ function renderChart5() {
 
     // hover interactions
     bars
-      .on("mouseenter", function(event, d) {
+      .on("mouseenter", function (event, d) {
+        const baseColor = d3.color(colorScale(d.ageGroup));
+        const hoverColor = baseColor ? baseColor.darker(1) : "#4f46e5";
+
         d3.select(this)
-          .transition().duration(150)
-          .attr("fill", "#4f46e5")
+          .transition()
+          .duration(150)
+          .attr("fill", hoverColor)
           .attr("y", y(d.value) - 4)
           .attr("height", innerHeight - y(d.value) + 4);
 
@@ -180,7 +267,7 @@ function renderChart5() {
             <div style="font-size:14px; font-weight:600; margin-bottom:4px;">
               ${d.ageGroup}
             </div>
-            <div style="color:#4f46e5; font-weight:600;">
+            <div style="color:${baseColor}; font-weight:600;">
               ${d.value.toLocaleString()} positive tests
             </div>
           `)
@@ -192,18 +279,20 @@ function renderChart5() {
           .style("left", event.pageX + 12 + "px")
           .style("top", event.pageY - 40 + "px");
       })
-      .on("mouseleave", function(event, d) {
+      .on("mouseleave", function (event, d) {
         d3.select(this)
-          .transition().duration(150)
-          .attr("fill", "#6366f1")
-          .attr("y", y(d.value))
-          .attr("height", innerHeight - y(d.value));
+          .transition()
+          .duration(150)
+          .attr("fill", d => colorScale(d.ageGroup))
+          .attr("y", d => y(d.value))
+          .attr("height", d => innerHeight - y(d.value));
 
         tooltip.style("opacity", 0);
       });
 
     // axis labels
-    g.append("text")
+    g
+      .append("text")
       .attr("x", innerWidth / 2)
       .attr("y", innerHeight + 55)
       .attr("text-anchor", "middle")
@@ -211,7 +300,8 @@ function renderChart5() {
       .attr("font-size", 12)
       .text("Age group");
 
-    g.append("text")
+    g
+      .append("text")
       .attr("x", -innerHeight / 2)
       .attr("y", -60)
       .attr("text-anchor", "middle")
