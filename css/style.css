@@ -249,7 +249,7 @@ p{margin:.5rem 0 0; line-height:1.65;}
   width:100%;
 }
 
-/* no breakpoint hiding nav links – always visible */
+
 
 /* ------  Hero Section ------ */
 .hero{
@@ -260,7 +260,7 @@ p{margin:.5rem 0 0; line-height:1.65;}
   overflow:hidden;
   background:linear-gradient(135deg,#6366f1 0%, #3b82f6 50%, #10b981 100%);
   
-  /* fill screen height (minus sticky nav) on landing page */
+ 
   min-height: calc(100vh - 60px);
   display:flex;
   align-items:center;
@@ -576,10 +576,10 @@ footer{
   padding: 1.5rem;
   border-radius: var(--radius-xl, 20px);
   box-shadow: var(--shadow, 0 18px 45px rgba(15,23,42,0.10));
-  overflow: visible;             /* allow dropdown to hang outside */
+  overflow: visible;             
 }
 
-/* Container that holds slider + year chip + "All years" button */
+
 .chart2-filter {
   display: flex;
   flex-direction: column;
@@ -596,10 +596,10 @@ footer{
   position: relative;
 }
 
-/* Wrapper so dropdown can position relative to the chip */
+
 .year-dropdown-wrapper {
   position: relative;
-  z-index: 20;                   /* keep above chart */
+  z-index: 20;                   
 }
 
 /* ----------------
@@ -653,7 +653,7 @@ footer{
 .year-slider::-moz-range-track {
   height: 6px;
   border-radius: 4px;
-  background: transparent;        /* gradient set inline by JS */
+  background: transparent;        
 }
 
 /* ---------------
@@ -757,7 +757,7 @@ footer{
    RESPONSIVE BEHAVIOUR
    ========================= */
 
-/* Tablet and below – full width filter */
+
 @media (max-width: 1024px) {
   .chart2-filter {
     max-width: 100%;
@@ -780,7 +780,7 @@ footer{
     width: 100%;
   }
 
-  /* Center dropdown under the chip and keep inside viewport */
+ 
   .year-dropdown {
     left: 50%;
     right: auto;
