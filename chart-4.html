@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Top nav -->
   <div class="nav">
     <div class="container nav__bar">
       <a class="brand" href="index.html">Road<span>Safety</span></a>
@@ -14,18 +15,19 @@
         <a href="chart-1.html">Chart 1</a>
         <a href="chart-2.html">Chart 2</a>
         <a href="chart-3.html">Chart 3</a>
-        <a href="chart-4.html">Chart 4</a>
+        <a href="chart-4.html" class="is-active">Chart 4</a>
         <a href="chart-5.html">Chart 5</a>
       </nav>
     </div>
   </div>
 
+  <!-- Hero -->
   <header class="hero chart-header">
     <div class="container centered">
       <h1>Enforcement actions across jurisdictions</h1>
       <p class="intro">
-        Compares how many fines, arrests, and charges were recorded for positive roadside drug tests
-        across each state and territory in 2008-2024.
+        Compares how many fines, arrests, and charges were recorded for positive roadside
+        drug tests, grouped by enforcement action type and coloured by jurisdiction.
       </p>
 
       <div class="pager">
@@ -35,24 +37,80 @@
     </div>
   </header>
 
+  <!-- Main section -->
   <section>
     <div class="container chart-grid">
       <figure class="chart-figure">
-        <figcaption class="kicker">Chart 4 · Fines, arrests, and charges by jurisdiction (2008-2024)</figcaption>
+        <figcaption class="kicker">
+          Chart 4 · Fines, arrests, and charges by jurisdiction (2008–2024 total)
+        </figcaption>
+
+        <!-- State filter controls -->
+        <div class="chart-controls-row">
+          <div class="chart-controls-left">
+            <span class="chart-label">State:</span>
+
+            <!-- clickable state chip -->
+            <button id="jurisValue4" type="button"
+                    class="year-bubble year-chip-btn juris-chip-btn">
+              All jurisdictions
+            </button>
+
+            <!-- Dropdown anchored directly under the state filter chip -->
+            <div class="juris-dropdown-wrapper"
+                 style="position: relative; display: inline-block;">
+
+              <div id="jurisDropdown4"
+                   class="juris-dropdown hidden"
+                   style="
+                     position: absolute;
+                     top: 48px;          /* distance below the chip */
+                     left: 0;            /* align left edge with the chip */
+                     z-index: 9999;
+                   ">
+
+                <button class="juris-option4" data-juris="all">
+                  All jurisdictions
+                </button>
+
+                <div class="juris-grid">
+                  <button class="juris-option4" data-juris="NSW">NSW</button>
+                  <button class="juris-option4" data-juris="QLD">QLD</button>
+                  <button class="juris-option4" data-juris="WA">WA</button>
+                  <button class="juris-option4" data-juris="SA">SA</button>
+                  <button class="juris-option4" data-juris="VIC">VIC</button>
+                  <button class="juris-option4" data-juris="TAS">TAS</button>
+                  <button class="juris-option4" data-juris="NT">NT</button>
+                  <button class="juris-option4" data-juris="ACT">ACT</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- external reset button -->
+            <button id="jurisReset4" type="button"
+                    class="btn btn--ghost btn--pill"
+                    style="margin-left: 12px;">
+              All jurisdictions
+            </button>
+          </div>
+        </div>
+
+        <!-- Chart container -->
         <div id="chart4"></div>
       </figure>
 
       <aside class="notes">
-        <h3>Notes & Insights</h3>
+        <h3>Notes &amp; Insights</h3>
         <ul class="list">
-          <li>Each cluster of bars shows how enforcement outcomes differ by jurisdiction for positive drug tests.</li>
-          <li>Fines and charges generally make up the majority of actions, with arrests applied more selectively.</li>
-          <li>This helps highlight where enforcement is more punitive (charges) versus monetary (fines).</li>
+          <li>Each cluster shows fines, arrests, and charges, coloured by jurisdiction.</li>
+          <li>Filtering by state helps compare how one jurisdiction’s enforcement mix differs from the national pattern.</li>
+          <li>The totals represent the full 2008–2024 period of roadside drug-test enforcement data.</li>
         </ul>
       </aside>
     </div>
   </section>
 
+  <!-- Footer -->
   <footer>
     <div class="container footer">
       <div>© <span id="year4"></span> Road Safety</div>
