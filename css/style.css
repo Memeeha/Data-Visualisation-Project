@@ -501,7 +501,7 @@ footer{
   padding:clamp(50px,8vw,65px) 0 clamp(60px,10vw,75px);
 }
 
-/* chart headers should not be forced to full viewport height */
+
 .hero.chart-header{
   min-height:auto;
   display:block;
@@ -564,6 +564,255 @@ footer{
   justify-content:center; 
   flex-wrap:wrap; 
   margin-top:1.5rem;
+}
+
+/* =========================
+   CHART 2 – CARD + CONTROLS
+   ========================= */
+
+/* Chart card */
+.chart-figure {
+  background: var(--card-bg, #f9fafb);
+  padding: 1.5rem;
+  border-radius: var(--radius-xl, 20px);
+  box-shadow: var(--shadow, 0 18px 45px rgba(15,23,42,0.10));
+  overflow: visible;             /* allow dropdown to hang outside */
+}
+
+/* Container that holds slider + year chip + "All years" button */
+.chart2-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Top row: label + chip */
+.chart-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  position: relative;
+}
+
+/* Wrapper so dropdown can position relative to the chip */
+.year-dropdown-wrapper {
+  position: relative;
+  z-index: 20;                   /* keep above chart */
+}
+
+/* ----------------
+   Slider styling
+   ---------------- */
+
+.year-slider {
+  width: 100%;
+  margin-top: 6px;
+  appearance: none;
+  height: 6px;
+  border-radius: 4px;
+  background: linear-gradient(90deg,#6366f1,#10b981);
+  outline: none;
+  cursor: pointer;
+}
+
+/* WebKit thumb */
+.year-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--accent, #6366f1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.year-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* Firefox thumb */
+.year-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--accent, #6366f1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.year-slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+
+.year-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 4px;
+  background: transparent;        /* gradient set inline by JS */
+}
+
+/* ---------------
+   Year chip (button)
+   --------------- */
+
+.year-bubble {
+  font-weight: 600;
+  color: #0f172a;
+  background: #e2e8f0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm, 0 2px 5px rgba(15,23,42,0.08));
+  font-size: 0.9rem;
+}
+
+.year-chip-btn {
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.year-chip-btn:hover {
+  background: #d8dee6;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transform: translateY(-1px);
+}
+
+/* "Show all years" button row */
+.chart2-actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* ---------------
+   Dropdown menu
+   --------------- */
+
+.year-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 170px;
+  max-height: 260px;
+  overflow-y: auto;
+
+  background: #ffffff;
+  border: 1px solid #d0d7e2;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  z-index: 30;
+}
+
+.year-dropdown.hidden {
+  display: none;
+}
+
+.year-dropdown .year-option2:first-child {
+  font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 4px;
+}
+
+/* Years laid out in small grid inside dropdown */
+.year-dropdown .year-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.year-option2 {
+  display: block;
+  width: 100%;
+  padding: 6px 10px;
+  margin: 2px 0;
+
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  color: #0f172a;
+  font-size: 0.85rem;
+}
+
+.year-option2:hover {
+  background: #e8eef7;
+}
+
+/* =========================
+   RESPONSIVE BEHAVIOUR
+   ========================= */
+
+/* Tablet and below – full width filter */
+@media (max-width: 1024px) {
+  .chart2-filter {
+    max-width: 100%;
+  }
+}
+
+/* Small screens / half window */
+@media (max-width: 768px) {
+  .chart-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .chart2-actions {
+    justify-content: flex-start;
+  }
+
+  .year-dropdown-wrapper {
+    width: 100%;
+  }
+
+  /* Center dropdown under the chip and keep inside viewport */
+  .year-dropdown {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(260px, 90vw);
+  }
+}
+
+
+
+/* Age-group filter pills for Chart 5 */
+.age-filter {
+  margin-bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.age-pill {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: var(--text-body);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease, transform 0.1s ease;
+}
+
+.age-pill:hover {
+  background: var(--bg-soft);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.age-pill.is-active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: var(--shadow);
 }
 
 /* SVG Charts */
