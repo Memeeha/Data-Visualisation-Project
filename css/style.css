@@ -1022,6 +1022,106 @@ footer{
   }
 }
 
+
+/* === Chart 4 state controls === */
+
+.chart-controls-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 8px 0 18px;
+  gap: 12px;
+}
+
+
+.chart-controls-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;   
+}
+
+
+.chart-label {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.juris-chip-btn {
+  font-size: 0.9rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+#jurisReset4 {
+  margin-left: 6px;
+  margin-top: 4px;  
+}
+
+.juris-dropdown-wrapper {
+  position: relative;
+  display: inline-block;  
+}
+
+
+.juris-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 1px solid #d0d7e2;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+  z-index: 9000;
+  min-width: 240px;
+}
+
+
+.juris-dropdown.hidden {
+  display: none;
+}
+
+
+.juris-dropdown > .juris-option4:first-child {
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+
+.juris-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.juris-option4 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  color: #0f172a;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.juris-option4:hover {
+  background: #e5edff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+}
+
+
+.btn--pill {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  line-height: 1.1;
+}
+
+
 /* ------ Accessibility ------ */
 :focus-visible{
   outline:2px solid var(--accent); 
