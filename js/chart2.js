@@ -1,15 +1,453 @@
 // js/chart2.js
 
+// ---------- Global config & state ----------
+const YEAR_MIN_2 = 2008;
+const YEAR_MAX_2 = 2024;
+
+// "all" = total 2008–2024, or a specific year number
+let currentYear2 = "all";
+let cachedAgg2 = null;
+let chart2Width = null;
+
+// ---------- DOM ready ----------
 document.addEventListener("DOMContentLoaded", () => {
+  initYearControls2();    // slider + label + pills
+  initYearDropdown2();    // clickable year chip + dropdown
   renderChart2();
-  window.addEventListener("resize", renderChart2);
+
+  window.addEventListener("resize", () => {
+    renderChart2();
+  });
 });
 
+// ---------- CLICKABLE YEAR CHIP + DROPDOWN ----------
+function initYearDropdown2() {
+  const yearChipBtn = document.getElementById("yearValue2");
+  const dropdown = document.getElementById("yearDropdown2");
+  const slider = document.getElementById("yearSlider2");
+
+  if (!yearChipBtn || !dropdown || !slider) return;
+
+  // Toggle dropdown open/close
+  yearChipBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle("hidden");
+  });
+
+  // Apply year when user clicks a dropdown option
+  dropdown.querySelectorAll(".year-option2").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const selected = btn.dataset.year;
+
+      if (selected === "all") {
+        currentYear2 = "all";
+        yearChipBtn.textContent = "All (2008–2024)";
+        slider.value = YEAR_MAX_2;
+      } else {
+        currentYear2 = Number(selected);
+        yearChipBtn.textContent = selected;
+        slider.value = selected;
+      }
+
+      dropdown.classList.add("hidden");
+      renderChart2();
+    });
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", () => {
+    dropdown.classList.add("hidden");
+  });
+}
+
+// ---------- UI controls: slider + pills ----------
+function initYearControls2() {
+  const slider = document.getElementById("yearSlider2");
+  const yearChip = document.getElementById("yearValue2");
+  const allBtn = document.getElementById("yearAllBtn2");
+  const pills = document.querySelectorAll(".year-pill2"); // you can add pills later
+
+  if (!slider || !yearChip) return;
+
+  slider.min = YEAR_MIN_2;
+  slider.max = YEAR_MAX_2;
+  slider.step = 1;
+  slider.value = YEAR_MAX_2;
+
+  // Helper: update slider gradient
+  const updateSliderGradient = () => {
+    const min = Number(slider.min);
+    const max = Number(slider.max);
+    const val =
+      currentYear2 === "all" ? max : Number(currentYear2 || slider.value);
+    const pct = ((val - min) / (max - min)) * 100;
+
+    slider.style.background = `linear-gradient(
+      90deg,
+      var(--accent) 0%,
+      var(--accent-2) ${pct}%,
+      #e5e7eb ${pct}%,
+      #e5e7eb 100%
+    )`;
+  };
+
+  // Helper: update active pill highlight
+  const updatePillActive = () => {
+    pills.forEach((pill) => {
+      const y = pill.dataset.year;
+      const active =
+        (currentYear2 === "all" && y === "all") ||
+        (currentYear2 !== "all" && Number(y) === Number(currentYear2));
+      pill.classList.toggle("is-active", active);
+    });
+  };
+
+  // Helper: set label text
+  const updateLabel = () => {
+    if (currentYear2 === "all") {
+      yearChip.textContent = "All (2008–2024)";
+    } else {
+      yearChip.textContent = currentYear2;
+    }
+  };
+
+  // Slider drag
+  slider.addEventListener("input", () => {
+    currentYear2 = Number(slider.value);
+    updateLabel();
+    updateSliderGradient();
+    updatePillActive();
+    renderChart2();
+  });
+
+  // All years button (also can be styled as a pill)
+  if (allBtn) {
+    allBtn.dataset.year = "all";
+    allBtn.addEventListener("click", () => {
+      currentYear2 = "all";
+      slider.value = YEAR_MAX_2;
+      updateLabel();
+      updateSliderGradient();
+      updatePillActive();
+      renderChart2();
+    });
+  }
+
+  // Clickable year pills (optional extra shortcuts)
+  pills.forEach((pill) => {
+    pill.addEventListener("click", () => {
+      const y = pill.dataset.year;
+      if (y === "all") {
+        currentYear2 = "all";
+        slider.value = YEAR_MAX_2;
+      } else {
+        currentYear2 = Number(y);
+        slider.value = currentYear2;
+      }
+      updateLabel();
+      updateSliderGradient();
+      updatePillActive();
+      renderChart2();
+    });
+  });
+
+  // Initial visuals
+  updateLabel();
+  updateSliderGradient();
+  updatePillActive();
+}
+
+// ---------- Data loading & aggregation ----------
+function loadAndAggregate2() {
+  if (cachedAgg2) {
+    return Promise.resolve(cachedAgg2);
+  }
+
+  return d3
+    .csv("data/police_enforcement_2024_positive_drug_tests.csv")
+    .then((raw) => {
+      const agg = {}; // agg[year][jurisdiction] = sum
+
+      raw.forEach((d) => {
+        const year = +d.YEAR;
+        const metric = d.METRIC;
+        if (!year || metric !== "positive_drug_tests") return;
+
+        const j = d.JURISDICTION || "Unknown";
+        const v = +d.COUNT || 0;
+
+        if (!agg[year]) agg[year] = {};
+        if (!agg[year][j]) agg[year][j] = 0;
+        agg[year][j] += v;
+      });
+
+      cachedAgg2 = agg;
+      return agg;
+    });
+}
+
+// ---------- KPI cards ----------
+function generateKPISection2(data, yearLabel) {
+  const sorted = [...data].sort((a, b) => d3.descending(a.value, b.value));
+  const highest = sorted[0];
+  const lowest = sorted[sorted.length - 1];
+  const total = d3.sum(sorted, (d) => d.value);
+
+  const kpiContainer = document.getElementById("kpi2");
+  if (!kpiContainer) return;
+
+  kpiContainer.innerHTML = `
+    <div class="kpi">
+      <h3>HIGHEST JURISDICTION</h3>
+      <p>${highest.jurisdiction}</p>
+      <span class="kpi-sub">
+        ${highest.value.toLocaleString()} positive tests (${yearLabel})
+      </span>
+    </div>
+
+    <div class="kpi">
+      <h3>LOWEST JURISDICTION</h3>
+      <p>${lowest.jurisdiction}</p>
+      <span class="kpi-sub">
+        ${lowest.value.toLocaleString()} positive tests (${yearLabel})
+      </span>
+    </div>
+
+    <div class="kpi">
+      <h3>TOTAL POSITIVE</h3>
+      <p>${total.toLocaleString()}</p>
+      <span class="kpi-sub">${yearLabel}</span>
+    </div>
+  `;
+}
+
+// ---------- Main render ----------
+function renderChart2() {
+  const container = document.getElementById("chart2");
+  if (!container) return;
+
+  const newWidth = container.clientWidth;
+  container.innerHTML = ""; // clear previous chart
+  chart2Width = newWidth;
+
+  const margin = { top: 30, right: 24, bottom: 60, left: 80 };
+  const width = newWidth || 720;
+  const height = 380;
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  const svg = d3
+    .select(container)
+    .append("svg")
+    .attr("class", "svg-frame")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet");
+
+  const g = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const tooltip = createTooltip2();
+
+  loadAndAggregate2().then((agg) => {
+    let data = [];
+
+    if (currentYear2 === "all") {
+      // Sum across all years per jurisdiction
+      const totals = {};
+      Object.keys(agg).forEach((yearStr) => {
+        const yearData = agg[yearStr];
+        Object.keys(yearData).forEach((jur) => {
+          totals[jur] = (totals[jur] || 0) + yearData[jur];
+        });
+      });
+
+      data = Object.keys(totals).map((jur) => ({
+        jurisdiction: jur,
+        value: totals[jur],
+      }));
+    } else {
+      const yearData = agg[currentYear2] || {};
+      data = Object.keys(yearData).map((jur) => ({
+        jurisdiction: jur,
+        value: yearData[jur],
+      }));
+    }
+
+    if (!data.length) return;
+
+    data.sort((a, b) => d3.descending(a.value, b.value));
+
+    const yearLabel =
+      currentYear2 === "all"
+        ? "Total 2008–2024"
+        : `Year ${currentYear2}`;
+
+    generateKPISection2(data, yearLabel);
+
+    const x = d3
+      .scaleBand()
+      .domain(data.map((d) => d.jurisdiction))
+      .range([0, innerWidth])
+      .padding(0.25);
+
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(data, (d) => d.value) * 1.1])
+      .nice()
+      .range([innerHeight, 0]);
+
+    const colorScale = d3
+      .scaleOrdinal()
+      .domain(data.map((d) => d.jurisdiction))
+      .range([
+        "#60a5fa",
+        "#3b82f6",
+        "#2563eb",
+        "#10b981",
+        "#34d399",
+        "#0ea5e9",
+        "#6366f1",
+        "#7c3aed",
+      ]);
+
+    // Grid
+    g.append("g")
+      .attr("class", "grid")
+      .call(
+        d3
+          .axisLeft(y)
+          .ticks(5)
+          .tickSize(-innerWidth)
+          .tickFormat("")
+      );
+
+    // Y axis
+    g.append("g")
+      .attr("class", "axis")
+      .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(",")));
+
+    // X axis
+    g.append("g")
+      .attr("class", "axis")
+      .attr("transform", `translate(0,${innerHeight})`)
+      .call(d3.axisBottom(x));
+
+    // Bars
+    const bars = g
+      .selectAll(".bar")
+      .data(data, (d) => d.jurisdiction)
+      .enter()
+      .append("rect")
+      .attr("class", "bar")
+      .attr("x", (d) => x(d.jurisdiction))
+      .attr("width", x.bandwidth())
+      .attr("y", innerHeight)
+      .attr("height", 0)
+      .attr("fill", (d) => colorScale(d.jurisdiction))
+      .attr("rx", 6)
+      .attr("ry", 6);
+
+    bars
+      .transition()
+      .duration(900)
+      .delay((d, i) => i * 80)
+      .attr("y", (d) => y(d.value))
+      .attr("height", (d) => innerHeight - y(d.value));
+
+    // Value labels
+    g
+      .selectAll(".bar-label")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("class", "bar-label")
+      .attr("text-anchor", "middle")
+      .attr("x", (d) => x(d.jurisdiction) + x.bandwidth() / 2)
+      .attr("y", (d) => y(d.value) - 6)
+      .attr("fill", "#0f172a")
+      .attr("font-size", 11)
+      .text((d) => d3.format(",")(d.value));
+
+    // Tooltip interactions
+    bars
+      .on("mouseenter", function (event, d) {
+        const baseColor = d3.color(colorScale(d.jurisdiction));
+        const hoverColor = baseColor ? baseColor.darker(0.8) : "#1d4ed8";
+
+        d3.select(this)
+          .transition()
+          .duration(120)
+          .attr("fill", hoverColor)
+          .attr("y", y(d.value) - 4)
+          .attr("height", innerHeight - y(d.value) + 4);
+
+        tooltip
+          .style("opacity", 1)
+          .html(`
+            <div style="font-size:14px; font-weight:600; margin-bottom:4px;">
+              ${d.jurisdiction}
+            </div>
+            <div style="color:#1d4ed8; font-weight:600;">
+              ${d.value.toLocaleString()} positive tests
+              ${
+                currentYear2 === "all"
+                  ? "(2008–2024 total)"
+                  : "in " + currentYear2
+              }
+            </div>
+          `)
+          .style("left", event.pageX + 14 + "px")
+          .style("top", event.pageY - 40 + "px");
+      })
+      .on("mousemove", function (event) {
+        tooltip
+          .style("left", event.pageX + 14 + "px")
+          .style("top", event.pageY - 40 + "px");
+      })
+      .on("mouseleave", function () {
+        d3.select(this)
+          .transition()
+          .duration(120)
+          .attr("fill", (d) => colorScale(d.jurisdiction))
+          .attr("y", (d) => y(d.value))
+          .attr("height", (d) => innerHeight - y(d.value));
+
+        tooltip.style("opacity", 0);
+      });
+
+    // Axis labels
+    g
+      .append("text")
+      .attr("x", innerWidth / 2)
+      .attr("y", innerHeight + 44)
+      .attr("text-anchor", "middle")
+      .attr("fill", "#0f172a")
+      .attr("font-size", 12)
+      .text("Jurisdiction");
+
+    g
+      .append("text")
+      .attr("x", -innerHeight / 2)
+      .attr("y", -60)
+      .attr("text-anchor", "middle")
+      .attr("transform", "rotate(-90)")
+      .attr("fill", "#0f172a")
+      .attr("font-size", 12)
+      .text(
+        currentYear2 === "all"
+          ? "Total positive roadside drug tests (2008–2024)"
+          : `Positive roadside drug tests (${currentYear2})`
+      );
+  });
+}
+
+// ---------- Tooltip factory ----------
 function createTooltip2() {
-  // remove any existing tooltip (e.g., on resize)
   d3.selectAll(".chart-tooltip").remove();
 
-  return d3.select("body")
+  return d3
+    .select("body")
     .append("div")
     .attr("class", "chart-tooltip")
     .style("position", "absolute")
@@ -26,232 +464,4 @@ function createTooltip2() {
     .style("opacity", 0)
     .style("transition", "opacity 0.15s ease")
     .style("z-index", 9999);
-}
-
-// === KPI STATISTICS ===
-function generateKPISection(data) {
-  // compute highest, lowest, and total
-  const sorted = [...data].sort((a, b) => d3.descending(a.value, b.value));
-
-  const highest = sorted[0];
-  const lowest  = sorted[sorted.length - 1];
-  const total   = d3.sum(sorted, d => d.value);
-
-  // build HTML dynamically
-  const kpiContainer = document.getElementById("kpi2");
-  if (!kpiContainer) return;
-
-  kpiContainer.innerHTML = `
-    <div class="kpi">
-      <h3>HIGHEST JURISDICTION</h3>
-      <p>${highest.jurisdiction}</p>
-      <span class="kpi-sub">${highest.value.toLocaleString()} positive tests</span>
-    </div>
-
-    <div class="kpi">
-      <h3>LOWEST JURISDICTION</h3>
-      <p>${lowest.jurisdiction}</p>
-      <span class="kpi-sub">${lowest.value.toLocaleString()} positive tests</span>
-    </div>
-
-    <div class="kpi">
-      <h3>TOTAL POSITIVE (2024)</h3>
-      <p>${total.toLocaleString()}</p>
-      <span class="kpi-sub">National total</span>
-    </div>
-  `;
-}
-
-
-function renderChart2() {
-  const container = document.getElementById("chart2");
-  if (!container) return;
-
-  // clear on resize
-  container.innerHTML = "";
-
-  const margin = { top: 30, right: 24, bottom: 60, left: 80 };
-  const width  = container.clientWidth || 720;
-  const height = 380;
-
-  const svg = d3.select(container)
-    .append("svg")
-    .attr("class", "svg-frame")
-    .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("preserveAspectRatio", "xMidYMid meet");
-
-  const innerWidth  = width  - margin.left - margin.right;
-  const innerHeight = height - margin.top  - margin.bottom;
-
-  const g = svg.append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
-
-  const tooltip = createTooltip2();
-
-  d3.csv("data/police_enforcement_2024_positive_drug_tests.csv").then(raw => {
-    // --- 1) Filter for 2024 positive drug tests ---
-    const filtered = raw.filter(d => {
-      const year = +d.YEAR;
-      return year === 2024 && d.METRIC === "positive_drug_tests";
-    });
-
-    // --- 2) Aggregate COUNT by JURISDICTION ---
-    const totalsByJurisdiction = {};
-    filtered.forEach(d => {
-      const j = d.JURISDICTION || "Unknown";
-      const v = +d.COUNT || 0;
-      totalsByJurisdiction[j] = (totalsByJurisdiction[j] || 0) + v;
-    });
-
-    let data = Object.keys(totalsByJurisdiction).map(j => ({
-      jurisdiction: j,
-      value: totalsByJurisdiction[j]
-    }));
-
-    if (!data.length) {
-      console.warn("Chart2: no data for 2024");
-      return;
-    }
-
-    // sort descending (highest positive tests first)
-    data.sort((a, b) => d3.descending(a.value, b.value));
-
-    // ⭐ NEW: generate KPI cards from the same data
-    generateKPISection(data);
-
-    // --- 3) Scales ---
-    const x = d3.scaleBand()
-      .domain(data.map(d => d.jurisdiction))
-      .range([0, innerWidth])
-      .padding(0.25);
-
-    const y = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.value) * 1.1])
-      .nice()
-      .range([innerHeight, 0]);
-
-    // --- 3b) Colour scale – one colour per jurisdiction ---
-    const colorScale = d3.scaleOrdinal()
-      .domain(data.map(d => d.jurisdiction))
-      .range([
-        "#60a5fa",  // light blue
-        "#3b82f6",  // blue
-        "#2563eb",  // deep blue
-        "#10b981",  // green
-        "#34d399",  // light green
-        "#0ea5e9",  // cyan
-        "#6366f1",  // indigo
-        "#7c3aed"   // violet
-      ]);
-
-    // --- 4) Grid + axes ---
-    g.append("g")
-      .attr("class", "grid")
-      .call(
-        d3.axisLeft(y)
-          .ticks(5)
-          .tickSize(-innerWidth)
-          .tickFormat("")
-      );
-
-    g.append("g")
-      .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(",")));
-
-    g.append("g")
-      .attr("class", "axis")
-      .attr("transform", `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(x));
-
-    // --- 5) Bars with grow animation ---
-    const bars = g.selectAll(".bar")
-      .data(data, d => d.jurisdiction)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", d => x(d.jurisdiction))
-      .attr("width", x.bandwidth())
-      .attr("y", innerHeight)
-      .attr("height", 0)
-      .attr("fill", d => colorScale(d.jurisdiction))
-      .attr("rx", 6)
-      .attr("ry", 6);
-
-    bars.transition()
-      .duration(900)
-      .delay((d, i) => i * 80)
-      .attr("y", d => y(d.value))
-      .attr("height", d => innerHeight - y(d.value));
-
-    // --- 6) Value labels above each bar ---
-    g.selectAll(".bar-label")
-      .data(data)
-      .enter()
-      .append("text")
-      .attr("class", "bar-label")
-      .attr("text-anchor", "middle")
-      .attr("x", d => x(d.jurisdiction) + x.bandwidth() / 2)
-      .attr("y", d => y(d.value) - 6)
-      .attr("fill", "#0f172a")
-      .attr("font-size", 11)
-      .text(d => d3.format(",")(d.value));
-
-    // --- 7) Hover interaction + tooltip ---
-    bars
-      .on("mouseenter", function(event, d) {
-        const baseColor = d3.color(colorScale(d.jurisdiction));
-        const hoverColor = baseColor ? baseColor.darker(1) : "#1d4ed8";
-
-        d3.select(this)
-          .transition().duration(120)
-          .attr("fill", hoverColor)
-          .attr("y", y(d.value) - 4)
-          .attr("height", innerHeight - y(d.value) + 4);
-
-        tooltip
-          .style("opacity", 1)
-          .html(`
-            <div style="font-size:14px; font-weight:600; margin-bottom:4px;">
-              ${d.jurisdiction}
-            </div>
-            <div style="color:#1d4ed8; font-weight:600;">
-              ${d.value.toLocaleString()} positive tests in 2024
-            </div>
-          `)
-          .style("left", event.pageX + 14 + "px")
-          .style("top", event.pageY - 40 + "px");
-      })
-      .on("mousemove", function(event) {
-        tooltip
-          .style("left", event.pageX + 14 + "px")
-          .style("top", event.pageY - 40 + "px");
-      })
-      .on("mouseleave", function(event, d) {
-        d3.select(this)
-          .transition().duration(120)
-          .attr("fill", d => colorScale(d.jurisdiction))
-          .attr("y", y(d.value))
-          .attr("height", innerHeight - y(d.value));
-
-        tooltip.style("opacity", 0);
-      });
-
-    // --- 8) Axis labels ---
-    g.append("text")
-      .attr("x", innerWidth / 2)
-      .attr("y", innerHeight + 44)
-      .attr("text-anchor", "middle")
-      .attr("fill", "#0f172a")
-      .attr("font-size", 12)
-      .text("Jurisdiction");
-
-    g.append("text")
-      .attr("x", -innerHeight / 2)
-      .attr("y", -60)
-      .attr("text-anchor", "middle")
-      .attr("transform", "rotate(-90)")
-      .attr("fill", "#0f172a")
-      .attr("font-size", 12)
-      .text("Positive roadside drug tests (count), 2024");
-  });
 }
