@@ -6,13 +6,15 @@
   <title>Chart 2 — Positive Drug Test Rates by Jurisdiction</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
+  <!-- NAVBAR -->
   <div class="nav">
     <div class="container nav__bar">
       <a class="brand" href="index.html">Road<span>Safety</span></a>
       <nav class="nav__links">
         <a href="chart-1.html">Chart 1</a>
-        <a href="chart-2.html">Chart 2</a>
+        <a href="chart-2.html" class="active">Chart 2</a>
         <a href="chart-3.html">Chart 3</a>
         <a href="chart-4.html">Chart 4</a>
         <a href="chart-5.html">Chart 5</a>
@@ -20,11 +22,17 @@
     </div>
   </div>
 
+  <!-- HERO HEADER -->
   <header class="hero chart-header">
     <div class="container centered">
       <h1>Positive results by jurisdiction</h1>
-      <p class="intro"> This chart compares how each jurisdiction’s positive drug test rates have changed over time, highlighting which states consistently show higher or lower detection levels.</p>
+      <p class="intro">
+        This chart compares how each jurisdiction’s positive drug test rates have changed over time,
+        highlighting which states consistently show higher or lower detection levels.
+      </p>
+
       <div id="kpi2" class="kpi-grid kpi-grid-hero"></div>
+
       <div class="pager">
         <a class="btn btn--ghost" href="chart-1.html">← Previous</a>
         <a class="btn btn--brand" href="chart-3.html">Next →</a>
@@ -32,32 +40,115 @@
     </div>
   </header>
 
+  <!-- MAIN SECTION -->
   <section>
     <div class="container chart-grid">
+
       <figure class="chart-figure">
-        <figcaption class="kicker">Chart 2 · Jurisdictional Positive Drug Test Rates (2008–2024)</figcaption>
+  <figcaption class="kicker">
+    Chart 2 · Jurisdictional Positive Drug Test Rates (2008–2024)
+  </figcaption>
+
+  <!-- Filter panel -->
+  <div class="chart2-filter">
+    <!-- Top row: label + chip -->
+    <div class="chart-controls">
+      <span class="chart2-year-label">Year:</span>
+
+      <!-- clickable year chip -->
+      <button id="yearValue2" type="button"
+              class="year-bubble year-chip-btn">
+        All (2008–2024)
+      </button>
+
+      <!-- dropdown wrapper (anchored to chip) -->
+      <div class="year-dropdown-wrapper">
+        <div id="yearDropdown2" class="year-dropdown hidden">
+          <button class="year-option2" data-year="all">All (2008–2024)</button>
+          <div class="year-grid">
+            <button class="year-option2" data-year="2008">2008</button>
+            <button class="year-option2" data-year="2009">2009</button>
+            <button class="year-option2" data-year="2010">2010</button>
+            <button class="year-option2" data-year="2011">2011</button>
+            <button class="year-option2" data-year="2012">2012</button>
+            <button class="year-option2" data-year="2013">2013</button>
+            <button class="year-option2" data-year="2014">2014</button>
+            <button class="year-option2" data-year="2015">2015</button>
+            <button class="year-option2" data-year="2016">2016</button>
+            <button class="year-option2" data-year="2017">2017</button>
+            <button class="year-option2" data-year="2018">2018</button>
+            <button class="year-option2" data-year="2019">2019</button>
+            <button class="year-option2" data-year="2020">2020</button>
+            <button class="year-option2" data-year="2021">2021</button>
+            <button class="year-option2" data-year="2022">2022</button>
+            <button class="year-option2" data-year="2023">2023</button>
+            <button class="year-option2" data-year="2024">2024</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slider row -->
+    <div class="chart2-slider-row">
+      <input
+        type="range"
+        id="yearSlider2"
+        class="year-slider"
+        min="2008"
+        max="2024"
+        step="1"
+        value="2024"
+      />
+    </div>
+
+    <!-- “All years” button -->
+    <div class="chart2-actions">
+      <button id="yearAllBtn2" class="btn btn--ghost">
+        Show All Years (2008–2024)
+      </button>
+    </div>
+  </div>
+
+  <!-- Chart container -->
+  <div id="chart2"></div>
+</figure>
+
+
+        <!-- CHART AREA -->
         <div id="chart2"></div>
       </figure>
+
+      <!-- NOTES SECTION -->
       <aside class="notes">
         <h3>Notes & Insights</h3>
         <ul class="list">
-        <li>Higher rates often reflect larger testing programs, targeted police operations, or demographic factors.</li>
-        <li>Consistently low-rate jurisdictions may indicate smaller populations or less intensive testing.</li>
+          <li>Higher rates often reflect larger testing programs, targeted police operations, or demographic factors.</li>
+          <li>Consistently low-rate jurisdictions may indicate smaller populations or less intensive testing.</li>
         </ul>
       </aside>
+
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
     <div class="container footer">
       <div>© <span id="year2"></span> Road Safety</div>
-      <div class="page-dots"><a href="chart-1.html">1</a> · <a href="chart-2.html">2</a> · <a href="chart-3.html">3</a> · <a href="chart-4.html">4</a> · <a href="chart-5.html">5</a></div>
+      <div class="page-dots">
+        <a href="chart-1.html">1</a> ·
+        <a href="chart-2.html">2</a> ·
+        <a href="chart-3.html">3</a> ·
+        <a href="chart-4.html">4</a> ·
+        <a href="chart-5.html">5</a>
+      </div>
     </div>
   </footer>
-  <script>document.getElementById('year2').textContent = new Date().getFullYear();</script>
+
+  <script>
+    document.getElementById('year2').textContent = new Date().getFullYear();
+  </script>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/chart2.js"></script>
-
 </body>
 </html>
