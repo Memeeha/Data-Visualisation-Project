@@ -739,9 +739,18 @@ footer{
   color: #0f172a;
   font-size: 0.85rem;
 }
+.year-option2 {
+  font-weight: normal !important;
+}
 
 .year-option2:hover {
   background: #e8eef7;
+  font-weight: normal !important;
+}
+
+/* Remove bold from active dropdown option */
+.year-option2.is-active {
+  font-weight: normal !important; 
 }
 
 /* =========================
