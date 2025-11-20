@@ -37,7 +37,35 @@ function renderChart3() {
 
   const width  = container.clientWidth || 520;
   const height = 360;
-  const radius = Math.min(width, height) / 2 - 20;
+  const padding = 20;
+  const isWide = width > 640; // full / half screen handling
+
+  let centerX, centerY, radius, legendX, legendY;
+
+  if (isWide) {
+    // Legend on the left, pie on the right
+    const legendWidth = 220;
+    const pieAreaWidth = width - legendWidth - padding * 3;
+
+    radius = Math.min(pieAreaWidth, height - padding * 2) / 2;
+
+    centerX = legendWidth + padding * 2 + pieAreaWidth / 2;
+    centerY = height / 2;
+
+    legendX = padding * 1.5;
+    legendY = padding;
+  } else {
+    // Legend on top, pie in the middle
+    const verticalSpaceForLegend = 60;
+    radius = Math.min(width - padding * 2, height - verticalSpaceForLegend - padding * 2) / 2;
+
+    centerX = width / 2;
+    centerY = (height + verticalSpaceForLegend) / 2 + 10;
+
+    // roughly centre the legend
+    legendX = width / 2 - 90;
+    legendY = padding;
+  }
 
   const svg = d3.select(container)
     .append("svg")
@@ -46,7 +74,7 @@ function renderChart3() {
     .attr("preserveAspectRatio", "xMidYMid meet");
 
   const g = svg.append("g")
-    .attr("transform", `translate(${width / 2},${height / 2})`);
+    .attr("transform", `translate(${centerX},${centerY})`);
 
   const tooltip = createTooltip3();
 
@@ -152,7 +180,8 @@ function renderChart3() {
 
     // --- Legend in stage order ---
     const legend = svg.append("g")
-      .attr("transform", `translate(20, 20)`);
+      .attr("class", "chart3-legend")
+      .attr("transform", `translate(${legendX}, ${legendY})`);
 
     const legendItems = legend.selectAll(".legend-item")
       .data(data)
