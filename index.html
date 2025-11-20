@@ -68,87 +68,91 @@
           <a class="btn" href="#aim">Next ▶</a>
         </div>
       </div>
-    <figure class="mapbox">
+<figure class="mapbox">
   <div class="aus-map-wrapper">
-    <svg
-      class="aus-map"
-      viewBox="0 0 320 260"
-      role="img"
-      aria-labelledby="ausMapTitle ausMapDesc"
-    >
-      <title id="ausMapTitle">Australian jurisdictions</title>
+    <svg class="aus-map" viewBox="0 0 320 280" role="img" aria-labelledby="ausMapTitle ausMapDesc">
+      <title id="ausMapTitle">Stylised map of Australian states and territories</title>
       <desc id="ausMapDesc">
-        Stylised block map of Australian states and territories. Each region is coloured and can be hovered to see more information.
+        Hover over each region to see its state name and road-safety context.
       </desc>
 
-      <!-- Western Australia -->
+      <!-- WA -->
       <g class="state state--wa"
+         data-code="WA"
          data-name="Western Australia"
-         data-info="Large western state with long remote highways and regional testing corridors.">
-        <rect x="10" y="60" width="90" height="140" rx="10" ry="10"></rect>
-        <text x="55" y="140">WA</text>
+         data-desc="Known for long remote highways; alcohol and drug testing heavily focused on regional roads.">
+        <path d="M 26 100 L 26 75 L 55 52 L 95 40 L 120 55 L 118 165 L 85 210 L 40 202 Z"/>
+        <text x="75" y="130" class="state-label">WA</text>
       </g>
 
-      <!-- Northern Territory -->
+      <!-- NT -->
       <g class="state state--nt"
+         data-code="NT"
          data-name="Northern Territory"
-         data-info="Smaller population but long outback routes, often covered by targeted enforcement campaigns.">
-        <rect x="115" y="40" width="80" height="80" rx="10" ry="10"></rect>
-        <text x="155" y="90">NT</text>
+         data-desc="Large outback areas with long-distance travel; high focus on impaired-driving enforcement.">
+        <path d="M 120 55 L 185 55 L 185 135 L 120 135 Z"/>
+        <text x="152" y="100" class="state-label">NT</text>
       </g>
 
-      <!-- South Australia -->
-      <g class="state state--sa"
-         data-name="South Australia"
-         data-info="Mix of metropolitan Adelaide and rural freight routes with regular roadside testing.">
-        <rect x="115" y="130" width="80" height="90" rx="10" ry="10"></rect>
-        <text x="155" y="180">SA</text>
-      </g>
-
-      <!-- Queensland -->
+      <!-- QLD -->
       <g class="state state--qld"
+         data-code="QLD"
          data-name="Queensland"
-         data-info="Large eastern state with high traffic volumes and extensive coastal and inland testing.">
-        <rect x="210" y="40" width="90" height="100" rx="10" ry="10"></rect>
-        <text x="255" y="95">QLD</text>
+         data-desc="Strong roadside testing presence across coastal cities and regional highways.">
+        <path d="M 185 55 L 245 42 L 280 80 L 270 135 L 250 155 L 205 150 L 185 135 Z"/>
+        <text x="230" y="110" class="state-label">QLD</text>
       </g>
 
-      <!-- New South Wales -->
+      <!-- SA -->
+      <g class="state state--sa"
+         data-code="SA"
+         data-name="South Australia"
+         data-desc="Major freight routes and rural crash risks drive ongoing drug-testing operations.">
+        <path d="M 120 135 L 185 135 L 185 210 L 155 222 L 115 215 L 103 175 Z"/>
+        <text x="150" y="175" class="state-label">SA</text>
+      </g>
+
+      <!-- NSW -->
       <g class="state state--nsw"
+         data-code="NSW"
          data-name="New South Wales"
-         data-info="Densely populated jurisdiction with intensive enforcement on major urban and regional corridors.">
-        <rect x="210" y="145" width="90" height="60" rx="10" ry="10"></rect>
-        <text x="255" y="180">NSW</text>
+         data-desc="Most populous state; frequent testing across Sydney and busy urban motorways.">
+        <path d="M 185 150 L 230 150 L 260 162 L 248 210 L 215 225 L 185 210 Z"/>
+        <text x="220" y="185" class="state-label">NSW</text>
       </g>
 
-      <!-- Victoria -->
-      <g class="state state--vic"
-         data-name="Victoria"
-         data-info="Compact state with a dense road network and frequent roadside drug-testing operations.">
-        <rect x="220" y="210" width="60" height="30" rx="8" ry="8"></rect>
-        <text x="250" y="230">VIC</text>
-      </g>
-
-      <!-- Tasmania -->
-      <g class="state state--tas"
-         data-name="Tasmania"
-         data-info="Island state with lower volumes but focused testing around key population centres.">
-        <rect x="150" y="210" width="40" height="30" rx="10" ry="10"></rect>
-        <text x="170" y="230">TAS</text>
-      </g>
-
-      <!-- Australian Capital Territory -->
+          <!-- ACT  -->
       <g class="state state--act"
-         data-name="Australian Capital Territory"
-         data-info="Small jurisdiction centred on Canberra with predominantly metropolitan testing.">
-        <rect x="205" y="155" width="26" height="20" rx="6" ry="6"></rect>
-        <text x="218" y="169" font-size="9">ACT</text>
+        data-code="ACT"
+        data-name="Australian Capital Territory"
+        data-desc="Compact territory with concentrated roadside drug testing around Canberra.">
+        <path d="M 230 140 L 248 140 L 248 155 L 232 155 Z"/>
+        <text x="240" y="150" class="state-label-small">ACT</text>
       </g>
+
+      <!-- VIC -->
+      <g class="state state--vic"
+         data-code="VIC"
+         data-name="Victoria"
+         data-desc="High-density road network with strong enforcement and targeted safety campaigns.">
+        <path d="M 185 210 L 215 225 L 205 245 L 172 245 L 160 225 Z"/>
+        <text x="188" y="235" class="state-label">VIC</text>
+      </g>
+
+      <!-- TAS -->
+      <g class="state state--tas"
+         data-code="TAS"
+         data-name="Tasmania"
+         data-desc="Rural state with winding regional roads; active impaired-driving enforcement.">
+        <path d="M 205 255 L 225 260 L 215 278 L 198 272 Z"/>
+        <text x="210" y="270" class="state-label-small">TAS</text>
+      </g>
+
     </svg>
 
-    <div id="map-label" class="map-label">
-      Hover over a state or territory to see its name and a short description.
-    </div>
+    <p class="map-label" id="jurisLabel">
+      Hover over a state or territory to see its road-safety context.
+    </p>
   </div>
 </figure>
 
@@ -203,28 +207,40 @@
 
   <!-- Team -->
   <section id="team" class="white">
-    <div class="container">
-      <h3 class="centered">Project Team</h3>
-      <div class="team" style="margin-top:16px">
-        <div class="member">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <strong>Ivy Lim</strong><br />
-            <small>Data wrangling & analysis</small><br />
-            <a href="mailto:tan@example.com">Lim@example.com</a>
-          </div>
+  <div class="container">
+    <h3 class="centered">Project Team</h3>
+
+    <div class="team" style="margin-top:16px">
+
+      <!-- Member 1 -->
+      <div class="member">
+        <div class="avatar">
+          <img src="images/pingu.jpg" alt="Photo of Ivy Lim">
         </div>
-        <div class="member">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <strong>Selina Chang</strong><br />
-            <small>Frontend & UX</small><br />
-            <a href="mailto:jia@example.com">Chang@example.com</a>
-          </div>
+        <div class="member-info">
+          <strong>Ivy Lim</strong><br>
+          <small>Data Wrangling & Analysis</small><br>
+          <a href="mailto:ivy@example.com">ivy@example.com</a>
+        </div>
+        
+      </div>
+
+      <!-- Member 2 -->
+      <div class="member">
+        <div class="avatar">
+          <img src="images/selina.jpg" alt="Photo of Selina Chang">
+        </div>
+        <div class="member-info">
+          <strong>Selina Chang</strong><br>
+          <small>Frontend & UX</small><br>
+          <a href="mailto:selina@example.com">selina@example.com</a>
         </div>
       </div>
+
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- Sources & Notes -->
   <section id="sources">
@@ -288,38 +304,52 @@
   });
 </script>
 
+
 <script>
-  (function () {
-    const labelEl = document.getElementById('map-label');
+  document.addEventListener('DOMContentLoaded', function () {
+    const label = document.getElementById('jurisLabel');
+    const svg   = document.querySelector('.aus-map');
     const states = document.querySelectorAll('.aus-map .state');
-    if (!labelEl || !states.length) return;
 
-    const defaultText = 'Hover over a state or territory to see its name and a short description.';
+    if (!label || !svg || !states.length) return;
 
-    states.forEach((state) => {
-      const name = state.getAttribute('data-name') || 'Unknown jurisdiction';
-      const info = state.getAttribute('data-info') || '';
+    const defaultText =
+      'Hover over a state or territory to see its name and a short description.';
 
-      state.addEventListener('mouseenter', () => {
+    states.forEach(state => {
+      const name = state.dataset.name || state.dataset.code || '';
+      const desc = state.dataset.desc || '';
+
+      function activate() {
+        // Dim all, then activate this one
         states.forEach(s => s.classList.remove('is-active'));
+        svg.classList.add('is-hovering');
         state.classList.add('is-active');
 
-        if (info) {
-          labelEl.innerHTML = '<strong>' + name + ':</strong> ' + info;
+        // Update text below map
+        if (name || desc) {
+          label.innerHTML =
+            '<strong>' + name + '</strong>' + (desc ? ': ' + desc : '');
         } else {
-          labelEl.innerHTML = '<strong>' + name + '</strong>';
+          label.textContent = defaultText;
         }
-      });
+      }
 
-      state.addEventListener('mouseleave', () => {
+      function reset() {
         state.classList.remove('is-active');
-        labelEl.textContent = defaultText;
-      });
+        svg.classList.remove('is-hovering');
+        label.textContent = defaultText;
+      }
+
+      state.addEventListener('mouseenter', activate);
+      state.addEventListener('mouseleave', reset);
+
+      // Optional: keyboard accessibility
+      state.setAttribute('tabindex', '0');
+      state.addEventListener('focus', activate);
+      state.addEventListener('blur', reset);
     });
-  })();
+  });
 </script>
-
-
-
 </body>
 </html>
