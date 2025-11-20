@@ -1,11 +1,9 @@
 /* =============================
-   Road Safety — Clean & Friendly Design
-   Comfortable, Easy to Read, User-Friendly
+   Road Safety 
    ============================= */
 
-/* ------ Gentle Theme Colors ------ */
+/* ------  Theme Colors ------ */
 :root{
-  /* Soft, approachable colors */
   --accent: #6366f1;
   --accent-2:#3b82f6;
   --accent-3:#10b981;
@@ -33,7 +31,6 @@
   --maxw:1140px;
 }
 
-/* ------ Comfortable Base ------ */
 html{
   box-sizing:border-box; 
   scroll-behavior:smooth;
@@ -59,7 +56,7 @@ a{
 }
 a:hover{color:var(--accent);}
 
-/* ------ Readable Typography ------ */
+/* ------  Typography ------ */
 h1,h2,h3{
   line-height:1.3; 
   margin:0 0 .75rem; 
@@ -97,7 +94,7 @@ p{margin:.5rem 0 0; line-height:1.65;}
   font-size:.875rem;
 }
 
-/* ------ Friendly Buttons ------ */
+/* ------  Buttons ------ */
 .btn{
   display:inline-flex; 
   align-items:center; 
@@ -140,7 +137,7 @@ p{margin:.5rem 0 0; line-height:1.65;}
   border-color:var(--accent-light);
 }
 
-/* Generic button group (used in other places) */
+/* Generic button group  */
 .btn-group{
   margin-top:1rem; 
   display:flex; 
@@ -148,7 +145,7 @@ p{margin:.5rem 0 0; line-height:1.65;}
   flex-wrap:wrap;
 }
 
-/* Neater layout for the Explore section buttons */
+/*  Explore section buttons */
 #explore .btn-group {
   margin-top: 1.25rem;
   display: grid;
@@ -156,15 +153,13 @@ p{margin:.5rem 0 0; line-height:1.65;}
   gap: 12px;
 }
 
-/* Make each Explore button fill its grid cell and align text nicely */
 #explore .btn-group .btn {
   width: 100%;
   justify-content: flex-start;
   text-align: left;
-  border-radius: 999px;          /* pill shape */
+  border-radius: 999px;        
 }
 
-/* Make non-primary Explore buttons look soft but clickable */
 #explore .btn-group .btn:not(.btn--brand) {
   background: #ffffff;
   border: 1px solid var(--border);
@@ -173,7 +168,8 @@ p{margin:.5rem 0 0; line-height:1.65;}
 
 .cta{margin-top:1.5rem;}
 
-/* ------ Simple Chips ------ */
+
+/* ------ Chips ------ */
 .chip{
   display:inline-block; 
   padding:.4rem .85rem; 
@@ -201,6 +197,8 @@ p{margin:.5rem 0 0; line-height:1.65;}
   display:flex; 
   align-items:center; 
   justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap; /* allow links to wrap under logo on smaller screens */
 }
 
 .brand{
@@ -217,9 +215,10 @@ p{margin:.5rem 0 0; line-height:1.65;}
 }
 
 .nav__links{
-  display:none; 
+  display:flex; 
   gap:24px;
   align-items:center;
+  flex-wrap:wrap;
 }
 
 .nav__links a{
@@ -250,11 +249,9 @@ p{margin:.5rem 0 0; line-height:1.65;}
   width:100%;
 }
 
-@media (min-width:860px){
-  .nav__links{display:flex;}
-}
+/* no breakpoint hiding nav links – always visible */
 
-/* ------ Gentle Hero ------ */
+/* ------  Hero Section ------ */
 .hero{
   color:#fff; 
   text-align:center; 
@@ -262,6 +259,11 @@ p{margin:.5rem 0 0; line-height:1.65;}
   position:relative; 
   overflow:hidden;
   background:linear-gradient(135deg,#6366f1 0%, #3b82f6 50%, #10b981 100%);
+  
+  /* fill screen height (minus sticky nav) on landing page */
+  min-height: calc(100vh - 60px);
+  display:flex;
+  align-items:center;
 }
 
 .hero::before{
@@ -294,6 +296,12 @@ p{margin:.5rem 0 0; line-height:1.65;}
   gap:12px; 
   flex-wrap:wrap;
   position:relative;
+}
+
+.hero .container{
+  position:relative;
+  z-index:1;
+  width:100%;
 }
 
 .sparkline{
@@ -423,13 +431,26 @@ section{
   box-shadow:var(--shadow-md);
 }
 
+
 .avatar{
   width:60px; 
   height:60px; 
-  border-radius:50%; 
-  background:linear-gradient(135deg,var(--accent-3),var(--accent-2)); 
+  border-radius:50%;
+  overflow:hidden;                 
   border:2px solid var(--bg-white);
   box-shadow:var(--shadow-sm);
+  display:flex;                   
+  align-items:center;
+  justify-content:center;
+  background: #fff;    
+}          
+
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;                
+  display:block;
 }
 
 .member strong{
@@ -442,6 +463,7 @@ section{
   display:block;
   margin-top:.25rem;
 }
+
 
 /* ------ Footer ------ */
 footer{
@@ -473,24 +495,30 @@ footer{
 }
 
 /* =======================================================
-   CHART PAGES - Clean & Focused
+   CHART PAGES 
    ======================================================= */
 .chart-header{
   padding:clamp(50px,8vw,65px) 0 clamp(60px,10vw,75px);
+}
+
+/* chart headers should not be forced to full viewport height */
+.hero.chart-header{
+  min-height:auto;
+  display:block;
 }
 
 .chart-header .intro{
   color:rgba(255,255,255,.95);
 }
 
-/* Chart layout – centered stack: chart card then notes card */
+/* Chart layout  */
 .chart-grid{
   display: grid;
-  grid-template-columns: 1fr;                 /* stack vertically */
+  grid-template-columns: 1fr;                 
   gap: clamp(18px, 2.5vw, 24px);
   align-items: stretch;
-  max-width: 960px;                           /* a bit narrower than full page */
-  margin: 32px auto 56px;                     /* center and give breathing room */
+  max-width: 960px;                           
+  margin: 32px auto 56px;                     
 }
 
 .chart-figure{
@@ -502,7 +530,6 @@ footer{
   padding: 1.75rem 1.75rem 1.5rem;
 }
 
-/* subtle gradient strip at the top of the chart card */
 .chart-figure::before{
   content: "";
   position: absolute;
@@ -517,7 +544,6 @@ footer{
   font-size: .75rem;
 }
 
-/* Notes card matches the look but without the gradient strip */
 .notes{
   background: var(--bg-white);
   border: 1px solid var(--border);
@@ -555,7 +581,7 @@ footer{
 .axis{stroke:#64748b; stroke-width:2;}
 .grid{stroke:#e2e8f0; stroke-width:1;}
 
-/* Make chart labels sharp and readable */
+
 .axis text,
 .tick text {
   stroke: none;
@@ -745,7 +771,6 @@ footer{
   border-radius:4px;
 }
 
-/* ------ Print Friendly ------ */
 @media print{
   .nav,
   .hero .actions,
@@ -767,7 +792,6 @@ footer{
   }
 }
 
-/* Allow clicks to pass through the hero overlay */
 .hero::before,
 .hero::after { pointer-events: none; }
 
@@ -815,14 +839,14 @@ footer{
   transform: translateY(0);
 }
 
-/* Hover – brighter + lifted */
+/* Hover  */
 .scroll-btn.show:hover {
   background: linear-gradient(135deg, var(--accent-light), var(--accent-2));
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   transform: translateY(-2px) scale(1.05);
 }
 
-/* Active (when clicked) – subtle press down */
+/* Active */
 .scroll-btn.show:active {
   transform: translateY(0) scale(0.95);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
@@ -835,56 +859,79 @@ footer{
   box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.7), var(--shadow-md);
 }
 
+/* ---------------------------
+   Australia Map 
+   --------------------------- */
+
+/* Wrapper */
 .aus-map-wrapper {
   width: 100%;
   max-width: 360px;
+  margin-inline: auto;
 }
 
+/* Map base */
 .aus-map {
   width: 100%;
   height: auto;
 }
 
-/* Base style for all states */
-.aus-map .state rect {
+/* Base state shape styling */
+.aus-map .state path {
   stroke: #0f766e;
-  stroke-width: 1.6;
-  transition: fill 0.2s ease, stroke 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  stroke-width: 1.8;
+  fill-opacity: 0.85;
+  transition: 
+    fill 0.2s ease,
+    stroke 0.2s ease,
+    transform 0.25s ease,
+    filter 0.25s ease;
 }
 
-.aus-map .state text {
+/* State labels */
+.state-label,
+.state-label-small {
+  font-family: inherit;
   fill: #0f766e;
-  font-size: 12px;
-  font-weight: 600;
   text-anchor: middle;
+  pointer-events: none;
+  font-weight: 600;
 }
 
-/* Pastel colours per state (similar to the reference map) */
-.state--wa rect  { fill: #f9c;          /* soft pink */      }
-.state--nt rect  { fill: #a7f3d0;      /* mint green */     }
-.state--sa rect  { fill: #fed7aa;      /* peach */          }
-.state--qld rect { fill: #bbf7d0;      /* light green */    }
-.state--nsw rect { fill: #bfdbfe;      /* pale blue */      }
-.state--vic rect { fill: #ddd6fe;      /* soft purple */    }
-.state--tas rect { fill: #fecaca;      /* soft red */       }
-.state--act rect { fill: #e5e7eb;      /* neutral grey */   }
+.state-label {
+  font-size: 14px;
+}
 
-/* Hover / active highlight */
-.aus-map .state.is-active rect,
-.aus-map .state:hover rect {
-  transform: translateY(-2px);
+.state-label-small {
+  font-size: 11px;
+}
+
+/* Hover effect */
+.aus-map .state:hover path,
+.aus-map .state.is-active path {
+  fill-opacity: 1;
   stroke: #047857;
-  fill-opacity: 0.95;
+  filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.15));
+  transform: translateY(-2px);
 }
 
-/* Label under map */
+/* Colours */
+.state--wa path  { fill: #f9c; }
+.state--nt path  { fill: #a7f3d0; }
+.state--sa path  { fill: #fed7aa; }
+.state--qld path { fill: #d0dc5f; }
+.state--nsw path { fill: #bfdbfe; }
+.state--vic path { fill: #ddd6fe; }
+.state--tas path { fill: #fecaca; }
+.state--act path { fill: #e5e7eb; }
+
+/* Map label text under SVG */
 .map-label {
   margin-top: 0.75rem;
   font-size: 0.9rem;
   color: var(--text-body);
   line-height: 1.5;
+  text-align: center;
 }
 
-.map-label strong {
-  color: #047857;
-}
+
