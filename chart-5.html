@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chart 5 — Positive Detections by Age Group</title>
+  <title>Chart 5 — Positive Roadside Drug Tests by Age Group</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Top navigation -->
+  <!-- Top nav -->
   <div class="nav">
     <div class="container nav__bar">
       <a class="brand" href="index.html">Road<span>Safety</span></a>
@@ -16,18 +16,20 @@
         <a href="chart-2.html">Chart 2</a>
         <a href="chart-3.html">Chart 3</a>
         <a href="chart-4.html">Chart 4</a>
-        <a href="chart-5.html">Chart 5</a>
+        <a href="chart-5.html" class="is-active">Chart 5</a>
+          <a href="chart-6.html">Chart 6</a>
       </nav>
     </div>
   </div>
 
-  <!-- Hero / summary -->
+  <!-- Hero -->
   <header class="hero chart-header">
     <div class="container centered">
-      <h1>Positive detections by age group</h1>
+      <h1>Positive roadside drug tests by age group</h1>
       <p class="intro">
-        Shows how roadside drug test positives in 2024 are distributed across age groups,
-        highlighting which segments of drivers are most affected.
+        This chart shows how roadside drug test positives are distributed across
+        different age groups. Use the year slider or quick year menu to explore
+        trends from 2008–2024, or view the combined total for all years.
       </p>
 
       <!-- KPI cards populated by JS -->
@@ -35,6 +37,7 @@
 
       <div class="pager">
         <a class="btn btn--ghost" href="chart-4.html">← Previous</a>
+         <a class="btn btn--brand" href="chart-6.html">Next →</a>
         <a class="btn btn--brand" href="index.html">Back to Home</a>
       </div>
     </div>
@@ -45,22 +48,81 @@
     <div class="container chart-grid">
       <figure class="chart-figure">
         <figcaption class="kicker">
-          Chart 5 · Positive roadside drug tests by age group (2024)
+          Chart 5 · Positive roadside drug tests by age group (2008–2024)
         </figcaption>
 
-        <!-- Age-group filter pills (populated by JS) -->
-        <div class="age-filter" id="ageFilter5"></div>
+        <!-- Year controls -->
+        <div class="chart-controls-row">
+          <span class="chart-label">Year:</span>
+
+          <!-- clickable bubble (same idea as Chart 2) -->
+          <button
+            id="yearValue5"
+            type="button"
+            class="year-bubble year-chip-btn"
+          >
+            All years (2008–2024)
+          </button>
+
+          <!-- dropdown wrapper (anchored to chip) -->
+          <div class="year-dropdown-wrapper">
+            <div id="yearDropdown5" class="year-dropdown hidden">
+              <button class="year-option5" data-year="all">
+                <strong>All (2008–2024)</strong>
+              </button>
+              <div class="year-grid">
+                <button class="year-option5" data-year="2008">2008</button>
+                <button class="year-option5" data-year="2009">2009</button>
+                <button class="year-option5" data-year="2010">2010</button>
+                <button class="year-option5" data-year="2011">2011</button>
+                <button class="year-option5" data-year="2012">2012</button>
+                <button class="year-option5" data-year="2013">2013</button>
+                <button class="year-option5" data-year="2014">2014</button>
+                <button class="year-option5" data-year="2015">2015</button>
+                <button class="year-option5" data-year="2016">2016</button>
+                <button class="year-option5" data-year="2017">2017</button>
+                <button class="year-option5" data-year="2018">2018</button>
+                <button class="year-option5" data-year="2019">2019</button>
+                <button class="year-option5" data-year="2020">2020</button>
+                <button class="year-option5" data-year="2021">2021</button>
+                <button class="year-option5" data-year="2022">2022</button>
+                <button class="year-option5" data-year="2023">2023</button>
+                <button class="year-option5" data-year="2024">2024</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slider (smooth like Chart 2, wired in JS) -->
+        <input
+          type="range"
+          id="yearSlider5"
+          class="year-slider"
+          min="2008"
+          max="2024"
+          step="1"
+          value="2008"
+        />
+
+        <!-- Button to reset to all years -->
+        <button
+          id="yearAllBtn5"
+          class="btn btn--ghost"
+          style="margin-top:10px; margin-bottom:14px;"
+        >
+          All years (2008–2024)
+        </button>
 
         <!-- Chart container -->
         <div id="chart5"></div>
       </figure>
 
       <aside class="notes">
-        <h3>Notes & Insights</h3>
+        <h3>Notes &amp; Insights</h3>
         <ul class="list">
-          <li>Young to middle-aged drivers record the highest number of positive detections.</li>
-          <li>Very young and older age groups contribute fewer positives, partly reflecting lower exposure and driving volume.</li>
-          <li>This age profile helps target education, enforcement, and road safety campaigns at higher-risk groups.</li>
+          <li>Each bar represents one age group.</li>
+          <li>Use the year controls to see how age profiles shift over time.</li>
+          <li>The “All years” option shows the long-term overall pattern.</li>
         </ul>
       </aside>
     </div>
@@ -69,22 +131,22 @@
   <!-- Footer -->
   <footer>
     <div class="container footer">
-      <div>© <span id="year5"></span> Road Safety</div>
+      <div>© <span id="year5Footer"></span> Road Safety</div>
       <div class="page-dots">
         <a href="chart-1.html">1</a> ·
         <a href="chart-2.html">2</a> ·
         <a href="chart-3.html">3</a> ·
         <a href="chart-4.html">4</a> ·
-        <a href="chart-5.html">5</a>
+        <a href="chart-5.html">5</a>.
+          <a href="chart-6.html">Chart 6</a>
       </div>
     </div>
   </footer>
 
   <script>
-    document.getElementById('year5').textContent = new Date().getFullYear();
+    document.getElementById('year5Footer').textContent = new Date().getFullYear();
   </script>
 
-  <!-- D3 + Chart 5 JS -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/chart5.js"></script>
 </body>
