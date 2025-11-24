@@ -1,17 +1,67 @@
 // js/chart5.js
 
-let chart5Filter = "all"; // 'all' or a specific age group string
+let chart5Data = null;          // raw rows from CSV
+let chart5Years = [];           // list of available years
+let chart5AgeGroups = [];       // list of age groups
+
+let chart5CurrentYear = "all";  // "all" or a number
+let chart5CurrentAge = "all";   // "all" or age-group string
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderChart5();
-  window.addEventListener("resize", renderChart5);
+  d3.csv("data/Chart 5.csv").then(raw => {
+    if (!raw.length) {
+      console.warn("Chart5: no data in Chart 5.csv");
+      return;
+    }
+
+    // Detect column names
+    const cols = raw.columns.map(c => c.toLowerCase());
+    const yearCol =
+      raw.columns[cols.indexOf("year")] ??
+      raw.columns[cols.indexOf("yr")] ??
+      "YEAR";
+
+    const ageCol =
+      raw.columns[cols.indexOf("age_group")] ??
+      raw.columns[cols.indexOf("age group")] ??
+      "AGE_GROUP";
+
+    const countCol =
+      raw.columns.find(c => c.toLowerCase().includes("sum(count")) ||
+      raw.columns.find(c => c.toLowerCase().includes("count")) ||
+      "Sum(COUNT)";
+
+    chart5Data = raw.map(d => ({
+      year: d[yearCol] ? +d[yearCol] : null,
+      ageGroup: d[ageCol],
+      value: +d[countCol] || 0
+    })).filter(d => d.ageGroup);
+
+    // Years & age groups
+    chart5Years = Array.from(
+      new Set(chart5Data.map(d => d.year).filter(v => !isNaN(v)))
+    ).sort(d3.ascending);
+
+    chart5AgeGroups = Array.from(
+      new Set(chart5Data.map(d => d.ageGroup))
+    );
+
+    setupYearControls5();
+    buildAgeFilter5(chart5AgeGroups);
+
+    updateChart5();
+
+    window.addEventListener("resize", () => {
+      updateChart5(true); // redraw only
+    });
+  });
 });
 
+// ---------- Tooltip ----------
 function createTooltip5() {
   d3.selectAll(".chart-tooltip").remove();
 
-  return d3
-    .select("body")
+  return d3.select("body")
     .append("div")
     .attr("class", "chart-tooltip")
     .style("position", "absolute")
@@ -30,15 +80,23 @@ function createTooltip5() {
     .style("z-index", 9999);
 }
 
-// === KPI STATISTICS FOR CHART 5 ===
+// ---------- KPI cards ----------
 function generateKPI5(data) {
+  const kpiContainer = document.getElementById("kpi5");
+  if (!kpiContainer || !data.length) return;
+
   const sorted = [...data].sort((a, b) => d3.descending(a.value, b.value));
   const highest = sorted[0];
   const lowest = sorted[sorted.length - 1];
   const total = d3.sum(sorted, d => d.value);
 
-  const kpiContainer = document.getElementById("kpi5");
-  if (!kpiContainer || !data.length) return;
+  const yearLabel =
+    chart5CurrentYear === "all"
+      ? `${chart5Years[0]}–${chart5Years[chart5Years.length - 1]}`
+      : chart5CurrentYear;
+
+  const ageLabel =
+    chart5CurrentAge === "all" ? "All age groups" : chart5CurrentAge;
 
   kpiContainer.innerHTML = `
     <div class="kpi">
@@ -54,16 +112,98 @@ function generateKPI5(data) {
     </div>
 
     <div class="kpi">
-      <h3>TOTAL POSITIVES (2024)</h3>
+      <h3>TOTAL POSITIVES</h3>
       <p>${total.toLocaleString()}</p>
-      <span class="kpi-sub">${
-        chart5Filter === "all" ? "All age groups" : "Filtered age groups"
-      }</span>
+      <span class="kpi-sub">${ageLabel}, ${yearLabel}</span>
     </div>
   `;
 }
 
-// Build / rebuild age filter pills based on available groups
+// ---------- Year controls ----------
+function setupYearControls5() {
+  const slider = document.getElementById("yearSlider5");
+  const labelBtn = document.getElementById("yearValue5");
+  const allBtn = document.getElementById("yearAllBtn5");
+  const chip = document.getElementById("yearValue5");
+const dropdown = document.getElementById("yearDropdown5");
+
+if (chip && dropdown) {
+  chip.addEventListener("click", () => {
+    dropdown.classList.toggle("hidden");
+  });
+
+  document.querySelectorAll(".year-option5").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const y = btn.dataset.year;
+      const minYear = chart5Years[0];
+      const maxYear = chart5Years[chart5Years.length - 1];
+
+      if (y === "all") {
+        chart5CurrentYear = "all";
+        slider.value = minYear;
+        labelBtn.textContent = `All years (${minYear}–${maxYear})`;
+        allBtn.classList.add("is-active");
+        updateSliderTrack5(minYear);
+      } else {
+        const yearNum = +y;
+        chart5CurrentYear = yearNum;
+        slider.value = yearNum;
+        labelBtn.textContent = y;
+        allBtn.classList.remove("is-active");
+        updateSliderTrack5(yearNum);
+      }
+
+      dropdown.classList.add("hidden");
+      updateChart5();
+    });
+  });
+}
+
+
+  if (!slider || !labelBtn || !allBtn || !chart5Years.length) return;
+
+  const minYear = chart5Years[0];
+  const maxYear = chart5Years[chart5Years.length - 1];
+
+  slider.min = minYear;
+  slider.max = maxYear;
+  slider.value = minYear;
+
+  chart5CurrentYear = "all";
+  labelBtn.textContent = `All years (${minYear}–${maxYear})`;
+  updateSliderTrack5(minYear);
+
+  slider.addEventListener("input", e => {
+    const y = +e.target.value;
+    chart5CurrentYear = y;
+    labelBtn.textContent = String(y);
+    allBtn.classList.remove("is-active");
+    updateSliderTrack5(y);
+    updateChart5();
+  });
+
+  allBtn.addEventListener("click", () => {
+    chart5CurrentYear = "all";
+    slider.value = minYear;
+    labelBtn.textContent = `All years (${minYear}–${maxYear})`;
+    allBtn.classList.add("is-active");
+    updateSliderTrack5(minYear);
+    updateChart5();
+  });
+
+  allBtn.classList.add("is-active");
+}
+
+function updateSliderTrack5(value) {
+  const slider = document.getElementById("yearSlider5");
+  if (!slider) return;
+  const min = +slider.min;
+  const max = +slider.max;
+  const pct = max === min ? 0 : ((value - min) / (max - min)) * 100;
+  slider.style.background = `linear-gradient(90deg,#6366f1 0%,#6366f1 ${pct}%,#e5e7eb ${pct}%,#e5e7eb 100%)`;
+}
+
+// ---------- Age filter pills ----------
 function buildAgeFilter5(ageGroups) {
   const container = document.getElementById("ageFilter5");
   if (!container) return;
@@ -76,48 +216,43 @@ function buildAgeFilter5(ageGroups) {
     btn.dataset.value = value;
     btn.textContent = label;
 
-    if (
-      (value === "all" && chart5Filter === "all") ||
-      (value !== "all" && chart5Filter === value)
-    ) {
+    if (value === chart5CurrentAge) {
       btn.classList.add("is-active");
     }
 
     btn.addEventListener("click", () => {
-      chart5Filter = value;
-      // update active states
+      chart5CurrentAge = value;
       container.querySelectorAll(".age-pill").forEach(pill => {
-        const v = pill.dataset.value;
-        const active =
-          (v === "all" && chart5Filter === "all") ||
-          (v !== "all" && chart5Filter === v);
-        pill.classList.toggle("is-active", active);
+        pill.classList.toggle(
+          "is-active",
+          pill.dataset.value === chart5CurrentAge
+        );
       });
-      renderChart5();
+      updateChart5();
     });
 
     container.appendChild(btn);
   };
 
-  // "All" pill
+  // "All" pill first
+  chart5CurrentAge = "all";
   makePill("All age groups", "all");
 
-  // One pill per age group (keep original order)
   ageGroups.forEach(g => makePill(g, g));
 }
 
-function renderChart5() {
+// ---------- Chart drawing ----------
+function updateChart5(resizeOnly = false) {
   const container = document.getElementById("chart5");
-  if (!container) return;
+  if (!container || !chart5Data) return;
 
   container.innerHTML = "";
 
   const margin = { top: 30, right: 20, bottom: 70, left: 80 };
   const width = container.clientWidth || 720;
-  const height = 360;
+  const height = 380;
 
-  const svg = d3
-    .select(container)
+  const svg = d3.select(container)
     .append("svg")
     .attr("class", "svg-frame")
     .attr("viewBox", `0 0 ${width} ${height}`)
@@ -126,188 +261,177 @@ function renderChart5() {
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
-  const g = svg
-    .append("g")
+  const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
   const tooltip = createTooltip5();
 
-  d3.csv("data/Chart 5.csv").then(raw => {
-    if (!raw.length) {
-      console.warn("Chart5: no data in Chart 5.csv");
-      return;
-    }
+  // Filter by year first
+  let rows = chart5Data;
 
-    // Base data from CSV
-    const baseData = raw.map(d => ({
-      ageGroup: d.AGE_GROUP,
-      value: +d["Sum(COUNT)"] || 0
-    }));
+  if (chart5CurrentYear !== "all") {
+    rows = rows.filter(d => d.year === chart5CurrentYear);
+  }
 
-    const allGroups = baseData.map(d => d.ageGroup);
-    buildAgeFilter5(allGroups);
+  // Now aggregate depending on age filter
+  let agg;
 
-    // Apply filter
-    let data =
-      chart5Filter === "all"
-        ? baseData
-        : baseData.filter(d => d.ageGroup === chart5Filter);
+  if (chart5CurrentAge === "all") {
+    // group by ageGroup
+    const roll = d3.rollup(
+      rows,
+      v => d3.sum(v, d => d.value),
+      d => d.ageGroup
+    );
+    agg = Array.from(roll, ([ageGroup, value]) => ({ ageGroup, value }));
+  } else {
+    const filtered = rows.filter(d => d.ageGroup === chart5CurrentAge);
+    const total = d3.sum(filtered, d => d.value);
+    agg = [{ ageGroup: chart5CurrentAge, value: total }];
+  }
 
-    if (!data.length) return;
+  if (!agg.length) return;
 
-    // Sort visible data by value (highest first)
-    data.sort((a, b) => d3.descending(a.value, b.value));
+  // Sort descending for nicer layout
+  agg.sort((a, b) => d3.descending(a.value, b.value));
 
-    // KPIs reflect current filtered view
-    generateKPI5(data);
+  generateKPI5(agg);
 
-    const x = d3
-      .scaleBand()
-      .domain(data.map(d => d.ageGroup))
-      .range([0, innerWidth])
-      .padding(0.25);
+  const x = d3.scaleBand()
+    .domain(agg.map(d => d.ageGroup))
+    .range([0, innerWidth])
+    .padding(0.25);
 
-    const y = d3
-      .scaleLinear()
-      .domain([0, d3.max(data, d => d.value) * 1.1])
-      .nice()
-      .range([innerHeight, 0]);
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(agg, d => d.value) * 1.1])
+    .nice()
+    .range([innerHeight, 0]);
 
-    // Multi-colour scale for age groups
-    const colorScale = d3
-      .scaleOrdinal()
-      .domain(allGroups) // keep consistent colours even when filtered
-      .range([
-        "#60a5fa", // Light Blue
-        "#3b82f6", // Blue
-        "#2563eb", // Deep Blue
-        "#10b981", // Green
-        "#34d399", // Light Green
-        "#0ea5e9", // Cyan
-        "#6366f1", // Indigo
-        "#7c3aed" // Violet
-      ]);
+  const colorScale = d3.scaleOrdinal()
+    .domain(chart5AgeGroups)
+    .range([
+      "#60a5fa",
+      "#3b82f6",
+      "#2563eb",
+      "#0ea5e9",
+      "#10b981",
+      "#34d399",
+      "#6366f1",
+      "#7c3aed"
+    ]);
 
-    // grid
-    g.append("g")
-      .attr("class", "grid")
-      .call(
-        d3
-          .axisLeft(y)
-          .ticks(5)
-          .tickSize(-innerWidth)
-          .tickFormat("")
-      );
+  // grid
+  g.append("g")
+    .attr("class", "grid")
+    .call(
+      d3.axisLeft(y)
+        .ticks(5)
+        .tickSize(-innerWidth)
+        .tickFormat("")
+    );
 
-    // y-axis
-    g.append("g")
-      .attr("class", "axis")
-      .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(",")));
+  // y-axis
+  g.append("g")
+    .attr("class", "axis")
+    .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(",")));
 
-    // x-axis
-    const xAxis = g
-      .append("g")
-      .attr("class", "axis")
-      .attr("transform", `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(x));
+  // x-axis
+  const xAxis = g.append("g")
+    .attr("class", "axis")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(d3.axisBottom(x));
 
-    xAxis.selectAll("text").attr("dy", "1em");
+  xAxis.selectAll("text").attr("dy", "1em");
 
-    // bars
-    const bars = g
-      .selectAll(".bar")
-      .data(data)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", d => x(d.ageGroup))
-      .attr("width", x.bandwidth())
-      .attr("y", innerHeight)
-      .attr("height", 0)
-      .attr("fill", d => colorScale(d.ageGroup))
-      .attr("rx", 8);
+  // bars
+  const bars = g.selectAll(".bar")
+    .data(agg)
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", d => x(d.ageGroup))
+    .attr("width", x.bandwidth())
+    .attr("y", innerHeight)
+    .attr("height", 0)
+    .attr("fill", d => colorScale(d.ageGroup))
+    .attr("rx", 8);
 
-    bars
-      .transition()
-      .duration(900)
-      .delay((d, i) => i * 80)
-      .attr("y", d => y(d.value))
-      .attr("height", d => innerHeight - y(d.value));
+  bars.transition()
+    .duration(900)
+    .delay((d, i) => i * 80)
+    .attr("y", d => y(d.value))
+    .attr("height", d => innerHeight - y(d.value));
 
-    // labels above bars
-    g
-      .selectAll(".bar-label")
-      .data(data)
-      .enter()
-      .append("text")
-      .attr("class", "bar-label")
-      .attr("text-anchor", "middle")
-      .attr("x", d => x(d.ageGroup) + x.bandwidth() / 2)
-      .attr("y", d => y(d.value) - 6)
-      .attr("fill", "#0f172a")
-      .attr("font-size", 11)
-      .text(d => d3.format(",")(d.value));
+  // labels
+  g.selectAll(".bar-label")
+    .data(agg)
+    .enter()
+    .append("text")
+    .attr("class", "bar-label")
+    .attr("text-anchor", "middle")
+    .attr("x", d => x(d.ageGroup) + x.bandwidth() / 2)
+    .attr("y", d => y(d.value) - 6)
+    .attr("fill", "#0f172a")
+    .attr("font-size", 11)
+    .text(d => d3.format(",")(d.value));
 
-    // hover interactions
-    bars
-      .on("mouseenter", function (event, d) {
-        const baseColor = d3.color(colorScale(d.ageGroup));
-        const hoverColor = baseColor ? baseColor.darker(1) : "#4f46e5";
+  // hover
+  bars
+    .on("mouseenter", function (event, d) {
+      const baseColor = d3.color(colorScale(d.ageGroup));
+      const hoverColor = baseColor ? baseColor.darker(1) : "#4f46e5";
 
-        d3.select(this)
-          .transition()
-          .duration(150)
-          .attr("fill", hoverColor)
-          .attr("y", y(d.value) - 4)
-          .attr("height", innerHeight - y(d.value) + 4);
+      d3.select(this)
+        .transition()
+        .duration(150)
+        .attr("fill", hoverColor)
+        .attr("y", y(d.value) - 4)
+        .attr("height", innerHeight - y(d.value) + 4);
 
-        tooltip
-          .style("opacity", 1)
-          .html(`
-            <div style="font-size:14px; font-weight:600; margin-bottom:4px;">
-              ${d.ageGroup}
-            </div>
-            <div style="color:${baseColor}; font-weight:600;">
-              ${d.value.toLocaleString()} positive tests
-            </div>
-          `)
-          .style("left", event.pageX + 12 + "px")
-          .style("top", event.pageY - 40 + "px");
-      })
-      .on("mousemove", event => {
-        tooltip
-          .style("left", event.pageX + 12 + "px")
-          .style("top", event.pageY - 40 + "px");
-      })
-      .on("mouseleave", function (event, d) {
-        d3.select(this)
-          .transition()
-          .duration(150)
-          .attr("fill", d => colorScale(d.ageGroup))
-          .attr("y", d => y(d.value))
-          .attr("height", d => innerHeight - y(d.value));
+      tooltip
+        .style("opacity", 1)
+        .html(`
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">
+            ${d.ageGroup}
+          </div>
+          <div style="color:${baseColor}; font-weight:600;">
+            ${d.value.toLocaleString()} positive tests
+          </div>
+        `)
+        .style("left", event.pageX + 12 + "px")
+        .style("top", event.pageY - 40 + "px");
+    })
+    .on("mousemove", event => {
+      tooltip
+        .style("left", event.pageX + 12 + "px")
+        .style("top", event.pageY - 40 + "px");
+    })
+    .on("mouseleave", function (event, d) {
+      d3.select(this)
+        .transition()
+        .duration(150)
+        .attr("fill", d => colorScale(d.ageGroup))
+        .attr("y", d => y(d.value))
+        .attr("height", d => innerHeight - y(d.value));
 
-        tooltip.style("opacity", 0);
-      });
+      tooltip.style("opacity", 0);
+    });
 
-    // axis labels
-    g
-      .append("text")
-      .attr("x", innerWidth / 2)
-      .attr("y", innerHeight + 55)
-      .attr("text-anchor", "middle")
-      .attr("fill", "#0f172a")
-      .attr("font-size", 12)
-      .text("Age group");
+  // axis labels
+  g.append("text")
+    .attr("x", innerWidth / 2)
+    .attr("y", innerHeight + 55)
+    .attr("text-anchor", "middle")
+    .attr("fill", "#0f172a")
+    .attr("font-size", 12)
+    .text("Age group");
 
-    g
-      .append("text")
-      .attr("x", -innerHeight / 2)
-      .attr("y", -60)
-      .attr("text-anchor", "middle")
-      .attr("transform", "rotate(-90)")
-      .attr("fill", "#0f172a")
-      .attr("font-size", 12)
-      .text("Positive detections (count)");
-  });
+  g.append("text")
+    .attr("x", -innerHeight / 2)
+    .attr("y", -60)
+    .attr("text-anchor", "middle")
+    .attr("transform", "rotate(-90)")
+    .attr("fill", "#0f172a")
+    .attr("font-size", 12)
+    .text("Positive detections (count)");
 }
