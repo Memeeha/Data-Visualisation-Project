@@ -1,22 +1,19 @@
 // js/chart4.js
 
+let currentJuris4 = "all";     // "all" or one of NSW, QLD, ...
+let cachedAgg4 = null;
 
-
-let currentJuris4 = "all";   
-let cachedAgg4 = null;       
-let chart4Width = null;
-
-
+// Enforcement action definitions
 const ACTIONS_4 = [
   { id: "fines",   label: "Fines",   col: "Sum(FINES)" },
   { id: "arrests", label: "Arrests", col: "Sum(ARRESTS)" },
   { id: "charges", label: "Charges", col: "Sum(CHARGES)" }
 ];
 
-
+// Fixed jurisdiction order
 const JURIS_ORDER_4 = ["NSW", "QLD", "WA", "SA", "VIC", "TAS", "NT", "ACT"];
 
-// Colour palette for jurisdictions (legend)
+// Colours per jurisdiction
 const JURIS_COLOURS_4 = [
   "#3b82f6", // NSW
   "#f97316", // QLD
@@ -31,13 +28,10 @@ const JURIS_COLOURS_4 = [
 document.addEventListener("DOMContentLoaded", () => {
   initJurisControls4();
   renderChart4();
-
-  window.addEventListener("resize", () => {
-    renderChart4();
-  });
+  window.addEventListener("resize", renderChart4);
 });
 
-// ------- TOOLTIP -------
+/* ---------------- Tooltip helper ---------------- */
 
 function createTooltip4() {
   d3.selectAll(".chart-tooltip").remove();
@@ -61,7 +55,7 @@ function createTooltip4() {
     .style("z-index", 9999);
 }
 
-// ------- DATA AGGREGATION -------
+/* ---------------- Load + aggregate CSV once ---------------- */
 
 function loadAndAggregate4() {
   if (cachedAgg4) return Promise.resolve(cachedAgg4);
@@ -88,7 +82,7 @@ function loadAndAggregate4() {
   });
 }
 
-// ------- STATE / JURISDICTION CONTROLS -------
+/* ---------------- Controls (chip + dropdown) ---------------- */
 
 function initJurisControls4() {
   const chip     = document.getElementById("jurisValue4");
@@ -103,13 +97,13 @@ function initJurisControls4() {
       currentJuris4 === "all" ? "All jurisdictions" : currentJuris4;
   };
 
-  // Open / close dropdown when clicking the chip
+  // Open / close dropdown
   chip.addEventListener("click", e => {
     e.stopPropagation();
     dropdown.classList.toggle("hidden");
   });
 
-  // Click on any option inside dropdown
+  // Select a jurisdiction
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
       const j = btn.dataset.juris;
@@ -120,7 +114,7 @@ function initJurisControls4() {
     });
   });
 
-  // External reset button (always sets back to ALL)
+  // Reset back to all
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
       currentJuris4 = "all";
@@ -129,7 +123,7 @@ function initJurisControls4() {
     });
   }
 
-  // Close dropdown when clicking anywhere else
+  // Close dropdown when clicking outside
   document.addEventListener("click", () => {
     dropdown.classList.add("hidden");
   });
@@ -137,23 +131,20 @@ function initJurisControls4() {
   updateLabel();
 }
 
-
-// ------- MAIN RENDER -------
+/* ---------------- Main render ---------------- */
 
 function renderChart4() {
   const container = document.getElementById("chart4");
   if (!container) return;
 
-  const newWidth = container.clientWidth;
-  container.innerHTML = "";
-  chart4Width = newWidth;
-
-  const margin = { top: 60, right: 24, bottom: 70, left: 80 };
-  const width  = newWidth || 720;
+  const width  = container.clientWidth || 720;
   const height = 380;
+  const margin = { top: 80, right: 24, bottom: 70, left: 80 }; // extra top for view label
 
   const innerWidth  = width  - margin.left - margin.right;
   const innerHeight = height - margin.top  - margin.bottom;
+
+  container.innerHTML = "";
 
   const svg = d3.select(container)
     .append("svg")
@@ -167,26 +158,21 @@ function renderChart4() {
   const tooltip = createTooltip4();
 
   loadAndAggregate4().then(agg => {
-    // 1. Pick jurisdictions based on filter
+    // 1. Decide which jurisdictions are shown
     let jurisList = Object.keys(agg);
+
     if (currentJuris4 !== "all") {
       jurisList = agg[currentJuris4] ? [currentJuris4] : [];
     }
 
     if (!jurisList.length) {
-      console.warn("Chart4: no data for current jurisdiction filter");
+      console.warn("Chart4: no data for current filter");
       return;
     }
 
-    // Sort jurisdictions in fixed order
     jurisList = JURIS_ORDER_4.filter(j => jurisList.includes(j));
 
-    // Colour scale
-    const colorScale = d3.scaleOrdinal()
-      .domain(JURIS_ORDER_4)
-      .range(JURIS_COLOURS_4);
-
-    // 2. Build grouped data: one group per ACTION (Fines, Arrests, Charges)
+    // 2. Build grouped data: action -> bars
     const groups = ACTIONS_4.map(act => ({
       actionId: act.id,
       label: act.label,
@@ -198,9 +184,7 @@ function renderChart4() {
       }))
     }));
 
-    const yMax = d3.max(groups, g =>
-      d3.max(g.bars, b => b.value)
-    ) || 0;
+    const yMax = d3.max(groups, grp => d3.max(grp.bars, b => b.value)) || 0;
 
     const x0 = d3.scaleBand()
       .domain(groups.map(g => g.label))
@@ -212,10 +196,53 @@ function renderChart4() {
       .range([0, x0.bandwidth()])
       .padding(0.18);
 
+    // EXTRA headroom at top so labels don't hit the axis line
     const y = d3.scaleLinear()
-      .domain([0, yMax * 1.15])
+      .domain([0, yMax * 1.25])
       .nice()
       .range([innerHeight, 0]);
+
+    const colorScale = d3.scaleOrdinal()
+      .domain(JURIS_ORDER_4)
+      .range(JURIS_COLOURS_4);
+
+    // Helper: compute draw y + height with a minimum visible bar height
+    const MIN_BAR_HEIGHT = 4;
+    function getBarGeom(value) {
+      if (!value) return { y: innerHeight, h: 0 };
+
+      const actualY = y(value);
+      const actualH = innerHeight - actualY;
+
+      if (actualH < MIN_BAR_HEIGHT) {
+        return {
+          y: innerHeight - MIN_BAR_HEIGHT,
+          h: MIN_BAR_HEIGHT
+        };
+      }
+      return { y: actualY, h: actualH };
+    }
+
+    // 2b. Friendly "view" label above plot
+    const isAllMode = currentJuris4 === "all";
+    let viewText;
+
+    if (isAllMode) {
+      viewText = "Viewing all jurisdictions – hover a bar to compare states.";
+    } else {
+      const stateAgg = agg[currentJuris4];
+      const total = (stateAgg.fines || 0) +
+                    (stateAgg.arrests || 0) +
+                    (stateAgg.charges || 0);
+      viewText = `${currentJuris4} only – axis scaled to this state (${d3.format(",")(total)} total actions, 2008–2024).`;
+    }
+
+    g.append("text")
+      .attr("x", 0)
+      .attr("y", -40)
+      .attr("fill", "#64748b")
+      .attr("font-size", 12)
+      .text(viewText);
 
     // 3. Grid + axes
     g.append("g")
@@ -236,10 +263,9 @@ function renderChart4() {
       .attr("transform", `translate(0,${innerHeight})`)
       .call(d3.axisBottom(x0));
 
-    xAxis.selectAll("text")
-      .attr("dy", "1.2em");
+    xAxis.selectAll("text").attr("dy", "1.2em");
 
-    // 4. Draw bars
+    // 4. Draw grouped bars
     const groupG = g.selectAll(".action-group")
       .data(groups)
       .enter()
@@ -262,10 +288,15 @@ function renderChart4() {
     bars.transition()
       .duration(900)
       .delay((d, i) => i * 70)
-      .attr("y", d => y(d.value))
-      .attr("height", d => innerHeight - y(d.value));
+      .attr("y", d => getBarGeom(d.value).y)
+      .attr("height", d => getBarGeom(d.value).h);
 
-    // 5. Value labels (more separated)
+    // 5. Value labels – friendly / non-overlapping
+    const maxByAction = {};
+    groups.forEach(grp => {
+      maxByAction[grp.actionId] = d3.max(grp.bars, b => b.value);
+    });
+
     groupG.selectAll("text.bar-label")
       .data(d => d.bars)
       .enter()
@@ -273,19 +304,38 @@ function renderChart4() {
       .attr("class", "bar-label")
       .attr("text-anchor", "middle")
       .attr("x", d => x1(d.jurisdiction) + x1.bandwidth() / 2)
-      .attr("y", d => y(d.value) - 8)    
+      .attr("y", d => {
+        if (!d.value) return innerHeight;
+        const rawY = y(d.value);
+        // Put label above bar, but never higher than 12px from top of plot
+        return Math.max(rawY - 18, 12);
+      })
       .attr("fill", "#0f172a")
       .attr("font-size", 11)
       .style("letter-spacing", "0.03em")
-      .text(d => d.value ? d3.format(",")(d.value) : "");
+      .text(d => {
+        if (!d.value) return ""; // hide true zeros
 
-    // 6. Hover interaction
+        if (isAllMode) {
+          // Only label tallest bar in each action group in "all" mode
+          if (d.value < maxByAction[d.actionId]) return "";
+        }
+
+        return d3.format(",")(d.value);
+      });
+
+    // 6. Hover interaction with clear highlight
     bars
       .on("mouseenter", function (event, d) {
+        const geom = getBarGeom(d.value);
+
         d3.select(this)
+          .raise()
           .transition().duration(120)
-          .attr("y", y(d.value) - 4)
-          .attr("height", innerHeight - y(d.value) + 4);
+          .attr("y", geom.y - 4)
+          .attr("height", geom.h + 4)
+          .attr("stroke", "#0f172a")
+          .attr("stroke-width", 1.5);
 
         tooltip
           .style("opacity", 1)
@@ -306,18 +356,21 @@ function renderChart4() {
           .style("top", event.pageY - 40 + "px");
       })
       .on("mouseleave", function (event, d) {
+        const geom = getBarGeom(d.value);
+
         d3.select(this)
           .transition().duration(120)
-          .attr("y", y(d.value))
-          .attr("height", innerHeight - y(d.value));
+          .attr("y", geom.y)
+          .attr("height", geom.h)
+          .attr("stroke", "none");
 
         tooltip.style("opacity", 0);
       });
 
-    // 7. Legend (states)
+    // 7. Legend for shown jurisdictions
     const legend = g.append("g")
       .attr("class", "simple-legend")
-      .attr("transform", `translate(0, -30)`);
+      .attr("transform", `translate(0, -15)`);
 
     const legendItems = legend.selectAll(".legend-item")
       .data(jurisList)
