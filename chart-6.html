@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chart 6 — Total Positive Drug Tests by State/Territory</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Top nav -->
+  <div class="nav">
+    <div class="container nav__bar">
+      <a class="brand" href="index.html">Road<span>Safety</span></a>
+      <nav class="nav__links">
+        <a href="chart-1.html">Chart 1</a>
+        <a href="chart-2.html">Chart 2</a>
+        <a href="chart-3.html">Chart 3</a>
+        <a href="chart-4.html">Chart 4</a>
+        <a href="chart-5.html">Chart 5</a>
+        <a href="chart-6.html" class="is-active">Chart 6</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero header (simple) -->
+  <header class="hero chart-header">
+    <div class="container centered">
+      <h1>Chart 6 · Total positive drug tests by state/territory (2008–2024)</h1>
+      <p class="intro">
+        This choropleth map shows how many positive drug tests were recorded in each state or territory.
+        Use the year slider to explore single years or view the total across all years.
+      </p>
+
+      <div class="pager">
+        <a class="btn btn--ghost" href="chart-5.html">← Previous</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main layout: map card + side cards -->
+  <section>
+    <div class="container chart6-layout">
+      <!-- Map panel -->
+      <figure class="chart-figure chart6-map-panel" id="chart6Panel">
+        <figcaption class="kicker">
+          Chart 6 · Total positive drug tests by state/territory (2008–2024)
+        </figcaption>
+
+        <!-- Controls row -->
+        <div class="chart-controls-row">
+          <span class="chart-label">Year:</span>
+
+          <button id="yearChip6" type="button"
+                  class="year-bubble year-chip-btn">
+            All years (2008–2024)
+          </button>
+
+          <button id="yearAllBtn6"
+                  type="button"
+                  class="btn btn--ghost btn--pill">
+            All years
+          </button>
+
+          <!-- fullscreen toggle -->
+          <button id="fsToggle6" type="button" class="map-fs-btn">
+            Full view
+          </button>
+        </div>
+
+        <!-- Slider -->
+        <input
+          type="range"
+          id="yearSlider6"
+          class="year-slider"
+          min="2008"
+          max="2024"
+          step="1"
+          value="2024"
+        />
+
+        <!-- Map container -->
+        <div id="chart6MapWrapper">
+          <svg id="chart6Map" viewBox="0 0 800 520"></svg>
+
+          <!-- Tooltip -->
+          <div id="chart6Tooltip" class="chart-tooltip hidden"></div>
+        </div>
+
+        <!-- Legend -->
+        <div class="chart6-legend">
+          <div class="chart6-legend-bar"></div>
+          <div class="chart6-legend-labels">
+            <span>Lower total positives</span>
+            <span>Higher total positives</span>
+          </div>
+        </div>
+
+        <p class="small-note" id="chart6HelperText">
+          Hover over a state or territory to see its total positive drug tests (2008–2024).
+        </p>
+      </figure>
+
+      <!-- Right column: KPI + pie + table -->
+      <div class="chart6-side">
+        <!-- KPI card -->
+        <div class="card chart6-kpi-card">
+          <h3>Total positives (<span id="chart6YearLabelKpi">2008–2024</span>)</h3>
+          <p id="chart6TotalValue" class="chart6-kpi-main">0</p>
+          <span id="chart6KpiSubtitle" class="kpi-sub">
+            Across all states and territories
+          </span>
+        </div>
+
+        <!-- Pie card -->
+        <div class="card chart6-pie-card">
+          <h3>Share of positives by state</h3>
+          <svg id="chart6Pie" viewBox="0 0 260 220"></svg>
+          <p class="small-note" id="chart6PieCaption">
+            Share by state · All years
+          </p>
+        </div>
+
+        <!-- Table card -->
+        <div class="card chart6-table-card">
+          <h3>State totals</h3>
+          <table class="table chart6-table">
+            <thead>
+              <tr>
+                <th>State</th>
+                <th style="text-align:right">Positives</th>
+              </tr>
+            </thead>
+            <tbody id="chart6TableBody">
+              <tr><td>-</td><td style="text-align:right">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer">
+      <div>© <span id="year6"></span> Road Safety</div>
+      <div class="page-dots">
+        <a href="chart-1.html">1</a> ·
+        <a href="chart-2.html">2</a> ·
+        <a href="chart-3.html">3</a> ·
+        <a href="chart-4.html">4</a> ·
+        <a href="chart-5.html">5</a> ·
+        <a href="chart-6.html">6</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year6').textContent = new Date().getFullYear();
+  </script>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Make sure the paths below match where you put your files -->
+  <script src="js/chart6.js"></script>
+</body>
+</html>
