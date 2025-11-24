@@ -1,4 +1,22 @@
-"DETECTION_METHOD","Sum(COUNT)"
-"Indicator (Stage 1)",7238
-"Laboratory or Toxicology (Stage 3)",11693
-"Secondary Confirmatory (Stage 2)",6792
+"YEAR","DETECTION_METHOD","Sum(COUNT)"
+2008,"Indicator (Stage 1)",2413
+2009,"Indicator (Stage 1)",2910
+2010,"Indicator (Stage 1)",4033
+2011,"Indicator (Stage 1)",5604
+2012,"Indicator (Stage 1)",8242
+2013,"Indicator (Stage 1)",9853
+2014,"Indicator (Stage 1)",16289
+2015,"Indicator (Stage 1)",35143
+2016,"Indicator (Stage 1)",38703
+2017,"Indicator (Stage 1)",39855
+2018,"Indicator (Stage 1)",48216
+2019,"Indicator (Stage 1)",48466
+2020,"Indicator (Stage 1)",46905
+2021,"Indicator (Stage 1)",49465
+2022,"Indicator (Stage 1)",46868
+2023,"Indicator (Stage 1)",6037
+2023,"Laboratory or Toxicology (Stage 3)",10099
+2023,"Secondary Confirmatory (Stage 2)",5682
+2024,"Indicator (Stage 1)",7238
+2024,"Laboratory or Toxicology (Stage 3)",11693
+2024,"Secondary Confirmatory (Stage 2)",6792
