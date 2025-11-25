@@ -1705,4 +1705,31 @@ body.chart6-lock-scroll {
   margin-right: 8px;
   vertical-align: middle;
 }
+.chart6-insight-card {
+  margin-top: 18px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: #f9fafb;
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+  font-size: 13px;
+  color: #0f172a;
+}
+
+.chart6-insight-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.chart6-insight-body {
+  margin: 0 0 6px;
+  color: #64748b;
+}
+
+.chart6-insight-list {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.5;
+}
 
