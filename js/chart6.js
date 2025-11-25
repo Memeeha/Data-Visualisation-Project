@@ -83,6 +83,9 @@ Promise.all([
   const fsPanel    = document.getElementById("chart6Panel");
 
   const mapSvg     = d3.select("#chart6Map");
+  const insightTopEl   = document.getElementById("chart6InsightTopState");
+const insightTotalEl = document.getElementById("chart6InsightTotal");
+
 
   // -------------------------------------------------------
   // SLIDER INIT
@@ -192,6 +195,25 @@ Promise.all([
       .sort((a, b) => d3.descending(a.value, b.value));
 
     const localMax = d3.max(rows, d => d.value) || 1;
+    // Update insight panel
+const top = rows[0];
+
+if (insightTopEl) {
+  if (top) {
+    insightTopEl.textContent =
+      `${top.state} (${top.value.toLocaleString("en-AU")})`;
+  } else {
+    insightTopEl.textContent = "No data";
+  }
+}
+
+if (insightTotalEl) {
+  const totalSumForInsight = d3.sum(rows, d => d.value);
+  insightTotalEl.textContent =
+    totalSumForInsight.toLocaleString("en-AU");
+}
+
+    
     colorScale.domain([0, localMax]);
 
     const label = currentYear === "all"
