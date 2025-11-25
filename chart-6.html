@@ -44,7 +44,7 @@
       <!-- Map panel -->
       <figure class="chart-figure chart6-map-panel" id="chart6Panel">
         <figcaption class="kicker">
-          Chart 6 · Total positive drug tests by state/territory (2008–2024)
+       Question  6. From 2008 to 2024, how many positive drug tests were recorded in each jurisdiction?
         </figcaption>
 
         <!-- Controls row -->
@@ -99,6 +99,22 @@
         <p class="small-note" id="chart6HelperText">
           Hover a state or slice to see its positive drug tests in 2008–2024.
         </p>
+       <!-- Dynamic insight panel under the map -->
+<div id="chart6Insight" class="chart6-insight-card">
+  <h4 class="chart6-insight-title">Quick insight</h4>
+  <p class="chart6-insight-body">
+    Use the year slider or year chip to see which state records the most positive drug tests.
+  </p>
+  <ul class="chart6-insight-list">
+    <li>
+      Top state: <strong id="chart6InsightTopState">–</strong>
+    </li>
+    <li>
+      Total positives in this view:
+      <strong id="chart6InsightTotal">–</strong>
+    </li>
+  </ul>
+</div>
       </figure>
 
       <!-- Right column: KPI + pie + table -->
