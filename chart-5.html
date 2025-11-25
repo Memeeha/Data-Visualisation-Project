@@ -16,7 +16,7 @@
         <a href="chart-2.html">Chart 2</a>
         <a href="chart-3.html">Chart 3</a>
         <a href="chart-4.html">Chart 4</a>
-        <a href="chart-5.html" class="is-active">Chart 5</a>
+        <a href="chart-5.html" class="active">Chart 5</a>
           <a href="chart-6.html">Chart 6</a>
       </nav>
     </div>
@@ -118,13 +118,30 @@
       </figure>
 
       <aside class="notes">
-        <h3>Notes &amp; Insights</h3>
-        <ul class="list">
-          <li>Each bar represents one age group.</li>
-          <li>Use the year controls to see how age profiles shift over time.</li>
-          <li>The “All years” option shows the long-term overall pattern.</li>
-        </ul>
-      </aside>
+  <h3>Notes &amp; Insights</h3>
+  <ul class="list">
+    <li>
+      Each bar shows how many positive tests came from one age group in the selected year.
+    </li>
+    <li>
+      In the earlier years, the data is grouped as <strong>“All ages”</strong> only, so all age
+      groups are combined into one total and cannot be split further.
+    </li>
+    <li>
+      From the later years (up to 2023), the dataset includes separate age bands, so you can see
+      which age groups contribute more to positive tests.
+    </li>
+    <li>
+      The <strong>“Unknown”</strong> category means the person’s age was not recorded or was missing
+      in the original data, so these positives cannot be placed into a specific age group.
+    </li>
+    <li>
+      Use the year controls to see how the age profile changes over time, and use
+      <strong>“All years”</strong> to view the long-term overall pattern.
+    </li>
+  </ul>
+</aside>
+
     </div>
   </section>
 
@@ -149,5 +166,26 @@
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/chart5.js"></script>
+
+   <!-- Nav active script -->
+  <script>
+    const navLinks = document.querySelectorAll('.nav__links a');
+    const current = window.location.pathname.split('/').pop() || 'index.html';
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+
+      // highlight link that matches current page
+      if (href === current) {
+        link.classList.add('active');
+      }
+
+      // keep click behaviour consistent
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
