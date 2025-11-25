@@ -43,7 +43,6 @@ Promise.all([
   // -------------------------------------------------------
   // ROLLUPS
   // -------------------------------------------------------
-  // totalsByYearState: Map(year -> Map(stateAbbr -> total))
   const totalsByYearState = d3.rollup(
     data,
     v => d3.sum(v, d => d.count),
@@ -51,7 +50,6 @@ Promise.all([
     d => d.state
   );
 
-  // totalsAllYears: Map(stateAbbr -> total over all years)
   const totalsAllYears = d3.rollup(
     data,
     v => d3.sum(v, d => d.count),
@@ -63,29 +61,28 @@ Promise.all([
   // -------------------------------------------------------
   // DOM REFERENCES
   // -------------------------------------------------------
- const slider    = document.getElementById("yearSlider6");
-const chip      = document.getElementById("yearChip6");
-const allBtn    = document.getElementById("yearAllBtn6");
-const tooltipEl = d3.select("#chart6Tooltip");
-const helper    = document.getElementById("chart6HelperText");
-const mapWrapper = document.getElementById("chart6MapWrapper"); // NEW
+  const slider     = document.getElementById("yearSlider6");
+  const chip       = document.getElementById("yearChip6");
+  const allBtn     = document.getElementById("yearAllBtn6");
+  const helper     = document.getElementById("chart6HelperText");
+  const mapWrapper = document.getElementById("chart6MapWrapper");
+  const mapTooltip = d3.select("#chart6Tooltip");      // map tooltip
 
+  const kpiVal     = document.getElementById("chart6TotalValue");
+  const kpiLabel   = document.getElementById("chart6YearLabelKpi");
+  const kpiSub     = document.getElementById("chart6KpiSubtitle");
 
-  const kpiVal    = document.getElementById("chart6TotalValue");
-  const kpiLabel  = document.getElementById("chart6YearLabelKpi");
-  const kpiSub    = document.getElementById("chart6KpiSubtitle");
+  const pieSvg     = d3.select("#chart6Pie");
+  const pieLegend  = document.getElementById("chart6PieLegend");
+  const pieTooltip = d3.select("#chart6PieTooltip");   // PIE tooltip (different id)
+  const pieCard    = document.querySelector(".chart6-pie-card");
 
-  const pieSvg    = d3.select("#chart6Pie");
-  const tableBody = document.getElementById("chart6TableBody");
-  const pieCap    = document.getElementById("chart6PieCaption");
+  const tableBody  = document.getElementById("chart6TableBody");
 
-  const fsBtn     = document.getElementById("fsToggle6");
-  const fsPanel   = document.getElementById("chart6Panel");
+  const fsBtn      = document.getElementById("fsToggle6");
+  const fsPanel    = document.getElementById("chart6Panel");
 
-  const mapSvg    = d3.select("#chart6Map");
-
-  // NEW: legend element for the pie
-  const pieLegend = document.getElementById("chart6PieLegend"); // NEW
+  const mapSvg     = d3.select("#chart6Map");
 
   // -------------------------------------------------------
   // SLIDER INIT
@@ -130,7 +127,6 @@ const mapWrapper = document.getElementById("chart6MapWrapper"); // NEW
 
   const arc = d3.arc().innerRadius(55).outerRadius(95);
   const pie = d3.pie().value(d => d.value).sort(null);
-  
 
   const pieColor = d3.scaleOrdinal(d3.schemeSet2);
 
@@ -140,10 +136,9 @@ const mapWrapper = document.getElementById("chart6MapWrapper"); // NEW
   }
 
   let currentYear = "all";
-  
 
   // -------------------------------------------------------
-  // YEAR DROPDOWN (like Chart 3)
+  // YEAR DROPDOWN
   // -------------------------------------------------------
   const dropdown = document.createElement("div");
   dropdown.id = "yearDropdown6";
@@ -166,11 +161,13 @@ const mapWrapper = document.getElementById("chart6MapWrapper"); // NEW
     if (!btn) return;
     const val = btn.dataset.year;
     currentYear = (val === "all") ? "all" : +val;
+
     if (currentYear === "all") {
       slider.value = maxYear;
     } else {
       slider.value = currentYear;
     }
+    updateSliderFill();
     dropdown.classList.add("hidden");
     updateChart6();
   });
@@ -206,66 +203,58 @@ const mapWrapper = document.getElementById("chart6MapWrapper"); // NEW
       : String(label);
 
     helper.textContent =
-      `Hover a state to see its positive drug tests in ${label}.`;
+      `Hover a state or slice to see its positive drug tests in ${label}.`;
 
     kpiLabel.textContent = label;
-    pieCap.textContent = `Share by state · ${label}`;
 
     const totalSum = d3.sum(rows, d => d.value);
     kpiVal.textContent = totalSum.toLocaleString("en-AU");
     kpiSub.textContent = totalSum === 0
-      ? "No data for this year."
-      : "Across all states";
+      ? "No data for this period."
+      : "Across all states and territories";
 
-    // ------------------- MAP COLOURS + HOVER -------------------
-mapStates.transition().duration(animate ? 600 : 0)
-  .attr("fill", d => {
-    const name = d.properties.STATE_NAME;
-    const code = NAME_TO_ABBR[name] || name;
-    const v = totals.get(code) || 0;
-    return colorScale(v);
-  });
+    // ------------------- MAP: COLOURS + HOVER -------------------
+    mapStates.transition().duration(animate ? 600 : 0)
+      .attr("fill", d => {
+        const name = d.properties.STATE_NAME;
+        const code = NAME_TO_ABBR[name] || name;
+        const v = totals.get(code) || 0;
+        return colorScale(v);
+      });
 
-mapStates
-  .on("mouseenter", function (event, d) {
-    const name = d.properties.STATE_NAME;
-    const code = NAME_TO_ABBR[name] || name;
-    const val  = totals.get(code) || 0;
+    mapStates
+      .on("mouseenter", function (event, d) {
+        const name = d.properties.STATE_NAME;
+        const code = NAME_TO_ABBR[name] || name;
+        const val  = totals.get(code) || 0;
 
-    d3.select(this)
-      .attr("stroke", "#0f172a")
-      .attr("stroke-width", 2);
+        d3.select(this)
+          .attr("stroke", "#0f172a")
+          .attr("stroke-width", 2);
 
-    const labelText = currentYear === "all"
-      ? `${minYear}–${maxYear}`
-      : currentYear;
+        mapTooltip
+          .classed("hidden", false)
+          .html(`
+            <strong>${name} (${code})</strong><br>
+            ${val.toLocaleString("en-AU")} positives<br>
+            <span style="font-size:12px">Year: ${label}</span>
+          `);
+      })
+      .on("mousemove", function (event) {
+        const rect = mapWrapper.getBoundingClientRect();
+        const x = event.clientX - rect.left + 14;
+        const y = event.clientY - rect.top + 14;
 
-    // Tooltip content: state + sum + year
-    tooltipEl
-      .classed("hidden", false)
-      .html(`
-        <strong>${name} (${code})</strong><br>
-        ${val.toLocaleString("en-AU")} positives<br>
-        <span style="font-size:12px">Year: ${labelText}</span>
-      `);
-  })
-  .on("mousemove", function (event) {
-  // position relative to the map wrapper so it works at any window size
-  const rect = mapWrapper.getBoundingClientRect();
-  const x = event.clientX - rect.left + 14;
-  const y = event.clientY - rect.top + 14;
-
-  tooltipEl
-    .style("left", x + "px")
-    .style("top",  y + "px");
-})
-
-  .on("mouseleave", function () {
-    tooltipEl.classed("hidden", true);
-    d3.select(this)
-      .attr("stroke", "#cbd5e1")
-      .attr("stroke-width", 1.2);
-  });
+        mapTooltip
+          .style("left", x + "px")
+          .style("top",  y + "px");
+      })
+      .on("mouseleave", function () {
+        mapTooltip.classed("hidden", true);
+        d3.select(this)
+          .attr("stroke", "#cbd5e1")
+          .attr("stroke-width", 1.2);
+      });
 
     // ------------------- PIE CHART -------------------
     const arcs = pie(rows);
@@ -273,13 +262,15 @@ mapStates
     const piePaths = pieGroup.selectAll("path")
       .data(arcs, d => d.data.state);
 
-    piePaths.enter()
+    const mergedPie = piePaths.enter()
       .append("path")
       .attr("fill", d => pieColor(d.data.state))
       .attr("stroke", "#ffffff")
       .attr("stroke-width", 1)
       .each(function (d) { this._current = d; })
-      .merge(piePaths)
+      .merge(piePaths);
+
+    mergedPie
       .transition().duration(600)
       .attrTween("d", function (d) {
         const i = d3.interpolate(this._current, d);
@@ -287,9 +278,47 @@ mapStates
         return t => arc(i(t));
       });
 
+    // PIE HOVER TOOLTIP (uses #chart6PieTooltip)
+    mergedPie
+      .on("mouseenter", function (event, d) {
+        const state = d.data.state;
+        const val   = d.data.value;
+        const pct   = totalSum ? (val / totalSum) * 100 : 0;
+
+        pieTooltip
+          .classed("hidden", false)
+          .html(`
+            <strong>${state}</strong><br>
+            ${val.toLocaleString("en-AU")} positives<br>
+            ${pct.toFixed(1)}% of total<br>
+            <span style="font-size:12px">Year: ${label}</span>
+          `);
+      })
+      // 🔧 FIXED: keep tooltip close to the cursor (no more big offset)
+      .on("mousemove", function (event) {
+        pieTooltip
+          .style("left", (event.clientX + 12) + "px")
+          .style("top",  (event.clientY + 12) + "px");
+      })
+      .on("mouseleave", function () {
+        pieTooltip.classed("hidden", true);
+      });
+
     piePaths.exit().remove();
 
-    // NEW: Pie legend (uses same colours + shows value + %)
+    // centre total text in the middle of the donut
+    const pieText = pieGroup.selectAll("text.total-label").data([totalSum]);
+    pieText.enter().append("text")
+      .attr("class", "total-label")
+      .attr("text-anchor", "middle")
+      .attr("dy", "0.35em")
+      .style("font-size", "12px")
+      .style("fill", "#0f172a")
+      .merge(pieText)
+      .text(d => d ? d.toLocaleString("en-AU") : "");
+    pieText.exit().remove();
+
+    // ------------------- PIE LEGEND -------------------
     if (pieLegend) {
       pieLegend.innerHTML = "";
       rows.forEach(r => {
@@ -311,51 +340,46 @@ mapStates
       });
     }
 
-    // optional: simple labels in the middle with total
-    const pieText = pieGroup.selectAll("text.total-label").data([totalSum]);
-    pieText.enter().append("text")
-      .attr("class", "total-label")
-      .attr("text-anchor", "middle")
-      .attr("dy", "0.35em")
-      .style("font-size", "12px")
-      .style("fill", "#0f172a")
-      .merge(pieText)
-      .text(d => d ? d.toLocaleString("en-AU") : "");
-    pieText.exit().remove();
-
-    // ------------------- TABLE -------------------
+    // ------------------- TABLE (with colour dots) -------------------
     tableBody.innerHTML = rows.map(r => `
       <tr>
-        <td>${r.state}</td>
+        <td>
+          <span class="chart6-table-swatch"
+                style="background-color:${pieColor(r.state)}"></span>
+          ${r.state}
+        </td>
         <td style="text-align:right">${r.value.toLocaleString("en-AU")}</td>
       </tr>
     `).join("");
   }
 
   // -------------------------------------------------------
-  // INTERACTIONS
+  // SLIDER FILL (nice gradient)
   // -------------------------------------------------------
- slider.addEventListener("input", () => {
-  currentYear = +slider.value;
-  dropdown.classList.add("hidden");
-  // no animation while dragging – makes it feel smooth/snappy
-  updateChart6(false);
-});
-// Make the slider fill color follow its value like Chart 2
-function updateSliderFill() {
-  const min = slider.min;
-  const max = slider.max;
-  const val = slider.value;
-  const percent = ((val - min) / (max - min)) * 100;
-  slider.style.setProperty("--percent", percent + "%");
-}
-slider.addEventListener("input", updateSliderFill);
-updateSliderFill(); // initialize
+  function updateSliderFill() {
+    const min = +slider.min;
+    const max = +slider.max;
+    const val = +slider.value;
+    const percent = ((val - min) / (max - min)) * 100;
+    slider.style.setProperty("--percent", percent + "%");
+  }
 
+  slider.addEventListener("input", () => {
+    currentYear = +slider.value;
+    dropdown.classList.add("hidden");
+    updateSliderFill();
+    updateChart6(false); // no animation while dragging
+  });
 
+  updateSliderFill();
+
+  // -------------------------------------------------------
+  // BUTTONS
+  // -------------------------------------------------------
   allBtn.addEventListener("click", () => {
     currentYear = "all";
     slider.value = maxYear;
+    updateSliderFill();
     dropdown.classList.add("hidden");
     updateChart6();
   });
@@ -370,6 +394,7 @@ updateSliderFill(); // initialize
   // INITIAL RENDER
   // -------------------------------------------------------
   updateChart6(false);
+
 }).catch(err => {
   console.error("Error loading data for Chart 6:", err);
 });
