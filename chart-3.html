@@ -14,10 +14,10 @@
       <nav class="nav__links">
         <a href="chart-1.html">Chart 1</a>
         <a href="chart-2.html">Chart 2</a>
-        <a href="chart-3.html" class="is-active">Chart 3</a>
+        <a href="chart-3.html" class="active">Chart 3</a>
         <a href="chart-4.html">Chart 4</a>
         <a href="chart-5.html">Chart 5</a>
-          <a href="chart-6.html">Chart 6</a>
+        <a href="chart-6.html">Chart 6</a>
       </nav>
     </div>
   </div>
@@ -106,13 +106,28 @@
       </figure>
 
       <aside class="notes">
-        <h3>Notes &amp; Insights</h3>
-        <ul class="list">
-          <li>Roadside indicator tests are usually the first stage and tend to record the most positives.</li>
-          <li>Secondary confirmatory and laboratory methods validate initial results and capture true positives.</li>
-          <li>Filtering by year shows how the balance between quick screening and lab analysis changes over time.</li>
-        </ul>
-      </aside>
+  <h3>Notes &amp; Insights</h3>
+  <ul class="list">
+    <li>
+      Indicator (Stage 1) tests usually have the biggest slice because they are used on the roadside
+      for quick screening, so they capture most of the initial positives.
+    </li>
+    <li>
+      Secondary confirmatory tests and lab or toxicology tests are smaller because they are only done
+      on a subset of cases to double-check the first result or when a stronger legal outcome is needed.
+    </li>
+    <li>
+      Years where the indicator slice grows suggest more roadside screening activity, while years with
+      larger confirmatory or lab slices suggest a stronger focus on validating results and preparing
+      evidence for court.
+    </li>
+    <li>
+      By changing the year filter, you can see how police priorities shift between fast screening
+      (indicator) and more detailed follow-up testing over time.
+    </li>
+  </ul>
+</aside>
+
     </div>
   </section>
 
@@ -126,7 +141,7 @@
         <a href="chart-3.html">3</a> ·
         <a href="chart-4.html">4</a> ·
         <a href="chart-5.html">5</a>  .
-          <a href="chart-6.html">Chart 6</a>
+        <a href="chart-6.html">Chart 6</a>
       </div>
     </div>
   </footer>
@@ -137,5 +152,26 @@
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/chart3.js"></script>
+
+  <!-- Nav active script -->
+  <script>
+    const navLinks = document.querySelectorAll('.nav__links a');
+    const current = window.location.pathname.split('/').pop() || 'index.html';
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+
+      // highlight link that matches current page
+      if (href === current) {
+        link.classList.add('active');
+      }
+
+      // keep click behaviour consistent
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
