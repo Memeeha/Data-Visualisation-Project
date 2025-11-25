@@ -359,5 +359,18 @@
       });
     });
   </script>
+  <script>
+  const navLinks = document.querySelectorAll('.nav__links a');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      // remove active from all links
+      navLinks.forEach(l => l.classList.remove('active'));
+      // add active to the clicked one
+      link.classList.add('active');
+    });
+  });
+</script>
+
 </body>
 </html>
