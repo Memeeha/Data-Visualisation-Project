@@ -234,8 +234,13 @@ p {
   position: relative;
   transition: color .2s ease;
 }
-.nav__links a:hover { color: var(--accent); }
 
+/* hover style */
+.nav__links a:hover {
+  color: var(--accent);
+}
+
+/* underline animation */
 .nav__links a::after {
   content: '';
   position: absolute;
@@ -247,6 +252,14 @@ p {
   transition: width .25s ease;
 }
 .nav__links a:hover::after {
+  width: 100%;
+}
+
+/* active link */
+.nav__links a.active {
+  color: var(--accent);
+}
+.nav__links a.active::after {
   width: 100%;
 }
 
@@ -490,16 +503,17 @@ footer {
   color: rgba(255, 255, 255, .95);
 }
 
-/* Chart layout */
+/* Chart layout – both cards centred and same width */
 .chart-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(18px, 2.5vw, 24px);
-  align-items: stretch;
   max-width: 960px;
   margin: 32px auto 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center the cards */
+  gap: clamp(18px, 2.5vw, 24px);
 }
 
+/* Chart card */
 .chart-figure {
   position: relative;
   background: var(--bg-white);
@@ -508,8 +522,12 @@ footer {
   box-shadow: var(--shadow);
   padding: 1.75rem 1.75rem 1.5rem;
   overflow: visible;
+
+  width: 100%;
+  max-width: 960px;     /* same width as notes */
 }
 
+/* coloured strip on top of chart card */
 .chart-figure::before {
   content: "";
   position: absolute;
@@ -524,19 +542,25 @@ footer {
   font-size: .75rem;
 }
 
+/* Notes card – match chart card width & centring */
 .notes {
   background: var(--bg-white);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
   padding: 1.5rem 1.75rem;
+
+  width: 100%;
+  max-width: 960px;     /* same as chart card */
 }
+
 .notes h3 {
   margin-bottom: .75rem;
   color: var(--text-dark);
   font-size: 1.125rem;
 }
 
+/* Pager under hero stays the same */
 .pager {
   display: flex;
   gap: 10px;
@@ -544,6 +568,7 @@ footer {
   flex-wrap: wrap;
   margin-top: 1.5rem;
 }
+
 
 /* SVG Charts */
 .svg-frame {
@@ -687,7 +712,7 @@ footer {
     transform 0.1s ease;
 }
 
-/* 🔹 unified hover for ALL year options – same as pill hover */
+/* unified hover */
 .year-option:hover,
 .year-option2:hover,
 .year-option5:hover {
@@ -750,7 +775,7 @@ footer {
   transform: scale(1.1);
 }
 
-/* -------- Generic pill buttons (age, state, "All years") -------- */
+/* -------- Generic pill buttons -------- */
 
 .btn--pill,
 .age-pill,
@@ -897,7 +922,7 @@ footer {
   color: #6b7280;
 }
 
-/* Table block (if needed) */
+/* Table block */
 .table-wrap {
   background: var(--bg-white);
   border: 1px solid var(--border);
@@ -1169,7 +1194,6 @@ footer {
   pointer-events: none;
 }
 
-
 /* ============================
    Chart 6 – Map layout & legend
    ============================ */
@@ -1203,12 +1227,6 @@ footer {
   transform: translateY(-2px);
 }
 
-/* Legend text */
-.chart6-legend .legend-label {
-  font-size: 0.75rem;
-  fill: #64748b;
-}
-
 /* =======================================================
    Chart 6 layout + tooltip
    ======================================================= */
@@ -1229,24 +1247,34 @@ footer {
   overflow: hidden;
 }
 
+/* 🔹 Map gradient legend (kept & centred) */
 .chart6-legend {
-  margin-top: 14px;
-  text-align: center;
-}
-.chart6-legend-bar {
+  margin-top: 18px;
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
   display: flex;
-  justify-content: center;
-  margin-bottom: 4px;
-}
-.chart6-legend-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  color: #64748b;
-  max-width: 360px;
-  margin: 0 auto;
+  flex-direction: column;
+  align-items: center;
 }
 
+.chart6-legend-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #dbeafe, #1e40af);
+  margin-bottom: 4px;
+}
+
+.chart6-legend-labels {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+/* tooltip for map */
 .chart6-tooltip {
   position: absolute;
   pointer-events: none;
@@ -1299,135 +1327,20 @@ footer {
   color: var(--text-muted);
 }
 
-.chart6-table {
-  font-size: 0.86rem;
-}
-.chart6-table td, .chart6-table th {
-  padding: 0.4rem 0.25rem;
-}
+/* =======================================================
+   Table + built-in legend colours for pie slices
+   ======================================================= */
 
-/* responsive */
-@media (max-width: 960px) {
-  .chart6-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ============================================================
-   CHART 6 – CLEAN, NON-OVERLAPPING, STABLE LAYOUT
-   ============================================================ */
-
-/* ----------------------------- */
-/* MAIN LAYOUT GRID              */
-/* ----------------------------- */
-.chart6-layout {
-  display: grid;
-  grid-template-columns: 1.7fr 1fr;
-  gap: 28px;
-  align-items: start;
-  padding-bottom: 20px;
-}
-
-.chart6-map-panel {
-  position: relative;
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 20px;
-  border: 1px solid #e2e8f0;
-}
-
-/* ----------------------------- */
-/* MAP WRAPPER                   */
-/* ----------------------------- */
-#chart6MapWrapper {
-  background: #f8fafc;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  padding: 12px;
-  margin-top: 12px;
-  position: relative;
-}
-
-#chart6Map {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* ----------------------------- */
-/* TOOLTIP                       */
-/* ----------------------------- */
-.chart-tooltip {
-  position: fixed;
-  pointer-events: none;
-  background: rgba(15, 23, 42, 0.92);
-  color: #f8fafc;
-  padding: 8px 12px;
-  font-size: 13px;
-  border-radius: 8px;
-  white-space: nowrap;
-  z-index: 99999;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.35);
-}
-.chart-tooltip.hidden {
-  display: none;
-}
-
-/* ----------------------------- */
-/* LEGEND BAR                    */
-/* ----------------------------- */
-.chart6-legend {
-  margin-top: 18px;
-}
-
-.chart6-legend-bar {
-  height: 12px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #dbeafe, #1e40af);
-}
-
-.chart6-legend-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.82rem;
-  color: #64748b;
-  margin-top: 5px;
-}
-
-/* ----------------------------- */
-/* RIGHT SIDE PANELS             */
-/* ----------------------------- */
-.chart6-side {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.chart6-kpi-card,
-.chart6-pie-card,
-.chart6-table-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 18px 22px;
-  box-shadow: 0px 6px 18px rgba(0,0,0,0.04);
-}
-
-/* KPI text */
-.chart6-kpi-main {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-top: 6px;
-  color: #1d4ed8;
-}
-
-/* ----------------------------- */
-/* TABLE                         */
-/* ----------------------------- */
 .chart6-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 0.86rem;
   margin-top: 12px;
+}
+
+.chart6-table th,
+.chart6-table td {
+  padding: 0.4rem 0.25rem;
 }
 
 .chart6-table th {
@@ -1443,9 +1356,112 @@ footer {
   border-bottom: 1px solid #f1f5f9;
 }
 
-/* ----------------------------- */
-/* FULLSCREEN MODE               */
-/* ----------------------------- */
+/* first column = state name + colour dot */
+.chart6-table tbody tr td:first-child {
+  position: relative;
+  padding-left: 18px;          /* space for the dot */
+}
+
+.chart6-table tbody tr td:first-child::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+/* =======================================================
+   CHART 6 – CLEAN, NON-OVERLAPPING, STABLE LAYOUT
+   ======================================================= */
+
+/* MAIN LAYOUT GRID  */
+.chart6-layout {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  column-gap: clamp(32px, 4vw, 48px);
+  row-gap: 20px;
+}
+
+.chart6-map-panel {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 22px;
+  border: 1px solid #e2e8f0;
+}
+
+/* MAP WRAPPER */
+#chart6MapWrapper {
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  margin-top: 12px;
+  position: relative;
+}
+
+#chart6Map {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* generic chart tooltip (used by D3) */
+.chart-tooltip {
+  position: absolute;
+  padding: 6px 10px;
+  background: #0f172a;
+  color: #f9fafb;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+  pointer-events: none;
+  z-index: 20;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+}
+
+.chart-tooltip.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.chart-tooltip:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* RIGHT SIDE PANELS (keep padding consistent) */
+.chart6-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chart6-kpi-card,
+.chart6-pie-card,
+.chart6-table-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0px 6px 18px rgba(0,0,0,0.04);
+}
+
+/* KPI text */
+.chart6-kpi-main {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-top: 6px;
+  color: #1d4ed8;
+}
+
+/* FULLSCREEN MODE (unchanged layout, just for map panel) */
 .chart6-map-panel.is-fullscreen {
   position: fixed;
   inset: 60px 40px 40px 40px;
@@ -1479,9 +1495,7 @@ body.chart6-lock-scroll {
   overflow: hidden;
 }
 
-/* ----------------------------- */
-/* YEAR DROPDOWN (NEW, CLEAN)   */
-/* ----------------------------- */
+/* YEAR DROPDOWN (Chart 6) */
 .year-dropdown-wrapper {
   position: relative;
 }
@@ -1545,17 +1559,14 @@ body.chart6-lock-scroll {
   background: #f1f5f9;
 }
 
-/* ----------------------------- */
-/* RESPONSIVE FIX               */
-/* ----------------------------- */
-
+/* RESPONSIVE FIX */
 @media (max-width: 900px) {
   .chart6-layout {
     grid-template-columns: 1fr;
   }
 }
 
-/* Pie card layout */
+/* Pie card layout (donut + text) */
 .chart6-pie-card {
   display: flex;
   align-items: center;
@@ -1567,37 +1578,88 @@ body.chart6-lock-scroll {
   flex: 0 0 auto;
 }
 
-.chart6-pie-layout {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+/* Hide old pie legend (we use the table as the legend now) */
+.chart6-pie-legend,
+.pie-legend {
+  display: none;
 }
 
-.chart6-pie-legend {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* === Chart 6: make right column match map card height === */
+
+.chart6-layout {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  column-gap: clamp(32px, 4vw, 48px);
+  row-gap: 20px;
+  align-items: stretch;           /* stretch both columns to same height */
+}
+
+.chart6-map-panel,
+.chart6-side {
+  height: 100%;
+}
+
+/* right column fills height, last card grows to match map panel */
+.chart6-side {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 0.85rem;
-  color: var(--text-body);
+  gap: 20px;
 }
 
-.chart6-pie-legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.chart6-pie-swatch {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
+.chart6-kpi-card,
+.chart6-pie-card,
+.chart6-table-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px 22px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
   flex-shrink: 0;
 }
-.chart-tooltip {
-  position: absolute;
+
+.chart6-table-card {
+  flex: 1;                        /* stretch last card to fill column */
+  display: flex;
+  flex-direction: column;
+}
+
+.chart6-table {
+  margin-top: 12px;
+  flex: 1;
+}
+
+/* === Chart 6: centre fullscreen map panel === */
+
+.chart6-map-panel.is-fullscreen {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(1100px, 96vw);
+  max-height: 90vh;
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  z-index: 2000;
+  overflow: auto;
+
+  /* reset old inset values */
+  right: auto;
+  bottom: auto;
+}
+
+@media (max-width: 900px) {
+  .chart6-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Chart 6 pie tooltip – keep it close to cursor === */
+#chart6PieTooltip {
+  position: fixed;              /* follow the viewport mouse position */
   padding: 6px 10px;
   background: #0f172a;
   color: #f9fafb;
@@ -1606,33 +1668,41 @@ body.chart6-lock-scroll {
   line-height: 1.4;
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
   pointer-events: none;
-  z-index: 20;
-  transform: translate(-50%, -100%);
+  z-index: 9999;
   white-space: nowrap;
+  /* override any generic .chart-tooltip transform */
+  transform: none !important;
 }
 
-.chart-tooltip.hidden {
+#chart6PieTooltip.hidden {
   opacity: 0;
   visibility: hidden;
 }
 
-.chart-tooltip:not(.hidden) {
+#chart6PieTooltip:not(.hidden) {
   opacity: 1;
   visibility: visible;
 }
 
-.pie-legend text {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
+
+/* Notes width same as Chart 6 cards */
+.chart6-notes-wrapper {
+  margin-top: 26px;
+  margin-bottom: 40px;
 }
 
-.legend-item:hover text {
-  fill: #1d4ed8;
-  cursor: default;
+.chart6-notes {
+  max-width: 800px;   /* same as .chart6-layout */
+  margin: 0 auto;
 }
 
-.legend-item rect {
-  stroke: #fff;
-  stroke-width: 1px;
+/* Colour dots for table, matching pie colours */
+.chart6-table-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
