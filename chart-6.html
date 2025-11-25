@@ -17,22 +17,23 @@
         <a href="chart-3.html">Chart 3</a>
         <a href="chart-4.html">Chart 4</a>
         <a href="chart-5.html">Chart 5</a>
-        <a href="chart-6.html" class="is-active">Chart 6</a>
+        <a href="chart-6.html" class="active">Chart 6</a>
       </nav>
     </div>
   </div>
 
-  <!-- Hero header (simple) -->
+  <!-- Hero header -->
   <header class="hero chart-header">
     <div class="container centered">
       <h1>Chart 6 · Total positive drug tests by state/territory (2008–2024)</h1>
       <p class="intro">
-        This choropleth map shows how many positive drug tests were recorded in each state or territory.
-        Use the year slider to explore single years or view the total across all years.
+        This choropleth map shows how many positive drug tests were recorded in each state or
+        territory. Use the year controls to explore single years or view the total across all years.
       </p>
 
       <div class="pager">
         <a class="btn btn--ghost" href="chart-5.html">← Previous</a>
+        <a class="btn btn--brand" href="index.html">Back to Home</a>
       </div>
     </div>
   </header>
@@ -82,7 +83,7 @@
         <div id="chart6MapWrapper">
           <svg id="chart6Map" viewBox="0 0 800 520"></svg>
 
-          <!-- Tooltip -->
+          <!-- Map tooltip (ID ONLY FOR MAP) -->
           <div id="chart6Tooltip" class="chart-tooltip hidden"></div>
         </div>
 
@@ -96,7 +97,7 @@
         </div>
 
         <p class="small-note" id="chart6HelperText">
-          Hover over a state or territory to see its total positive drug tests (2008–2024).
+          Hover a state or slice to see its positive drug tests in 2008–2024.
         </p>
       </figure>
 
@@ -114,10 +115,15 @@
         <!-- Pie card -->
         <div class="card chart6-pie-card">
           <h3>Share of positives by state</h3>
-          <svg id="chart6Pie" viewBox="0 0 260 220"></svg>
-          <p class="small-note" id="chart6PieCaption">
-            Share by state · All years
-          </p>
+
+          <div class="chart6-pie-layout">
+            <svg id="chart6Pie" viewBox="0 0 260 220"></svg>
+            <!-- colour legend (same colours as pie) -->
+            <ul id="chart6PieLegend" class="chart6-pie-legend"></ul>
+          </div>
+
+          <!-- Pie tooltip (SEPARATE ID FROM MAP) -->
+          <div id="chart6PieTooltip" class="chart-tooltip hidden"></div>
         </div>
 
         <!-- Table card -->
@@ -136,6 +142,27 @@
           </table>
         </div>
       </div>
+    </div>
+
+    <!-- Notes under the chart (same width as main layout) -->
+    <div class="container chart6-notes-wrapper">
+      <aside class="notes chart6-notes">
+        <h3>Notes &amp; Insights</h3>
+        <ul class="list">
+          <li>
+            The darkest states on the map and the largest slices in the pie (for example Queensland,
+            New South Wales and Victoria) account for most positive roadside drug tests.
+          </li>
+          <li>
+            Smaller jurisdictions such as Tasmania, the ACT and the Northern Territory contribute a
+            much smaller share of the national total, so their map colours and pie slices are tighter.
+          </li>
+          <li>
+            Moving the year slider shows how some states grow in importance over time while others
+            remain relatively stable, helping to highlight where enforcement or drug use may be changing.
+          </li>
+        </ul>
+      </aside>
     </div>
   </section>
 
@@ -159,7 +186,25 @@
   </script>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <!-- Make sure the paths below match where you put your files -->
   <script src="js/chart6.js"></script>
+
+  <!-- Nav active script -->
+  <script>
+    const navLinks = document.querySelectorAll('.nav__links a');
+    const current = window.location.pathname.split('/').pop() || 'index.html';
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+
+      if (href === current) {
+        link.classList.add('active');
+      }
+
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
