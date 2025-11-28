@@ -16,14 +16,19 @@
         <a href="chart-3.html">Chart 3</a>
         <a href="chart-4.html">Chart 4</a>
         <a href="chart-5.html">Chart 5</a>
+        <a href="chart-6.html">Chart 6</a>
       </nav>
     </div>
   </div>
 
   <header class="hero chart-header">
     <div class="container centered">
-      <h1>Drug tests conducted vs positive results</h1>
-      <p class="intro">This chart illustrates how the number of positive drug test detections has changed from 2008 to 2024, highlighting long-term trends, peaks, and year-to-year shifts in enforcement outcomes.</p>
+      <h1>Chart 1 · Drug tests conducted vs positive results</h1>
+      <p class="intro">
+        This chart illustrates how the number of positive drug test detections has changed
+        from 2008 to 2024, highlighting long-term trends, peaks, and year-to-year shifts
+        in enforcement outcomes.
+      </p>
       <div class="pager">
         <a class="btn btn--ghost" href="index.html">← Back</a>
         <a class="btn btn--brand" href="chart-2.html">Next →</a>
@@ -34,31 +39,80 @@
   <section>
     <div class="container chart-grid">
       <figure class="chart-figure">
-        <figcaption class="kicker">Chart 1 · Positive Drug Test Trends (2008–2024)</figcaption>
+        <figcaption class="kicker">
+          Question 1. How have positive drug test detections increased from 2008 to 2024?
+
+        </figcaption>
         <div id="chart1"></div>
       </figure>
 
-      <aside class="notes">
-        <h3>Notes & Insights</h3>
+            <aside class="notes">
+        <h3>Notes &amp; Insights</h3>
         <ul class="list">
-         <li>Positive detections have generally increased over time as roadside drug testing expanded nationwide.</li>
-        <li>Variations between years may reflect changes in enforcement intensity, police campaigns, or jurisdictional reporting practices.</li>
+          <li>
+            The early years (around 2008–2012) have lower values because large-scale roadside drug
+            testing was still being rolled out.
+          </li>
+          <li>
+            The strong rise in the mid-2010s reflects more testing being done and police focusing
+            more on drug-driving enforcement.
+          </li>
+          <li>
+            Small ups and downs between years can be caused by special police operations, campaign
+            funding, or changes in how results are recorded.
+          </li>
+          <li>
+            The high values in the most recent years show how common roadside drug testing has
+            become, not just more drug use but also more checks being carried out.
+          </li>
         </ul>
       </aside>
+
     </div>
   </section>
 
   <footer>
     <div class="container footer">
       <div>© <span id="year1"></span> Road Safety</div>
-      <div class="page-dots"><a href="chart-1.html">1</a> · <a href="chart-2.html">2</a> · <a href="chart-3.html">3</a> · <a href="chart-4.html">4</a> · <a href="chart-5.html">5</a></div>
+      <div class="page-dots">
+        <a href="chart-1.html">1</a> ·
+        <a href="chart-2.html">2</a> ·
+        <a href="chart-3.html">3</a> ·
+        <a href="chart-4.html">4</a> ·
+        <a href="chart-5.html">5</a> ·
+        <a href="chart-6.html">6</a>
+      </div>
     </div>
   </footer>
-  <script>document.getElementById('year1').textContent = new Date().getFullYear();</script>
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<script src="js/chart1.js"></script>
+  <script>
+    // Footer year
+    document.getElementById('year1').textContent = new Date().getFullYear();
+  </script>
 
+  <!-- D3 + chart script -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="js/chart1.js"></script>
 
+  <!-- 🔹 Nav active script (add this to each chart page) -->
+  <script>
+    const navLinks = document.querySelectorAll('.nav__links a');
+    const current = window.location.pathname.split('/').pop() || 'index.html';
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+
+      // highlight link that matches current page
+      if (href === current) {
+        link.classList.add('active');
+      }
+
+      // optional: keep click behaviour consistent
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>

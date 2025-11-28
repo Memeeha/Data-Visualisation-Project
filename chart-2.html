@@ -18,6 +18,7 @@
         <a href="chart-3.html">Chart 3</a>
         <a href="chart-4.html">Chart 4</a>
         <a href="chart-5.html">Chart 5</a>
+        <a href="chart-6.html">Chart 6</a>
       </nav>
     </div>
   </div>
@@ -25,7 +26,7 @@
   <!-- HERO HEADER -->
   <header class="hero chart-header">
     <div class="container centered">
-      <h1>Positive results by jurisdiction</h1>
+      <h1>Chart 2 · Positive results by jurisdiction</h1>
       <p class="intro">
         This chart compares how each jurisdiction’s positive drug test rates have changed over time,
         highlighting which states consistently show higher or lower detection levels.
@@ -45,76 +46,72 @@
     <div class="container chart-grid">
 
       <figure class="chart-figure">
-  <figcaption class="kicker">
-    Chart 2 · Jurisdictional Positive Drug Test Rates (2008–2024)
-  </figcaption>
+        <figcaption class="kicker">
+            Question 2. Which jurisdictions have shown the highest or lowest positive drug test rates over time?
 
-  <!-- Filter panel -->
-  <div class="chart2-filter">
-    <!-- Top row: label + chip -->
-    <div class="chart-controls">
-      <span class="chart2-year-label">Year:</span>
+        </figcaption>
 
-      <!-- clickable year chip -->
-      <button id="yearValue2" type="button"
-              class="year-bubble year-chip-btn">
-        All (2008–2024)
-      </button>
+        <!-- Filter panel -->
+        <div class="chart2-filter">
+          <!-- Top row: label + chip -->
+          <div class="chart-controls">
+            <span class="chart2-year-label">Year:</span>
 
-      <!-- dropdown wrapper (anchored to chip) -->
-      <div class="year-dropdown-wrapper">
-        <div id="yearDropdown2" class="year-dropdown hidden">
-          <button class="year-option2" data-year="all"><strong>All (2008–2024)</strong></button>
-          <div class="year-grid">
-            <button class="year-option2" data-year="2008">2008</button>
-            <button class="year-option2" data-year="2009">2009</button>
-            <button class="year-option2" data-year="2010">2010</button>
-            <button class="year-option2" data-year="2011">2011</button>
-            <button class="year-option2" data-year="2012">2012</button>
-            <button class="year-option2" data-year="2013">2013</button>
-            <button class="year-option2" data-year="2014">2014</button>
-            <button class="year-option2" data-year="2015">2015</button>
-            <button class="year-option2" data-year="2016">2016</button>
-            <button class="year-option2" data-year="2017">2017</button>
-            <button class="year-option2" data-year="2018">2018</button>
-            <button class="year-option2" data-year="2019">2019</button>
-            <button class="year-option2" data-year="2020">2020</button>
-            <button class="year-option2" data-year="2021">2021</button>
-            <button class="year-option2" data-year="2022">2022</button>
-            <button class="year-option2" data-year="2023">2023</button>
-            <button class="year-option2" data-year="2024">2024</button>
+            <!-- clickable year chip -->
+            <button id="yearValue2" type="button"
+                    class="year-bubble year-chip-btn">
+              All (2008–2024)
+            </button>
+
+            <!-- dropdown wrapper (anchored to chip) -->
+            <div class="year-dropdown-wrapper">
+              <div id="yearDropdown2" class="year-dropdown hidden">
+                <button class="year-option2" data-year="all"><strong>All (2008–2024)</strong></button>
+                <div class="year-grid">
+                  <button class="year-option2" data-year="2008">2008</button>
+                  <button class="year-option2" data-year="2009">2009</button>
+                  <button class="year-option2" data-year="2010">2010</button>
+                  <button class="year-option2" data-year="2011">2011</button>
+                  <button class="year-option2" data-year="2012">2012</button>
+                  <button class="year-option2" data-year="2013">2013</button>
+                  <button class="year-option2" data-year="2014">2014</button>
+                  <button class="year-option2" data-year="2015">2015</button>
+                  <button class="year-option2" data-year="2016">2016</button>
+                  <button class="year-option2" data-year="2017">2017</button>
+                  <button class="year-option2" data-year="2018">2018</button>
+                  <button class="year-option2" data-year="2019">2019</button>
+                  <button class="year-option2" data-year="2020">2020</button>
+                  <button class="year-option2" data-year="2021">2021</button>
+                  <button class="year-option2" data-year="2022">2022</button>
+                  <button class="year-option2" data-year="2023">2023</button>
+                  <button class="year-option2" data-year="2024">2024</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slider row -->
+          <div class="chart2-slider-row">
+            <input
+              type="range"
+              id="yearSlider2"
+              class="year-slider"
+              min="2008"
+              max="2024"
+              step="1"
+              value="2024"
+            />
+          </div>
+
+          <!-- “All years” button -->
+          <div class="chart2-actions">
+            <button id="yearAllBtn2" class="btn btn--ghost">
+              Show All Years (2008–2024)
+            </button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Slider row -->
-    <div class="chart2-slider-row">
-      <input
-        type="range"
-        id="yearSlider2"
-        class="year-slider"
-        min="2008"
-        max="2024"
-        step="1"
-        value="2024"
-      />
-    </div>
-
-    <!-- “All years” button -->
-    <div class="chart2-actions">
-      <button id="yearAllBtn2" class="btn btn--ghost">
-        Show All Years (2008–2024)
-      </button>
-    </div>
-  </div>
-
-  <!-- Chart container -->
-  <div id="chart2"></div>
-</figure>
-
-
-        <!-- CHART AREA -->
+        <!-- Chart container -->
         <div id="chart2"></div>
       </figure>
 
@@ -139,7 +136,8 @@
         <a href="chart-2.html">2</a> ·
         <a href="chart-3.html">3</a> ·
         <a href="chart-4.html">4</a> ·
-        <a href="chart-5.html">5</a>
+        <a href="chart-5.html">5</a> ·
+        <a href="chart-6.html">6</a>
       </div>
     </div>
   </footer>
@@ -150,5 +148,26 @@
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/chart2.js"></script>
+
+  <!-- Nav active script -->
+  <script>
+    const navLinks = document.querySelectorAll('.nav__links a');
+    const current = window.location.pathname.split('/').pop() || 'index.html';
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+
+      // highlight link that matches current page
+      if (href === current) {
+        link.classList.add('active');
+      }
+
+      // keep click behaviour consistent
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>

@@ -15,8 +15,9 @@
         <a href="chart-1.html">Chart 1</a>
         <a href="chart-2.html">Chart 2</a>
         <a href="chart-3.html">Chart 3</a>
-        <a href="chart-4.html" class="is-active">Chart 4</a>
+        <a href="chart-4.html" class="active">Chart 4</a>
         <a href="chart-5.html">Chart 5</a>
+        <a href="chart-6.html">Chart 6</a>
       </nav>
     </div>
   </div>
@@ -24,7 +25,7 @@
   <!-- Hero -->
   <header class="hero chart-header">
     <div class="container centered">
-      <h1>Enforcement actions across jurisdictions</h1>
+      <h1>Chart 4 · Enforcement actions across jurisdictions</h1>
       <p class="intro">
         Compares how many fines, arrests, and charges were recorded for positive roadside
         drug tests, grouped by enforcement action type and coloured by jurisdiction.
@@ -42,7 +43,7 @@
     <div class="container chart-grid">
       <figure class="chart-figure">
         <figcaption class="kicker">
-          Chart 4 · Fines, arrests, and charges by jurisdiction (2008–2024 total)
+        Question  4. What types of enforcement actions (fines, arrests, charges) are most common across jurisdictions ?
         </figcaption>
 
         <!-- State filter controls -->
@@ -99,14 +100,28 @@
         <div id="chart4"></div>
       </figure>
 
-      <aside class="notes">
+            <aside class="notes">
         <h3>Notes &amp; Insights</h3>
         <ul class="list">
-          <li>Each cluster shows fines, arrests, and charges, coloured by jurisdiction.</li>
-          <li>Filtering by state helps compare how one jurisdiction’s enforcement mix differs from the national pattern.</li>
-          <li>The totals represent the full 2008–2024 period of roadside drug-test enforcement data.</li>
+          <li>
+            Fines are usually the highest bar because most positive tests are handled with financial penalties,
+            while arrests and charges are used for more serious offences.
+          </li>
+          <li>
+            Jurisdictions with larger totals often have bigger populations, more roadside testing, or stricter
+            enforcement policies.
+          </li>
+          <li>
+            When you filter to a single state, look at the shape of the three bars – a very tall fines bar
+            suggests a fine-focused approach, while higher arrests or charges indicate tougher follow-up action.
+          </li>
+          <li>
+            Hovering over a bar shows the exact count so you can compare how enforcement style differs between
+            states over the whole 2008–2024 period.
+          </li>
         </ul>
       </aside>
+
     </div>
   </section>
 
@@ -119,7 +134,8 @@
         <a href="chart-2.html">2</a> ·
         <a href="chart-3.html">3</a> ·
         <a href="chart-4.html">4</a> ·
-        <a href="chart-5.html">5</a>
+        <a href="chart-5.html">5</a> ·
+        <a href="chart-6.html">6</a>
       </div>
     </div>
   </footer>
@@ -130,5 +146,26 @@
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/chart4.js"></script>
+
+  <!-- Nav active script -->
+  <script>
+    const navLinks = document.querySelectorAll('.nav__links a');
+    const current = window.location.pathname.split('/').pop() || 'index.html';
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+
+      // highlight link that matches current page
+      if (href === current) {
+        link.classList.add('active');
+      }
+
+      // keep click behaviour consistent
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
