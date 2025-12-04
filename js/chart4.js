@@ -1,18 +1,14 @@
 // js/chart4.js
 
-
-
 let currentJuris4 = "all";   
 let cachedAgg4 = null;       
 let chart4Width = null;
-
 
 const ACTIONS_4 = [
   { id: "fines",   label: "Fines",   col: "Sum(FINES)" },
   { id: "arrests", label: "Arrests", col: "Sum(ARRESTS)" },
   { id: "charges", label: "Charges", col: "Sum(CHARGES)" }
 ];
-
 
 const JURIS_ORDER_4 = ["NSW", "QLD", "WA", "SA", "VIC", "TAS", "NT", "ACT"];
 
@@ -103,6 +99,19 @@ function initJurisControls4() {
       currentJuris4 === "all" ? "All jurisdictions" : currentJuris4;
   };
 
+  // ADDED: helper to update .is-active on the dropdown pills
+  const updateActiveButtons = () => {
+    if (!buttons.length) return;
+    buttons.forEach(b => b.classList.remove("is-active"));
+
+    const target = currentJuris4 === "all" ? "all" : currentJuris4;
+    buttons.forEach(b => {
+      if (b.dataset.juris === target) {
+        b.classList.add("is-active");
+      }
+    });
+  }; // ADDED END
+
   // Open / close dropdown when clicking the chip
   chip.addEventListener("click", e => {
     e.stopPropagation();
@@ -116,6 +125,7 @@ function initJurisControls4() {
       currentJuris4 = j === "all" ? "all" : j;
       dropdown.classList.add("hidden");
       updateLabel();
+      updateActiveButtons(); // ADDED
       renderChart4();
     });
   });
@@ -125,6 +135,7 @@ function initJurisControls4() {
     resetBtn.addEventListener("click", () => {
       currentJuris4 = "all";
       updateLabel();
+      updateActiveButtons(); // ADDED
       renderChart4();
     });
   }
@@ -135,8 +146,8 @@ function initJurisControls4() {
   });
 
   updateLabel();
+  updateActiveButtons(); // ADDED – initial state
 }
-
 
 // ------- MAIN RENDER -------
 
