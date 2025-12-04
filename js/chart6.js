@@ -84,7 +84,7 @@ Promise.all([
 
   const mapSvg     = d3.select("#chart6Map");
   const insightTopEl   = document.getElementById("chart6InsightTopState");
-const insightTotalEl = document.getElementById("chart6InsightTotal");
+  const insightTotalEl = document.getElementById("chart6InsightTotal");
 
 
   // -------------------------------------------------------
@@ -143,21 +143,36 @@ const insightTotalEl = document.getElementById("chart6InsightTotal");
   // -------------------------------------------------------
   // YEAR DROPDOWN
   // -------------------------------------------------------
-  const dropdown = document.createElement("div");
-  dropdown.id = "yearDropdown6";
-  dropdown.classList.add("hidden");
-  dropdown.innerHTML = `
-    <div class="year-grid">
-      <button class="year-option" data-year="all">
-        All years (${minYear}–${maxYear})
-      </button>
-      ${d3.range(maxYear, minYear - 1, -1).map(y => `
-        <button class="year-option" data-year="${y}">${y}</button>
-      `).join("")}
-    </div>
-  `;
+const dropdown = document.createElement("div");
+dropdown.id = "yearDropdown6";
+dropdown.classList.add("hidden");
+dropdown.innerHTML = `
+  <div class="year-grid">
+    <button class="year-option" data-year="all">
+      All years (${minYear}–${maxYear})
+    </button>
+    ${d3.range(minYear, maxYear + 1, 1).map(y => `
+      <button class="year-option" data-year="${y}">${y}</button>
+    `).join("")}
+  </div>
+`;
+
   chip.parentElement.style.position = "relative";
   chip.parentElement.appendChild(dropdown);
+
+  // ADDED: helper to highlight the active year option
+  function updateYearActiveButtons6() {
+    const buttons = dropdown.querySelectorAll(".year-option");
+    buttons.forEach(b => b.classList.remove("active"));
+
+    const target = currentYear === "all" ? "all" : String(currentYear);
+    buttons.forEach(b => {
+      if (b.dataset.year === target) {
+        b.classList.add("active");
+      }
+    });
+  }
+  // END ADDED
 
   dropdown.addEventListener("click", e => {
     const btn = e.target.closest(".year-option");
@@ -171,6 +186,7 @@ const insightTotalEl = document.getElementById("chart6InsightTotal");
       slider.value = currentYear;
     }
     updateSliderFill();
+    updateYearActiveButtons6();   // ADDED
     dropdown.classList.add("hidden");
     updateChart6();
   });
@@ -195,25 +211,25 @@ const insightTotalEl = document.getElementById("chart6InsightTotal");
       .sort((a, b) => d3.descending(a.value, b.value));
 
     const localMax = d3.max(rows, d => d.value) || 1;
+
     // Update insight panel
-const top = rows[0];
+    const top = rows[0];
 
-if (insightTopEl) {
-  if (top) {
-    insightTopEl.textContent =
-      `${top.state} (${top.value.toLocaleString("en-AU")})`;
-  } else {
-    insightTopEl.textContent = "No data";
-  }
-}
+    if (insightTopEl) {
+      if (top) {
+        insightTopEl.textContent =
+          `${top.state} (${top.value.toLocaleString("en-AU")})`;
+      } else {
+        insightTopEl.textContent = "No data";
+      }
+    }
 
-if (insightTotalEl) {
-  const totalSumForInsight = d3.sum(rows, d => d.value);
-  insightTotalEl.textContent =
-    totalSumForInsight.toLocaleString("en-AU");
-}
+    if (insightTotalEl) {
+      const totalSumForInsight = d3.sum(rows, d => d.value);
+      insightTotalEl.textContent =
+        totalSumForInsight.toLocaleString("en-AU");
+    }
 
-    
     colorScale.domain([0, localMax]);
 
     const label = currentYear === "all"
@@ -316,7 +332,7 @@ if (insightTotalEl) {
             <span style="font-size:12px">Year: ${label}</span>
           `);
       })
-      // 🔧 FIXED: keep tooltip close to the cursor (no more big offset)
+      // 🔧 keep tooltip close to the cursor
       .on("mousemove", function (event) {
         pieTooltip
           .style("left", (event.clientX + 12) + "px")
@@ -379,21 +395,31 @@ if (insightTotalEl) {
   // SLIDER FILL (nice gradient)
   // -------------------------------------------------------
   function updateSliderFill() {
-    const min = +slider.min;
-    const max = +slider.max;
-    const val = +slider.value;
-    const percent = ((val - min) / (max - min)) * 100;
-    slider.style.setProperty("--percent", percent + "%");
-  }
+  const min = +slider.min;
+  const max = +slider.max;
+  const val = +slider.value;
+
+  const pct = max === min ? 0 : ((val - min) / (max - min)) * 100;
+
+  slider.style.background =
+    `linear-gradient(90deg,
+      #6366f1 0%,
+      #6366f1 ${pct}%,
+      #e5e7eb ${pct}%,
+      #e5e7eb 100%)`;
+}
+
 
   slider.addEventListener("input", () => {
     currentYear = +slider.value;
     dropdown.classList.add("hidden");
     updateSliderFill();
+    updateYearActiveButtons6();     // ADDED
     updateChart6(false); // no animation while dragging
   });
 
   updateSliderFill();
+  updateYearActiveButtons6();       // ADDED (initial state)
 
   // -------------------------------------------------------
   // BUTTONS
@@ -403,6 +429,7 @@ if (insightTotalEl) {
     slider.value = maxYear;
     updateSliderFill();
     dropdown.classList.add("hidden");
+    updateYearActiveButtons6();     // ADDED
     updateChart6();
   });
 
