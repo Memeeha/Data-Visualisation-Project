@@ -203,21 +203,24 @@ function renderChart4() {
 
     const yMax = d3.max(groups, grp => d3.max(grp.bars, b => b.value)) || 0;
 
+    // Slightly closer groups, nicer spacing
     const x0 = d3.scaleBand()
       .domain(groups.map(g => g.label))
       .range([0, innerWidth])
-      .paddingInner(0.25);
+      .paddingInner(0.2)
+      .paddingOuter(0.1);
 
+    // Thicker bars: reduce padding
     const x1 = d3.scaleBand()
       .domain(jurisList)
       .range([0, x0.bandwidth()])
-      .padding(0.18);
+      .padding(0.15);
 
-    // EXTRA headroom at top so labels don't hit the axis line
-   const y = d3.scaleLinear()
-  .domain([0, yMax * 1.05])
-  .nice()
-  .range([innerHeight, 0]);
+    // Extra headroom at top so labels don't hit the axis line
+    const y = d3.scaleLinear()
+      .domain([0, yMax * 1.05])
+      .nice()
+      .range([innerHeight, 0]);
 
     const colorScale = d3.scaleOrdinal()
       .domain(JURIS_ORDER_4)
@@ -293,40 +296,33 @@ function renderChart4() {
       .attr("y", innerHeight)
       .attr("height", 0)
       .attr("fill", d => colorScale(d.jurisdiction))
-      .attr("rx", 6);
+      .attr("rx", 6)
+      .attr("ry", 6);   // rounded corners top & bottom
 
+    // Smooth grow animation
     bars.transition()
       .duration(900)
       .delay((d, i) => i * 70)
       .attr("y", d => getBarGeom(d.value).y)
       .attr("height", d => getBarGeom(d.value).h);
 
-    // 5. Value labels – friendly / non-overlapping
-    const maxByAction = {};
-    groups.forEach(grp => {
-      maxByAction[grp.actionId] = d3.max(grp.bars, b => b.value);
-    });
-
- groupG.selectAll("text.bar-label")
-  .data(d => d.bars)
-  .enter()
-  .append("text")
-  .attr("class", "bar-label")
-  .attr("text-anchor", "middle")
-  .attr("x", d => x1(d.jurisdiction) + x1.bandwidth() / 2)
-  .attr("y", d => {
-    if (!d.value) return innerHeight;
-    const rawY = y(d.value);
-    // Put label above bar, but never higher than 12px from top of plot
-    return Math.max(rawY - 18, 12);
-  })
-  .attr("fill", "#0f172a")
-  .attr("font-size", 11)
-  .style("letter-spacing", "0.03em")
-  .text(d => {
-    if (!d.value) return "";        // still hide true zeros
-    return d3.format(",")(d.value); // always show non-zero values
-  });
+    // 5. Value labels – always show non-zero, placed above bars
+    groupG.selectAll("text.bar-label")
+      .data(d => d.bars)
+      .enter()
+      .append("text")
+      .attr("class", "bar-label")
+      .attr("text-anchor", "middle")
+      .attr("x", d => x1(d.jurisdiction) + x1.bandwidth() / 2 + 4)
+      .attr("y", d => {
+        if (!d.value) return innerHeight;
+        const rawY = y(d.value);
+        return Math.max(rawY - 18, 12); // keep inside chart area
+      })
+      .attr("fill", "#0f172a")
+      .attr("font-size", 11)
+      .style("letter-spacing", "0.03em")
+      .text(d => (d.value ? d3.format(",")(d.value) : ""));
 
     // 6. Hover interaction with clear highlight
     bars
