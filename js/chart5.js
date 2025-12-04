@@ -125,40 +125,58 @@ function setupYearControls5() {
   const labelBtn = document.getElementById("yearValue5");
   const allBtn = document.getElementById("yearAllBtn5");
   const chip = document.getElementById("yearValue5");
-const dropdown = document.getElementById("yearDropdown5");
+  const dropdown = document.getElementById("yearDropdown5");
+  const yearButtons = document.querySelectorAll(".year-option5"); // ADDED
 
-if (chip && dropdown) {
-  chip.addEventListener("click", () => {
-    dropdown.classList.toggle("hidden");
-  });
+  // ADDED: helper to sync .active state on dropdown buttons
+  const updateYearActiveButtons5 = () => {
+    if (!yearButtons.length) return;
+    yearButtons.forEach(b => b.classList.remove("active"));
 
-  document.querySelectorAll(".year-option5").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const y = btn.dataset.year;
-      const minYear = chart5Years[0];
-      const maxYear = chart5Years[chart5Years.length - 1];
+    const target = chart5CurrentYear === "all"
+      ? "all"
+      : String(chart5CurrentYear);
 
-      if (y === "all") {
-        chart5CurrentYear = "all";
-        slider.value = minYear;
-        labelBtn.textContent = `All years (${minYear}–${maxYear})`;
-        allBtn.classList.add("is-active");
-        updateSliderTrack5(minYear);
-      } else {
-        const yearNum = +y;
-        chart5CurrentYear = yearNum;
-        slider.value = yearNum;
-        labelBtn.textContent = y;
-        allBtn.classList.remove("is-active");
-        updateSliderTrack5(yearNum);
+    yearButtons.forEach(b => {
+      if (b.dataset.year === target) {
+        b.classList.add("active");
       }
-
-      dropdown.classList.add("hidden");
-      updateChart5();
     });
-  });
-}
+  };
+  // --- end ADDED helper ---
 
+  if (chip && dropdown) {
+    chip.addEventListener("click", () => {
+      dropdown.classList.toggle("hidden");
+    });
+
+    document.querySelectorAll(".year-option5").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const y = btn.dataset.year;
+        const minYear = chart5Years[0];
+        const maxYear = chart5Years[chart5Years.length - 1];
+
+        if (y === "all") {
+          chart5CurrentYear = "all";
+          slider.value = minYear;
+          labelBtn.textContent = `All years (${minYear}–${maxYear})`;
+          allBtn.classList.add("is-active");
+          updateSliderTrack5(minYear);
+        } else {
+          const yearNum = +y;
+          chart5CurrentYear = yearNum;
+          slider.value = yearNum;
+          labelBtn.textContent = y;
+          allBtn.classList.remove("is-active");
+          updateSliderTrack5(yearNum);
+        }
+
+        updateYearActiveButtons5(); // ADDED
+        dropdown.classList.add("hidden");
+        updateChart5();
+      });
+    });
+  }
 
   if (!slider || !labelBtn || !allBtn || !chart5Years.length) return;
 
@@ -172,6 +190,7 @@ if (chip && dropdown) {
   chart5CurrentYear = "all";
   labelBtn.textContent = `All years (${minYear}–${maxYear})`;
   updateSliderTrack5(minYear);
+  updateYearActiveButtons5(); // ADDED – initial state
 
   slider.addEventListener("input", e => {
     const y = +e.target.value;
@@ -179,6 +198,7 @@ if (chip && dropdown) {
     labelBtn.textContent = String(y);
     allBtn.classList.remove("is-active");
     updateSliderTrack5(y);
+    updateYearActiveButtons5(); // ADDED – sync with slider
     updateChart5();
   });
 
@@ -188,6 +208,7 @@ if (chip && dropdown) {
     labelBtn.textContent = `All years (${minYear}–${maxYear})`;
     allBtn.classList.add("is-active");
     updateSliderTrack5(minYear);
+    updateYearActiveButtons5(); // ADDED – highlight "All"
     updateChart5();
   });
 
@@ -412,7 +433,7 @@ function updateChart5(resizeOnly = false) {
         .duration(150)
         .attr("fill", d => colorScale(d.ageGroup))
         .attr("y", d => y(d.value))
-        .attr("height", d => innerHeight - y(d.value));
+        .attr("height", innerHeight - y(d.value));
 
       tooltip.style("opacity", 0);
     });
