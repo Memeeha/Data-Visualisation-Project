@@ -1,26 +1,17 @@
 // js/chart4.js
 
-<<<<<<< HEAD
-let currentJuris4 = "all";   
-let cachedAgg4 = null;       
-let chart4Width = null;
-
-=======
 let currentJuris4 = "all";     // "all" or one of NSW, QLD, ...
 let cachedAgg4 = null;
+let chart4Width = null;        // (currently unused, but kept in case you use it later)
 
 // Enforcement action definitions
->>>>>>> f7db2e0c9bbfabce54f9bf3214878003de802658
 const ACTIONS_4 = [
   { id: "fines",   label: "Fines",   col: "Sum(FINES)" },
   { id: "arrests", label: "Arrests", col: "Sum(ARRESTS)" },
   { id: "charges", label: "Charges", col: "Sum(CHARGES)" }
 ];
 
-<<<<<<< HEAD
-=======
 // Fixed jurisdiction order
->>>>>>> f7db2e0c9bbfabce54f9bf3214878003de802658
 const JURIS_ORDER_4 = ["NSW", "QLD", "WA", "SA", "VIC", "TAS", "NT", "ACT"];
 
 // Colours per jurisdiction
@@ -107,8 +98,7 @@ function initJurisControls4() {
       currentJuris4 === "all" ? "All jurisdictions" : currentJuris4;
   };
 
-<<<<<<< HEAD
-  // ADDED: helper to update .is-active on the dropdown pills
+  // helper to update .is-active on the dropdown pills
   const updateActiveButtons = () => {
     if (!buttons.length) return;
     buttons.forEach(b => b.classList.remove("is-active"));
@@ -119,12 +109,9 @@ function initJurisControls4() {
         b.classList.add("is-active");
       }
     });
-  }; // ADDED END
+  };
 
   // Open / close dropdown when clicking the chip
-=======
-  // Open / close dropdown
->>>>>>> f7db2e0c9bbfabce54f9bf3214878003de802658
   chip.addEventListener("click", e => {
     e.stopPropagation();
     dropdown.classList.toggle("hidden");
@@ -137,7 +124,7 @@ function initJurisControls4() {
       currentJuris4 = j === "all" ? "all" : j;
       dropdown.classList.add("hidden");
       updateLabel();
-      updateActiveButtons(); // ADDED
+      updateActiveButtons();
       renderChart4();
     });
   });
@@ -147,7 +134,7 @@ function initJurisControls4() {
     resetBtn.addEventListener("click", () => {
       currentJuris4 = "all";
       updateLabel();
-      updateActiveButtons(); // ADDED
+      updateActiveButtons();
       renderChart4();
     });
   }
@@ -158,14 +145,10 @@ function initJurisControls4() {
   });
 
   updateLabel();
-  updateActiveButtons(); // ADDED – initial state
+  updateActiveButtons(); // initial state
 }
 
-<<<<<<< HEAD
-// ------- MAIN RENDER -------
-=======
 /* ---------------- Main render ---------------- */
->>>>>>> f7db2e0c9bbfabce54f9bf3214878003de802658
 
 function renderChart4() {
   const container = document.getElementById("chart4");
@@ -268,7 +251,9 @@ function renderChart4() {
       const total = (stateAgg.fines || 0) +
                     (stateAgg.arrests || 0) +
                     (stateAgg.charges || 0);
-      viewText = `${currentJuris4} only – axis scaled to this state (${d3.format(",")(total)} total actions, 2008–2024).`;
+      viewText =
+        `${currentJuris4} only – axis scaled to this state ` +
+        `(${d3.format(",")(total)} total actions, 2008–2024).`;
     }
 
     g.append("text")
@@ -278,16 +263,7 @@ function renderChart4() {
       .attr("font-size", 12)
       .text(viewText);
 
-    // 3. Grid + axes
-    //g.append("g")
-    //  .attr("class", "grid")
-    //  .call(
-    //    d3.axisLeft(y)
-    //      .ticks(5)
-    //      .tickSize(-innerWidth)
-    //      .tickFormat("")
-    //  );
-
+    // 3. Axes
     g.append("g")
       .attr("class", "axis")
       .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(",")));
