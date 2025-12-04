@@ -139,13 +139,13 @@ function setupYearControls3() {
   slider.min = minYear;
   slider.max = maxYear;
   slider.step = 1;
-  slider.value = minYear;
 
-  // start in "all years" mode
+  // 🔹 Start in "all years" mode, slider at the LATEST year (same as Chart 2)
+  slider.value = maxYear;
   chart3CurrentYear = "all";
   chipBtn.textContent = `All years (${minYear}–${maxYear})`;
   allBtn.classList.add("is-active");
-  updateSliderTrack3(minYear);
+  updateSliderTrack3(maxYear);
 
   // build dropdown buttons
   yearGrid.innerHTML = "";
@@ -158,8 +158,8 @@ function setupYearControls3() {
     yearGrid.appendChild(b);
   };
 
-  // All-years option
-  makeYearBtn(`All (${minYear}–${maxYear})`, "all");
+  // All-years option (top)
+  makeYearBtn(`All years (${minYear}–${maxYear})`, "all");
   // Individual years
   chart3Years.forEach(y => makeYearBtn(String(y), y));
 
@@ -187,19 +187,20 @@ function setupYearControls3() {
     renderChart3();
   });
 
-  // All years button
+  // All years button (same behaviour as Chart 2)
   allBtn.addEventListener("click", () => {
     chart3CurrentYear = "all";
     chipBtn.textContent = `All years (${minYear}–${maxYear})`;
-    slider.value = minYear;
+    slider.value = maxYear;
     allBtn.classList.add("is-active");
-    updateSliderTrack3(minYear);
+    updateSliderTrack3(maxYear);
     setActiveYearOption();
     renderChart3();
   });
 
   // chip click -> toggle dropdown
-  chipBtn.addEventListener("click", () => {
+  chipBtn.addEventListener("click", e => {
+    e.stopPropagation();
     dropdown.classList.toggle("hidden");
   });
 
@@ -212,9 +213,9 @@ function setupYearControls3() {
     if (val === "all") {
       chart3CurrentYear = "all";
       chipBtn.textContent = `All years (${minYear}–${maxYear})`;
-      slider.value = minYear;
+      slider.value = maxYear;
       allBtn.classList.add("is-active");
-      updateSliderTrack3(minYear);
+      updateSliderTrack3(maxYear);
     } else {
       const year = +val;
       chart3CurrentYear = year;
@@ -243,7 +244,13 @@ function updateSliderTrack3(value) {
   const min = +slider.min;
   const max = +slider.max;
   const pct = max === min ? 0 : ((value - min) / (max - min)) * 100;
-  slider.style.background = `linear-gradient(90deg,#6366f1 0%,#6366f1 ${pct}%,#e5e7eb ${pct}%,#e5e7eb 100%)`;
+  slider.style.background = `linear-gradient(
+    90deg,
+    #6366f1 0%,
+    #6366f1 ${pct}%,
+    #e5e7eb ${pct}%,
+    #e5e7eb 100%
+  )`;
 }
 
 // ----------------- donut chart rendering -----------------
