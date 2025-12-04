@@ -214,10 +214,10 @@ function renderChart4() {
       .padding(0.18);
 
     // EXTRA headroom at top so labels don't hit the axis line
-    const y = d3.scaleLinear()
-      .domain([0, yMax * 1.25])
-      .nice()
-      .range([innerHeight, 0]);
+   const y = d3.scaleLinear()
+  .domain([0, yMax * 1.05])
+  .nice()
+  .range([innerHeight, 0]);
 
     const colorScale = d3.scaleOrdinal()
       .domain(JURIS_ORDER_4)
@@ -307,32 +307,26 @@ function renderChart4() {
       maxByAction[grp.actionId] = d3.max(grp.bars, b => b.value);
     });
 
-    groupG.selectAll("text.bar-label")
-      .data(d => d.bars)
-      .enter()
-      .append("text")
-      .attr("class", "bar-label")
-      .attr("text-anchor", "middle")
-      .attr("x", d => x1(d.jurisdiction) + x1.bandwidth() / 2)
-      .attr("y", d => {
-        if (!d.value) return innerHeight;
-        const rawY = y(d.value);
-        // Put label above bar, but never higher than 12px from top of plot
-        return Math.max(rawY - 18, 12);
-      })
-      .attr("fill", "#0f172a")
-      .attr("font-size", 11)
-      .style("letter-spacing", "0.03em")
-      .text(d => {
-        if (!d.value) return ""; // hide true zeros
-
-        if (isAllMode) {
-          // Only label tallest bar in each action group in "all" mode
-          if (d.value < maxByAction[d.actionId]) return "";
-        }
-
-        return d3.format(",")(d.value);
-      });
+ groupG.selectAll("text.bar-label")
+  .data(d => d.bars)
+  .enter()
+  .append("text")
+  .attr("class", "bar-label")
+  .attr("text-anchor", "middle")
+  .attr("x", d => x1(d.jurisdiction) + x1.bandwidth() / 2)
+  .attr("y", d => {
+    if (!d.value) return innerHeight;
+    const rawY = y(d.value);
+    // Put label above bar, but never higher than 12px from top of plot
+    return Math.max(rawY - 18, 12);
+  })
+  .attr("fill", "#0f172a")
+  .attr("font-size", 11)
+  .style("letter-spacing", "0.03em")
+  .text(d => {
+    if (!d.value) return "";        // still hide true zeros
+    return d3.format(",")(d.value); // always show non-zero values
+  });
 
     // 6. Hover interaction with clear highlight
     bars
