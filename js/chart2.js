@@ -301,14 +301,16 @@ function renderChart2() {
   });
 }
 
-// ---------- UI wiring (slider + chip + dropdown) ----------
+// ======================================================
+// UI wiring (slider + chip + dropdown + all-years pill)
+// ======================================================
 document.addEventListener("DOMContentLoaded", () => {
   const slider   = document.getElementById("yearSlider2");
-  const yearChip = document.getElementById("yearValue2");
+  const yearChip = document.getElementById("yearChip2");      // <-- new id
   const allBtn   = document.getElementById("yearAllBtn2");
   const dropdown = document.getElementById("yearDropdown2");
 
-  if (!slider || !yearChip) {
+  if (!slider || !yearChip || !dropdown) {
     renderChart2();
     return;
   }
@@ -317,76 +319,108 @@ document.addEventListener("DOMContentLoaded", () => {
   slider.min  = YEAR_MIN_2;
   slider.max  = YEAR_MAX_2;
   slider.step = 1;
-  slider.value = YEAR_MAX_2;
+  slider.value = YEAR_MIN_2;        // knob starts at 2008 like other charts
 
-  function updateLabelAndGradient() {
-    const min = YEAR_MIN_2;
-    const max = YEAR_MAX_2;
-    const val = currentYear2 === "all" ? max : Number(currentYear2);
-
-    yearChip.textContent =
-      currentYear2 === "all" ? "All (2008–2024)" : String(currentYear2);
-
-    const pct = ((val - min) / (max - min)) * 100;
+  // --- helper: slider track fill (like Chart 5) ---
+  function updateSliderTrack2(value) {
+    const min = +slider.min;
+    const max = +slider.max;
+    const pct = max === min ? 0 : ((value - min) / (max - min)) * 100;
 
     slider.style.background = `linear-gradient(
       90deg,
-      var(--accent) 0%,
-      var(--accent-2) ${pct}%,
+      #6366f1 0%,
+      #6366f1 ${pct}%,
       #e5e7eb ${pct}%,
       #e5e7eb 100%
     )`;
   }
 
-  // Slider drag -> update year
+  // --- helper: update chip label ---
+  function updateChipLabel2() {
+    if (currentYear2 === "all") {
+      yearChip.innerHTML = "<strong>All years (2008–2024)</strong>";
+    } else {
+      yearChip.innerHTML = `<strong>${currentYear2}</strong>`;
+    }
+  }
+
+  // --- helper: highlight active year in dropdown ---
+  function updateYearDropdownActive2() {
+    const buttons = dropdown.querySelectorAll(".year-option2");
+    const target = currentYear2 === "all" ? "all" : String(currentYear2);
+
+    buttons.forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.year === target);
+    });
+  }
+
+  // --- Slider input -> change year ---
   slider.addEventListener("input", () => {
     currentYear2 = Number(slider.value);
-    updateLabelAndGradient();
+    allBtn && allBtn.classList.remove("is-active");
+    updateChipLabel2();
+    updateSliderTrack2(currentYear2);
+    updateYearDropdownActive2();
     renderChart2();
   });
 
-  // "Show all years" button
+  // --- All-years pill ---
   if (allBtn) {
     allBtn.addEventListener("click", () => {
       currentYear2 = "all";
-      slider.value = YEAR_MAX_2;
-      updateLabelAndGradient();
+      slider.value = YEAR_MIN_2;           // knob to left, same as other charts
+      allBtn.classList.add("is-active");
+      updateChipLabel2();
+      updateSliderTrack2(YEAR_MIN_2);
+      updateYearDropdownActive2();
       renderChart2();
     });
   }
 
-  // Year chip + dropdown
-  if (yearChip && dropdown) {
-    yearChip.addEventListener("click", (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle("hidden");
-    });
+  // --- Year chip: open/close dropdown ---
+  yearChip.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle("hidden");
+  });
 
-    dropdown.querySelectorAll(".year-option2").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const selected = btn.dataset.year;
+  // --- Dropdown year buttons ---
+  dropdown.querySelectorAll(".year-option2").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const val = btn.dataset.year;
+      if (val === "all") {
+        currentYear2 = "all";
+        slider.value = YEAR_MIN_2;
+        allBtn && allBtn.classList.add("is-active");
+      } else {
+        currentYear2 = Number(val);
+        slider.value = currentYear2;
+        allBtn && allBtn.classList.remove("is-active");
+      }
 
-        if (selected === "all") {
-          currentYear2 = "all";
-          slider.value = YEAR_MAX_2;
-        } else {
-          currentYear2 = Number(selected);
-          slider.value = currentYear2;
-        }
-
-        updateLabelAndGradient();
-        renderChart2();
-        dropdown.classList.add("hidden");
-      });
-    });
-
-    document.addEventListener("click", () => {
+      updateChipLabel2();
+      updateSliderTrack2(
+        currentYear2 === "all" ? YEAR_MIN_2 : currentYear2
+      );
+      updateYearDropdownActive2();
       dropdown.classList.add("hidden");
+      renderChart2();
     });
-  }
+  });
 
-  // Initial state
-  updateLabelAndGradient();
+  // --- click outside closes dropdown ---
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && e.target !== yearChip) {
+      dropdown.classList.add("hidden");
+    }
+  });
+
+  // Initial UI + chart
+  currentYear2 = "all";
+  slider.value = YEAR_MIN_2;
+  updateChipLabel2();
+  updateSliderTrack2(YEAR_MIN_2);
+  updateYearDropdownActive2();
   renderChart2();
 
   // Smooth resize: small debounce

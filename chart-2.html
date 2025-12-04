@@ -47,27 +47,29 @@
 
       <figure class="chart-figure">
         <figcaption class="kicker">
-            Question 2. Which jurisdictions have shown the highest or lowest positive drug test rates over time?
-
+          Question 2. Which jurisdictions have shown the highest or lowest positive drug test rates over time?
         </figcaption>
 
         <!-- Filter panel -->
         <div class="chart2-filter">
-          <!-- Top row: label + chip -->
-          <div class="chart-controls">
-            <span class="chart2-year-label">Year:</span>
 
-            <!-- clickable year chip -->
-            <button id="yearValue2" type="button"
-                    class="year-bubble year-chip-btn">
-              All (2008–2024)
-            </button>
+          <!-- Top row: label + chip + all-years pill -->
+          <div class="chart-controls-row">
+            <span class="chart-label">Year:</span>
 
-            <!-- dropdown wrapper (anchored to chip) -->
+            <!-- Wrapper so dropdown is anchored to the chip (same pattern as other charts) -->
             <div class="year-dropdown-wrapper">
+              <!-- Year chip -->
+              <button id="yearChip2" type="button" class="year-bubble year-chip-btn">
+                All years (2008–2024)
+              </button>
+
+              <!-- Dropdown panel -->
               <div id="yearDropdown2" class="year-dropdown hidden">
-                <button class="year-option2" data-year="all"><strong>All (2008–2024)</strong></button>
+                <div class="dropdown-title"><strong>All years (2008–2024)</strong></div>
+
                 <div class="year-grid">
+                  <button class="year-option2" data-year="all">All (2008–2024)</button>
                   <button class="year-option2" data-year="2008">2008</button>
                   <button class="year-option2" data-year="2009">2009</button>
                   <button class="year-option2" data-year="2010">2010</button>
@@ -88,6 +90,11 @@
                 </div>
               </div>
             </div>
+
+            <!-- All-years pill (same style as other charts) -->
+            <button id="yearAllBtn2" class="btn btn--ghost btn--pill">
+              All years
+            </button>
           </div>
 
           <!-- Slider row -->
@@ -102,13 +109,6 @@
               value="2024"
             />
           </div>
-
-          <!-- “All years” button -->
-          <div class="chart2-actions">
-            <button id="yearAllBtn2" class="btn btn--ghost">
-              Show All Years (2008–2024)
-            </button>
-          </div>
         </div>
 
         <!-- Chart container -->
@@ -119,8 +119,33 @@
       <aside class="notes">
         <h3>Notes & Insights</h3>
         <ul class="list">
-          <li>Higher rates often reflect larger testing programs, targeted police operations, or demographic factors.</li>
-          <li>Consistently low-rate jurisdictions may indicate smaller populations or less intensive testing.</li>
+          <li>
+    Jurisdictions with the highest totals usually have larger populations and
+    more frequent roadside drug-testing operations, which increases the number
+    of positive detections.
+  </li>
+
+  <li>
+    Lower-count jurisdictions may simply conduct fewer tests due to smaller
+    populations or limited enforcement resources, rather than indicating lower
+    drug-impaired driving rates.
+  </li>
+
+  <li>
+    Year-to-year changes in a state’s values can reflect shifts in police
+    strategy, targeted enforcement campaigns, or the introduction of new
+    drug-testing initiatives.
+  </li>
+
+  <li>
+    A spike or drop in a specific year may signal a one-off operation, policy
+    change, or external factor (e.g., lockdown periods affecting road activity).
+  </li>
+
+  <li>
+    Comparing all-year totals highlights long-term patterns, helping identify
+    which jurisdictions consistently detect more drug-impaired drivers.
+  </li>
         </ul>
       </aside>
 
