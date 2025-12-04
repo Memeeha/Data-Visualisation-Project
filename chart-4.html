@@ -43,64 +43,56 @@
     <div class="container chart-grid">
       <figure class="chart-figure">
         <figcaption class="kicker">
-        Question  4. What types of enforcement actions (fines, arrests, charges) are most common across jurisdictions ?
+          Question 4. What types of enforcement actions (fines, arrests, charges) are most common across jurisdictions?
         </figcaption>
 
-        <!-- State filter controls -->
+        <!-- State filter controls (same layout style as Chart 3) -->
         <div class="chart-controls-row">
-          <div class="chart-controls-left">
-            <span class="chart-label">State:</span>
+          <span class="chart-label">State:</span>
 
-            <!-- clickable state chip -->
-            <button id="jurisValue4" type="button"
-                    class="year-bubble year-chip-btn juris-chip-btn">
+          <!-- State chip + dropdown -->
+          <div class="juris-dropdown-wrapper">
+            <button
+              id="jurisValue4"
+              type="button"
+              class="year-bubble year-chip-btn juris-chip-btn"
+            >
               All jurisdictions
             </button>
 
-            <!-- Dropdown anchored directly under the state filter chip -->
-            <div class="juris-dropdown-wrapper"
-                 style="position: relative; display: inline-block;">
-
-              <div id="jurisDropdown4"
-                   class="juris-dropdown hidden"
-                   style="
-                     position: absolute;
-                     top: 48px;          /* distance below the chip */
-                     left: 0;            /* align left edge with the chip */
-                     z-index: 9999;
-                   ">
-
+            <div id="jurisDropdown4" class="juris-dropdown hidden">
+              <div class="juris-dropdown-title">All jurisdictions</div>
+              <div class="juris-grid">
                 <button class="juris-option4" data-juris="all">
                   All jurisdictions
                 </button>
-
-                <div class="juris-grid">
-                  <button class="juris-option4" data-juris="NSW">NSW</button>
-                  <button class="juris-option4" data-juris="QLD">QLD</button>
-                  <button class="juris-option4" data-juris="WA">WA</button>
-                  <button class="juris-option4" data-juris="SA">SA</button>
-                  <button class="juris-option4" data-juris="VIC">VIC</button>
-                  <button class="juris-option4" data-juris="TAS">TAS</button>
-                  <button class="juris-option4" data-juris="NT">NT</button>
-                  <button class="juris-option4" data-juris="ACT">ACT</button>
-                </div>
+                <button class="juris-option4" data-juris="NSW">NSW</button>
+                <button class="juris-option4" data-juris="QLD">QLD</button>
+                <button class="juris-option4" data-juris="WA">WA</button>
+                <button class="juris-option4" data-juris="SA">SA</button>
+                <button class="juris-option4" data-juris="VIC">VIC</button>
+                <button class="juris-option4" data-juris="TAS">TAS</button>
+                <button class="juris-option4" data-juris="NT">NT</button>
+                <button class="juris-option4" data-juris="ACT">ACT</button>
               </div>
             </div>
-
-            <!-- external reset button -->
-            <button id="jurisReset4" type="button"
-                    class="btn btn--ghost btn--pill"
-                    style="margin-left: 12px;">
-              All jurisdictions
-            </button>
           </div>
+
+          <!-- External reset button -->
+          <button
+            id="jurisReset4"
+            type="button"
+            class="btn btn--ghost btn--pill"
+          >
+            All jurisdictions
+          </button>
         </div>
 
         <!-- Chart container -->
         <div id="chart4"></div>
       </figure>
 
-            <aside class="notes">
+      <aside class="notes">
         <h3>Notes &amp; Insights</h3>
         <ul class="list">
           <li>
