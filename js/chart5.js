@@ -320,15 +320,6 @@ function updateChart5(resizeOnly = false) {
       "#7c3aed"
     ]);
 
-  // grid
-  g.append("g")
-    .attr("class", "grid")
-    .call(
-      d3.axisLeft(y)
-        .ticks(5)
-        .tickSize(-innerWidth)
-        .tickFormat("")
-    );
 
   // y-axis
   g.append("g")

@@ -245,14 +245,14 @@ function renderChart4() {
       .text(viewText);
 
     // 3. Grid + axes
-    g.append("g")
-      .attr("class", "grid")
-      .call(
-        d3.axisLeft(y)
-          .ticks(5)
-          .tickSize(-innerWidth)
-          .tickFormat("")
-      );
+    //g.append("g")
+    //  .attr("class", "grid")
+    //  .call(
+    //    d3.axisLeft(y)
+    //      .ticks(5)
+    //      .tickSize(-innerWidth)
+    //      .tickFormat("")
+    //  );
 
     g.append("g")
       .attr("class", "axis")
