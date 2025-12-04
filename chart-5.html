@@ -17,7 +17,7 @@
         <a href="chart-3.html">Chart 3</a>
         <a href="chart-4.html">Chart 4</a>
         <a href="chart-5.html" class="active">Chart 5</a>
-          <a href="chart-6.html">Chart 6</a>
+        <a href="chart-6.html">Chart 6</a>
       </nav>
     </div>
   </div>
@@ -37,8 +37,7 @@
 
       <div class="pager">
         <a class="btn btn--ghost" href="chart-4.html">← Previous</a>
-         <a class="btn btn--brand" href="chart-6.html">Next →</a>
-        
+        <a class="btn btn--brand" href="chart-6.html">Next →</a>
       </div>
     </div>
   </header>
@@ -51,24 +50,24 @@
           Question 5. Which age group recorded the highest number of positive drug detections ?
         </figcaption>
 
-        <!-- Year controls -->
+        <!-- Year controls (aligned with Chart 3 layout) -->
         <div class="chart-controls-row">
           <span class="chart-label">Year:</span>
 
-          <!-- clickable bubble (same idea as Chart 2) -->
-          <button
-            id="yearValue5"
-            type="button"
-            class="year-bubble year-chip-btn"
-          >
-            All years (2008–2024)
-          </button>
-
-          <!-- dropdown wrapper (anchored to chip) -->
+          <!-- Year chip + dropdown -->
           <div class="year-dropdown-wrapper">
+            <button
+              id="yearValue5"
+              type="button"
+              class="year-bubble year-chip-btn"
+            >
+              All years (2008–2024)
+            </button>
+
             <div id="yearDropdown5" class="year-dropdown hidden">
+              <div class="year-dropdown-title">All years (2008–2024)</div>
               <button class="year-option5" data-year="all">
-                <strong>All (2008–2024)</strong>
+               All (2008–2024)
               </button>
               <div class="year-grid">
                 <button class="year-option5" data-year="2008">2008</button>
@@ -91,9 +90,18 @@
               </div>
             </div>
           </div>
+
+          <!-- External reset button -->
+          <button
+            id="yearAllBtn5"
+            type="button"
+            class="btn btn--ghost btn--pill"
+          >
+            All years 
+          </button>
         </div>
 
-        <!-- Slider (smooth like Chart 2, wired in JS) -->
+        <!-- Slider (same style as other charts) -->
         <input
           type="range"
           id="yearSlider5"
@@ -104,43 +112,34 @@
           value="2008"
         />
 
-        <!-- Button to reset to all years -->
-        <button
-          id="yearAllBtn5"
-          class="btn btn--ghost"
-          style="margin-top:10px; margin-bottom:14px;"
-        >
-          All years (2008–2024)
-        </button>
-
         <!-- Chart container -->
         <div id="chart5"></div>
       </figure>
 
       <aside class="notes">
-  <h3>Notes &amp; Insights</h3>
-  <ul class="list">
-    <li>
-      Each bar shows how many positive tests came from one age group in the selected year.
-    </li>
-    <li>
-      In the earlier years, the data is grouped as <strong>“All ages”</strong> only, so all age
-      groups are combined into one total and cannot be split further.
-    </li>
-    <li>
-      From the later years (up to 2023), the dataset includes separate age bands, so you can see
-      which age groups contribute more to positive tests.
-    </li>
-    <li>
-      The <strong>“Unknown”</strong> category means the person’s age was not recorded or was missing
-      in the original data, so these positives cannot be placed into a specific age group.
-    </li>
-    <li>
-      Use the year controls to see how the age profile changes over time, and use
-      <strong>“All years”</strong> to view the long-term overall pattern.
-    </li>
-  </ul>
-</aside>
+        <h3>Notes &amp; Insights</h3>
+        <ul class="list">
+          <li>
+            Each bar shows how many positive tests came from one age group in the selected year.
+          </li>
+          <li>
+            In the earlier years, the data is grouped as <strong>“All ages”</strong> only, so all age
+            groups are combined into one total and cannot be split further.
+          </li>
+          <li>
+            From the later years (up to 2023), the dataset includes separate age bands, so you can see
+            which age groups contribute more to positive tests.
+          </li>
+          <li>
+            The <strong>“Unknown”</strong> category means the person’s age was not recorded or was missing
+            in the original data, so these positives cannot be placed into a specific age group.
+          </li>
+          <li>
+            Use the year controls to see how the age profile changes over time, and use
+            <strong>“All years”</strong> to view the long-term overall pattern.
+          </li>
+        </ul>
+      </aside>
 
     </div>
   </section>
@@ -155,7 +154,7 @@
         <a href="chart-3.html">3</a> ·
         <a href="chart-4.html">4</a> ·
         <a href="chart-5.html">5</a>.
-          <a href="chart-6.html">Chart 6</a>
+        <a href="chart-6.html">Chart 6</a>
       </div>
     </div>
   </footer>
@@ -167,7 +166,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/chart5.js"></script>
 
-   <!-- Nav active script -->
+  <!-- Nav active script -->
   <script>
     const navLinks = document.querySelectorAll('.nav__links a');
     const current = window.location.pathname.split('/').pop() || 'index.html';
