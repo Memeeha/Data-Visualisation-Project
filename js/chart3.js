@@ -84,6 +84,8 @@ function createTooltip3() {
 }
 
 // ----------------- KPI cards -----------------
+// ----------------- KPI cards -----------------
+// ----------------- KPI cards -----------------
 function generateKPI3(agg) {
   const kpiContainer = document.getElementById("kpi3");
   if (!kpiContainer || !agg.length) return;
@@ -101,18 +103,20 @@ function generateKPI3(agg) {
   kpiContainer.innerHTML = `
     <div class="kpi">
       <h3>HIGHEST METHOD</h3>
-      <p>${highest.method.replace("(Stage", "<br/>(Stage")}</p>
+      <p>${highest.method}</p>
       <span class="kpi-sub">
         ${highest.value.toLocaleString()} positives
       </span>
     </div>
+
     <div class="kpi">
       <h3>LOWEST METHOD</h3>
-      <p>${lowest.method.replace("(Stage", "<br/>(Stage")}</p>
+      <p>${lowest.method}</p>
       <span class="kpi-sub">
         ${lowest.value.toLocaleString()} positives
       </span>
     </div>
+
     <div class="kpi">
       <h3>TOTAL POSITIVES</h3>
       <p>${total.toLocaleString()}</p>
@@ -120,6 +124,8 @@ function generateKPI3(agg) {
     </div>
   `;
 }
+
+
 
 // ----------------- year controls (chip + dropdown + slider) -----------------
 function setupYearControls3() {

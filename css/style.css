@@ -900,14 +900,6 @@ footer {
 }
 
 
-
-.kpi-grid-3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 1.4rem;
-}
-
 /* Table block */
 .table-wrap {
   background: var(--bg-white);
@@ -1719,5 +1711,9 @@ body.chart6-lock-scroll {
   line-height: 1.5;
 }
 
+
+.chart3-page .kpi p {
+  font-size: 1.5rem;
+}
 
 
