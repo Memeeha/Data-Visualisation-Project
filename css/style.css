@@ -600,11 +600,6 @@ footer {
   background: var(--bg-soft);
 }
 
-/* =======================================================
-   SHARED FILTER CONTROLS (Years, Age, Jurisdiction)
-   Used by Chart 2, 3, 4, 5
-   ======================================================= */
-
 /* Row that holds label + chip */
 .chart-controls-row {
   display: flex;
@@ -619,7 +614,7 @@ footer {
   color: #64748b;
 }
 
-/* -------- Main chip button (year / state) -------- */
+/* Main chip button (year / state)*/
 
 .year-bubble,
 .juris-chip-btn {
@@ -652,7 +647,7 @@ footer {
   transform: translateY(-1px);
 }
 
-/* -------- Dropdown wrappers (year + state) -------- */
+/*Dropdown wrappers (year + state) */
 
 .year-dropdown-wrapper,
 .juris-dropdown-wrapper {
@@ -732,7 +727,7 @@ footer {
   box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
 }
 
-/* -------- Slider (shared) -------- */
+/*Slider (shared)*/
 
 .year-slider {
   width: 100%;
@@ -775,7 +770,7 @@ footer {
   transform: scale(1.1);
 }
 
-/* -------- Generic pill buttons -------- */
+/*Generic pill buttons */
 
 .btn--pill,
 .age-pill,
@@ -839,9 +834,8 @@ footer {
   }
 }
 
-/* =======================================================
-   Shared KPI Card Styling (Charts 2, 3, 5)
-   ======================================================= */
+/*Shared KPI Card Styling (Charts 2, 3, 5) */
+  
 
 .kpi-grid {
   display: grid;
@@ -866,7 +860,7 @@ footer {
 /* KPI title */
 .kpi h3 {
   margin: 0;
-  font-size: 0.8125rem;      /* SAME SIZE AS CHART 2 */
+  font-size: 0.8125rem;      
   color: var(--text-muted);
   font-weight: 600;
   text-transform: uppercase;
@@ -876,7 +870,7 @@ footer {
 /* KPI main value */
 .kpi p {
   margin: 0.75rem 0 0;
-  font-size: 1.75rem;        /* SAME SIZE AS CHART 2 */
+  font-size: 1.75rem;      
   font-weight: 700;
   color: var(--accent);
 }
@@ -885,11 +879,11 @@ footer {
 .kpi-sub {
   display: block;
   margin-top: 6px;
-  font-size: 0.875rem;       /* SAME SIZE AS CHART 2 */
+  font-size: 0.875rem;      
   color: var(--text-muted);
 }
 
-/* Hero KPI grid (shared for Chart 3 & 5) */
+/* Hero KPI grid */
 .kpi-grid-hero {
   max-width: 820px;
   margin: 32px auto 28px;
@@ -935,9 +929,7 @@ footer {
 .table tbody tr:hover { background: var(--bg-soft); }
 .table tbody tr:last-child td { border-bottom: none; }
 
-/* =======================================================
-   Chart 3 Hero (Detection method)
-   ======================================================= */
+/* Chart 3 Hero (Detection method) */
 
 .chart3-hero {
   background: radial-gradient(circle at 0% 0%, #4f46e5 0%, #0ea5e9 50%, #10b981 100%);
@@ -961,9 +953,7 @@ footer {
   color: #e5ecff;
 }
 
-/* =======================================================
-   AUSTRALIA MAP (Chart 6, if used)
-   ======================================================= */
+/*AUSTRALIA MAP*/
 
 .aus-map-wrapper {
   width: 100%;
@@ -1021,9 +1011,7 @@ footer {
   text-align: center;
 }
 
-/* =======================================================
-   Scroll Buttons
-   ======================================================= */
+/*Scroll Buttons */
 
 .scroll-btn {
   position: fixed;
@@ -1073,9 +1061,7 @@ footer {
   box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.7), var(--shadow-md);
 }
 
-/* =======================================================
-   Responsive tweaks
-   ======================================================= */
+/*Responsive tweaks*/
 
 @media (max-width: 1024px) {
   .chart-grid {
@@ -1140,7 +1126,7 @@ footer {
   }
 }
 
-/* ------ Accessibility & Print ------ */
+/*Accessibility & Print*/
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -1172,9 +1158,7 @@ footer {
   pointer-events: none;
 }
 
-/* ============================
-   Chart 6 – Map layout & legend
-   ============================ */
+/*Chart 6 – Map layout & legend*/
 
 .chart6-wrapper {
   width: 100%;
@@ -1205,9 +1189,7 @@ footer {
   transform: translateY(-2px);
 }
 
-/* =======================================================
-   Chart 6 layout + tooltip
-   ======================================================= */
+/*Chart 6 layout + tooltip*/
 
 .chart6-grid {
   display: grid;
@@ -1225,7 +1207,7 @@ footer {
   overflow: hidden;
 }
 
-/* 🔹 Map gradient legend (kept & centred) */
+/*Map gradient legend */
 .chart6-legend {
   margin-top: 18px;
   width: 100%;
@@ -1305,9 +1287,7 @@ footer {
   color: var(--text-muted);
 }
 
-/* =======================================================
-   Table + built-in legend colours for pie slices
-   ======================================================= */
+/*Table + built-in legend colours for pie slices*/
 
 .chart6-table {
   width: 100%;
@@ -1337,7 +1317,7 @@ footer {
 /* first column = state name + colour dot */
 .chart6-table tbody tr td:first-child {
   position: relative;
-  padding-left: 18px;          /* space for the dot */
+  padding-left: 18px;          
 }
 
 .chart6-table tbody tr td:first-child::before {
@@ -1350,9 +1330,6 @@ footer {
   height: 10px;
   border-radius: 999px;
 }
-/* =======================================================
-   CHART 6 – CLEAN, NON-OVERLAPPING, STABLE LAYOUT
-   ======================================================= */
 
 /* MAIN LAYOUT GRID  */
 .chart6-layout {
@@ -1388,7 +1365,7 @@ footer {
   display: block;
 }
 
-/* generic chart tooltip (used by D3) */
+/* generic chart tooltip */
 .chart-tooltip {
   position: absolute;
   padding: 6px 10px;
@@ -1414,7 +1391,7 @@ footer {
   visibility: visible;
 }
 
-/* RIGHT SIDE PANELS (keep padding consistent) */
+/* RIGHT SIDE PANELS */
 .chart6-side {
   display: flex;
   flex-direction: column;
@@ -1439,7 +1416,7 @@ footer {
   color: #1d4ed8;
 }
 
-/* FULLSCREEN MODE (unchanged layout, just for map panel) */
+/* FULLSCREEN MODE */
 .chart6-map-panel.is-fullscreen {
   position: fixed;
   inset: 60px 40px 40px 40px;
@@ -1556,13 +1533,12 @@ body.chart6-lock-scroll {
   flex: 0 0 auto;
 }
 
-/* Hide old pie legend (we use the table as the legend now) */
+/* Hide old pie legend*/
 .chart6-pie-legend,
 .pie-legend {
   display: none;
 }
 
-/* === Chart 6: make right column match map card height === */
 
 .chart6-layout {
   max-width: 980px;
@@ -1571,7 +1547,7 @@ body.chart6-lock-scroll {
   grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
   column-gap: clamp(32px, 4vw, 48px);
   row-gap: 20px;
-  align-items: stretch;           /* stretch both columns to same height */
+  align-items: stretch;          
 }
 
 .chart6-map-panel,
@@ -1579,7 +1555,6 @@ body.chart6-lock-scroll {
   height: 100%;
 }
 
-/* right column fills height, last card grows to match map panel */
 .chart6-side {
   display: flex;
   flex-direction: column;
@@ -1598,7 +1573,7 @@ body.chart6-lock-scroll {
 }
 
 .chart6-table-card {
-  flex: 1;                        /* stretch last card to fill column */
+  flex: 1;                      
   display: flex;
   flex-direction: column;
 }
@@ -1635,9 +1610,9 @@ body.chart6-lock-scroll {
   }
 }
 
-/* === Chart 6 pie tooltip – keep it close to cursor === */
+/* === Chart 6 pie tooltip*/
 #chart6PieTooltip {
-  position: fixed;              /* follow the viewport mouse position */
+  position: fixed;              
   padding: 6px 10px;
   background: #0f172a;
   color: #f9fafb;
@@ -1670,11 +1645,10 @@ body.chart6-lock-scroll {
 }
 
 .chart6-notes {
-  max-width: 800px;   /* same as .chart6-layout */
+  max-width: 800px;   
   margin: 0 auto;
 }
 
-/* Colour dots for table, matching pie colours */
 .chart6-table-swatch {
   display: inline-block;
   width: 10px;

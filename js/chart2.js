@@ -292,9 +292,7 @@ function renderChart2() {
   });
 }
 
-// ======================================================
 // UI wiring (slider + chip + dropdown + all-years pill)
-// ======================================================
 document.addEventListener("DOMContentLoaded", () => {
   const slider   = document.getElementById("yearSlider2");
   const yearChip = document.getElementById("yearChip2");      // <-- new id
@@ -310,9 +308,9 @@ document.addEventListener("DOMContentLoaded", () => {
   slider.min  = YEAR_MIN_2;
   slider.max  = YEAR_MAX_2;
   slider.step = 1;
-  slider.value = YEAR_MIN_2;        // knob starts at 2008 like other charts
+  slider.value = YEAR_MIN_2;        
 
-  // --- helper: slider track fill (like Chart 5) ---
+  // --- slider track fill ---
   function updateSliderTrack2(value) {
     const min = +slider.min;
     const max = +slider.max;
@@ -327,7 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
     )`;
   }
 
-  // --- helper: update chip label ---
+  // --- update chip label ---
   function updateChipLabel2() {
     if (currentYear2 === "all") {
       yearChip.innerHTML = "<strong>All years (2008–2024)</strong>";
@@ -336,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- helper: highlight active year in dropdown ---
+  // --- highlight active year in dropdown ---
   function updateYearDropdownActive2() {
     const buttons = dropdown.querySelectorAll(".year-option2");
     const target = currentYear2 === "all" ? "all" : String(currentYear2);
@@ -346,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Slider input -> change year ---
+  // --- Slider input: change year ---
   slider.addEventListener("input", () => {
     currentYear2 = Number(slider.value);
     allBtn && allBtn.classList.remove("is-active");
@@ -360,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (allBtn) {
     allBtn.addEventListener("click", () => {
       currentYear2 = "all";
-      slider.value = YEAR_MIN_2;           // knob to left, same as other charts
+      slider.value = YEAR_MIN_2;           
       allBtn.classList.add("is-active");
       updateChipLabel2();
       updateSliderTrack2(YEAR_MIN_2);

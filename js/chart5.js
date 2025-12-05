@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ---------- Tooltip ----------
+// Tooltip
 function createTooltip5() {
   d3.selectAll(".chart-tooltip").remove();
 
@@ -80,7 +80,7 @@ function createTooltip5() {
     .style("z-index", 9999);
 }
 
-// ---------- KPI cards ----------
+// KPI cards
 function generateKPI5(data) {
   const kpiContainer = document.getElementById("kpi5");
   if (!kpiContainer || !data.length) return;
@@ -119,7 +119,7 @@ function generateKPI5(data) {
   `;
 }
 
-// ---------- Year controls ----------
+// Year Controls
 function setupYearControls5() {
   const slider = document.getElementById("yearSlider5");
   const labelBtn = document.getElementById("yearValue5");
@@ -128,7 +128,7 @@ function setupYearControls5() {
   const dropdown = document.getElementById("yearDropdown5");
   const yearButtons = document.querySelectorAll(".year-option5"); // ADDED
 
-  // ADDED: helper to sync .active state on dropdown buttons
+  // Help to sync .active state on dropdown buttons
   const updateYearActiveButtons5 = () => {
     if (!yearButtons.length) return;
     yearButtons.forEach(b => b.classList.remove("active"));
@@ -143,7 +143,6 @@ function setupYearControls5() {
       }
     });
   };
-  // --- end ADDED helper ---
 
   if (chip && dropdown) {
     chip.addEventListener("click", () => {
@@ -171,7 +170,7 @@ function setupYearControls5() {
           updateSliderTrack5(yearNum);
         }
 
-        updateYearActiveButtons5(); // ADDED
+        updateYearActiveButtons5(); 
         dropdown.classList.add("hidden");
         updateChart5();
       });
@@ -190,7 +189,7 @@ function setupYearControls5() {
   chart5CurrentYear = "all";
   labelBtn.textContent = `All years (${minYear}–${maxYear})`;
   updateSliderTrack5(minYear);
-  updateYearActiveButtons5(); // ADDED – initial state
+  updateYearActiveButtons5(); // initial states
 
   slider.addEventListener("input", e => {
     const y = +e.target.value;
@@ -198,7 +197,7 @@ function setupYearControls5() {
     labelBtn.textContent = String(y);
     allBtn.classList.remove("is-active");
     updateSliderTrack5(y);
-    updateYearActiveButtons5(); // ADDED – sync with slider
+    updateYearActiveButtons5(); 
     updateChart5();
   });
 
@@ -208,7 +207,7 @@ function setupYearControls5() {
     labelBtn.textContent = `All years (${minYear}–${maxYear})`;
     allBtn.classList.add("is-active");
     updateSliderTrack5(minYear);
-    updateYearActiveButtons5(); // ADDED – highlight "All"
+    updateYearActiveButtons5();
     updateChart5();
   });
 
@@ -224,7 +223,7 @@ function updateSliderTrack5(value) {
   slider.style.background = `linear-gradient(90deg,#6366f1 0%,#6366f1 ${pct}%,#e5e7eb ${pct}%,#e5e7eb 100%)`;
 }
 
-// ---------- Age filter pills ----------
+// Age filter piils
 function buildAgeFilter5(ageGroups) {
   const container = document.getElementById("ageFilter5");
   if (!container) return;
@@ -262,7 +261,7 @@ function buildAgeFilter5(ageGroups) {
   ageGroups.forEach(g => makePill(g, g));
 }
 
-// ---------- Chart drawing ----------
+// Chart drawing
 function updateChart5(resizeOnly = false) {
   const container = document.getElementById("chart5");
   if (!container || !chart5Data) return;
@@ -294,7 +293,7 @@ function updateChart5(resizeOnly = false) {
     rows = rows.filter(d => d.year === chart5CurrentYear);
   }
 
-  // Now aggregate depending on age filter
+  // Aggregate depending on age group selection
   let agg;
 
   if (chart5CurrentAge === "all") {

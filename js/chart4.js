@@ -1,8 +1,8 @@
 // js/chart4.js
 
-let currentJuris4 = "all";     // "all" or one of NSW, QLD, ...
+let currentJuris4 = "all";    
 let cachedAgg4 = null;
-let chart4Width = null;        // (currently unused, but kept in case you use it later)
+let chart4Width = null;      
 
 // Enforcement action definitions
 const ACTIONS_4 = [
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", renderChart4);
 });
 
-/* ---------------- Tooltip helper ---------------- */
+/* Tooltip helper */
 
 function createTooltip4() {
   d3.selectAll(".chart-tooltip").remove();
@@ -56,7 +56,7 @@ function createTooltip4() {
     .style("z-index", 9999);
 }
 
-/* ---------------- Load + aggregate CSV once ---------------- */
+/* Load + aggregate CSV once */
 
 function loadAndAggregate4() {
   if (cachedAgg4) return Promise.resolve(cachedAgg4);
@@ -83,7 +83,7 @@ function loadAndAggregate4() {
   });
 }
 
-/* ---------------- Controls (chip + dropdown) ---------------- */
+/*Controls (chip + dropdown) */
 
 function initJurisControls4() {
   const chip     = document.getElementById("jurisValue4");
@@ -98,7 +98,7 @@ function initJurisControls4() {
       currentJuris4 === "all" ? "All jurisdictions" : currentJuris4;
   };
 
-  // helper to update .is-active on the dropdown pills
+  // help to update .is-active on the dropdown pills
   const updateActiveButtons = () => {
     if (!buttons.length) return;
     buttons.forEach(b => b.classList.remove("is-active"));
@@ -148,7 +148,6 @@ function initJurisControls4() {
   updateActiveButtons(); // initial state
 }
 
-/* ---------------- Main render ---------------- */
 
 function renderChart4() {
   const container = document.getElementById("chart4");
@@ -156,7 +155,7 @@ function renderChart4() {
 
   const width  = container.clientWidth || 720;
   const height = 380;
-  const margin = { top: 80, right: 24, bottom: 70, left: 80 }; // extra top for view label
+  const margin = { top: 80, right: 24, bottom: 70, left: 80 }; 
 
   const innerWidth  = width  - margin.left - margin.right;
   const innerHeight = height - margin.top  - margin.bottom;
@@ -175,7 +174,7 @@ function renderChart4() {
   const tooltip = createTooltip4();
 
   loadAndAggregate4().then(agg => {
-    // 1. Decide which jurisdictions are shown
+    //Decide which jurisdictions are shown
     let jurisList = Object.keys(agg);
 
     if (currentJuris4 !== "all") {
@@ -189,7 +188,7 @@ function renderChart4() {
 
     jurisList = JURIS_ORDER_4.filter(j => jurisList.includes(j));
 
-    // 2. Build grouped data: action -> bars
+    // Build grouped data: action -> bars
     const groups = ACTIONS_4.map(act => ({
       actionId: act.id,
       label: act.label,
@@ -226,7 +225,7 @@ function renderChart4() {
       .domain(JURIS_ORDER_4)
       .range(JURIS_COLOURS_4);
 
-    // Helper: compute draw y + height with a minimum visible bar height
+    // compute draw y + height with a minimum visible bar height
     const MIN_BAR_HEIGHT = 4;
     function getBarGeom(value) {
       if (!value) return { y: innerHeight, h: 0 };
@@ -243,7 +242,7 @@ function renderChart4() {
       return { y: actualY, h: actualH };
     }
 
-    // 2b. Friendly "view" label above plot
+    // view label
     const isAllMode = currentJuris4 === "all";
     let viewText;
 
@@ -266,7 +265,7 @@ function renderChart4() {
       .attr("font-size", 12)
       .text(viewText);
 
-    // 3. Axes
+    // Axes
     g.append("g")
       .attr("class", "axis")
       .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format(",")));
@@ -278,7 +277,7 @@ function renderChart4() {
 
     xAxis.selectAll("text").attr("dy", "1.2em");
 
-    // 4. Draw grouped bars
+    // Draw grouped bars
     const groupG = g.selectAll(".action-group")
       .data(groups)
       .enter()
@@ -297,7 +296,7 @@ function renderChart4() {
       .attr("height", 0)
       .attr("fill", d => colorScale(d.jurisdiction))
       .attr("rx", 6)
-      .attr("ry", 6);   // rounded corners top & bottom
+      .attr("ry", 6);    // rounded corners
 
     // Smooth grow animation
     bars.transition()
@@ -306,7 +305,7 @@ function renderChart4() {
       .attr("y", d => getBarGeom(d.value).y)
       .attr("height", d => getBarGeom(d.value).h);
 
-    // 5. Value labels – always show non-zero, placed above bars
+    // Value labels – always show non-zero, placed above bars
     groupG.selectAll("text.bar-label")
       .data(d => d.bars)
       .enter()
@@ -317,14 +316,14 @@ function renderChart4() {
       .attr("y", d => {
         if (!d.value) return innerHeight;
         const rawY = y(d.value);
-        return Math.max(rawY - 18, 12); // keep inside chart area
+        return Math.max(rawY - 18, 12); 
       })
       .attr("fill", "#0f172a")
       .attr("font-size", 11)
       .style("letter-spacing", "0.03em")
       .text(d => (d.value ? d3.format(",")(d.value) : ""));
 
-    // 6. Hover interaction with clear highlight
+    // Hover interaction with clear highlight
     bars
       .on("mouseenter", function (event, d) {
         const geom = getBarGeom(d.value);
@@ -367,7 +366,7 @@ function renderChart4() {
         tooltip.style("opacity", 0);
       });
 
-    // 7. Legend for shown jurisdictions
+    // Legend for shown jurisdictions
     const legend = g.append("g")
       .attr("class", "simple-legend")
       .attr("transform", `translate(0, -15)`);
@@ -393,7 +392,7 @@ function renderChart4() {
       .attr("font-size", 12)
       .text(d => d);
 
-    // 8. Axis labels
+    // Axis labels
     g.append("text")
       .attr("x", innerWidth / 2)
       .attr("y", innerHeight + 50)
