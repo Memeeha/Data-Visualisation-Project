@@ -147,12 +147,11 @@
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
 
-      // highlight link that matches current page
+      
       if (href === current) {
         link.classList.add('active');
       }
 
-      // keep click behaviour consistent
       link.addEventListener('click', () => {
         navLinks.forEach(l => l.classList.remove('active'));
         link.classList.add('active');

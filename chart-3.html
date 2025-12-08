@@ -142,7 +142,7 @@
         <a href="chart-3.html">3</a> ·
         <a href="chart-4.html">4</a> ·
         <a href="chart-5.html">5</a>  .
-        <a href="chart-6.html">Chart 6</a>
+        <a href="chart-6.html"> 6</a>
       </div>
     </div>
   </footer>
@@ -162,12 +162,12 @@
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
 
-      // highlight link that matches current page
+   
       if (href === current) {
         link.classList.add('active');
       }
 
-      // keep click behaviour consistent
+      
       link.addEventListener('click', () => {
         navLinks.forEach(l => l.classList.remove('active'));
         link.classList.add('active');

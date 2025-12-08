@@ -57,7 +57,7 @@
           <div class="chart-controls-row">
             <span class="chart-label">Year:</span>
 
-            <!-- Wrapper so dropdown is anchored to the chip (same pattern as other charts) -->
+            <!-- Wrapper so dropdown is anchored to the chip  -->
             <div class="year-dropdown-wrapper">
               <!-- Year chip -->
               <button id="yearChip2" type="button" class="year-bubble year-chip-btn">
@@ -91,7 +91,7 @@
               </div>
             </div>
 
-            <!-- All-years pill (same style as other charts) -->
+            <!-- All-years pill  -->
             <button id="yearAllBtn2" class="btn btn--ghost btn--pill">
               All years
             </button>
@@ -182,12 +182,12 @@
     navLinks.forEach(link => {
       const href = link.getAttribute('href');
 
-      // highlight link that matches current page
+      
       if (href === current) {
         link.classList.add('active');
       }
 
-      // keep click behaviour consistent
+      
       link.addEventListener('click', () => {
         navLinks.forEach(l => l.classList.remove('active'));
         link.classList.add('active');

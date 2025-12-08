@@ -83,8 +83,7 @@ function createTooltip3() {
     .style("z-index", 9999);
 }
 
-// ----------------- KPI cards -----------------
-// ----------------- KPI cards -----------------
+
 // ----------------- KPI cards -----------------
 function generateKPI3(agg) {
   const kpiContainer = document.getElementById("kpi3");
@@ -146,7 +145,7 @@ function setupYearControls3() {
   slider.max = maxYear;
   slider.step = 1;
 
-  // 🔹 Start in "all years" mode, slider at the LATEST year (same as Chart 2)
+  // 🔹 Start in "all years" mode, slider at the LATEST year 
   slider.value = maxYear;
   chart3CurrentYear = "all";
   chipBtn.textContent = `All years (${minYear}–${maxYear})`;
@@ -193,7 +192,7 @@ function setupYearControls3() {
     renderChart3();
   });
 
-  // All years button (same behaviour as Chart 2)
+  // All years button 
   allBtn.addEventListener("click", () => {
     chart3CurrentYear = "all";
     chipBtn.textContent = `All years (${minYear}–${maxYear})`;
@@ -310,7 +309,7 @@ function renderChart3() {
 
   const total = d3.sum(data, d => d.value);
 
-  // update KPI cards
+ 
   generateKPI3(data);
 
   const pie = d3.pie()

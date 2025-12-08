@@ -160,7 +160,7 @@ dropdown.innerHTML = `
   chip.parentElement.style.position = "relative";
   chip.parentElement.appendChild(dropdown);
 
-  // ADDED: helper to highlight the active year option
+ 
   function updateYearActiveButtons6() {
     const buttons = dropdown.querySelectorAll(".year-option");
     buttons.forEach(b => b.classList.remove("active"));
@@ -172,7 +172,7 @@ dropdown.innerHTML = `
       }
     });
   }
-  // END ADDED
+
 
   dropdown.addEventListener("click", e => {
     const btn = e.target.closest(".year-option");
@@ -186,7 +186,7 @@ dropdown.innerHTML = `
       slider.value = currentYear;
     }
     updateSliderFill();
-    updateYearActiveButtons6();   // ADDED
+    updateYearActiveButtons6();   
     dropdown.classList.add("hidden");
     updateChart6();
   });
@@ -201,9 +201,7 @@ dropdown.innerHTML = `
     }
   });
 
-  // -------------------------------------------------------
-  // UPDATE FUNCTION
-  // -------------------------------------------------------
+  
   function updateChart6(animate = true) {
     const totals = getTotals(currentYear);
 
@@ -212,7 +210,7 @@ dropdown.innerHTML = `
 
     const localMax = d3.max(rows, d => d.value) || 1;
 
-    // Update insight panel
+   
     const top = rows[0];
 
     if (insightTopEl) {
@@ -316,7 +314,7 @@ dropdown.innerHTML = `
         return t => arc(i(t));
       });
 
-    // PIE HOVER TOOLTIP (uses #chart6PieTooltip)
+    // PIE HOVER TOOLTIP 
     mergedPie
       .on("mouseenter", function (event, d) {
         const state = d.data.state;
@@ -332,7 +330,7 @@ dropdown.innerHTML = `
             <span style="font-size:12px">Year: ${label}</span>
           `);
       })
-      // 🔧 keep tooltip close to the cursor
+      //  keep tooltip close to the cursor
       .on("mousemove", function (event) {
         pieTooltip
           .style("left", (event.clientX + 12) + "px")
@@ -392,7 +390,7 @@ dropdown.innerHTML = `
   }
 
   // -------------------------------------------------------
-  // SLIDER FILL (nice gradient)
+  // SLIDER FILL
   // -------------------------------------------------------
   function updateSliderFill() {
   const min = +slider.min;
@@ -414,12 +412,12 @@ dropdown.innerHTML = `
     currentYear = +slider.value;
     dropdown.classList.add("hidden");
     updateSliderFill();
-    updateYearActiveButtons6();     // ADDED
-    updateChart6(false); // no animation while dragging
+    updateYearActiveButtons6();     
+    updateChart6(false); 
   });
 
   updateSliderFill();
-  updateYearActiveButtons6();       // ADDED (initial state)
+  updateYearActiveButtons6();       
 
   // -------------------------------------------------------
   // BUTTONS
@@ -429,7 +427,7 @@ dropdown.innerHTML = `
     slider.value = maxYear;
     updateSliderFill();
     dropdown.classList.add("hidden");
-    updateYearActiveButtons6();     // ADDED
+    updateYearActiveButtons6();    
     updateChart6();
   });
 

@@ -94,7 +94,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="js/chart1.js"></script>
 
-  <!-- 🔹 Nav active script (add this to each chart page) -->
+  <!-- 🔹 Nav active script -->
   <script>
     const navLinks = document.querySelectorAll('.nav__links a');
     const current = window.location.pathname.split('/').pop() || 'index.html';
@@ -107,7 +107,7 @@
         link.classList.add('active');
       }
 
-      // optional: keep click behaviour consistent
+      
       link.addEventListener('click', () => {
         navLinks.forEach(l => l.classList.remove('active'));
         link.classList.add('active');
